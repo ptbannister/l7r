@@ -1,0 +1,286 @@
+
+CODE OF BUSHIDO, PART ONE
+
+This is a starting adventure for three to four PCs with little to no experience. It is adapted from the Code of Bushido adventure published by Alderac Entertainment Group, written by Patrick Kapera. We changed it significantly, although most of the original conflicts and personalities are retained. It would take many pages to list all of the changes; suffice to say, there are many. We feel that all of them make a lot of good sense.
+
+
+
+YOUR ASSIGNMENT
+
+Matsu Chokoku, with whom the PCs may have worked in the Hare Clan adventure, arranges an assignment detailed to them in a letter he writes to the character with the most Rank. If two characters are roughly tied for highest Rank then he addresses the letter to the bushi character with the highest Recognition.
+
+
+
+DEAR [PLAYER CHARACTER]:
+
+In conjunction with your daimyo, I have arranged for you and your companions to serve as guards to valuable relics. The Crane Clan has agreed to provide the prize for a shugenja competition at this year's Setsuban Festival, which is to be held at the Ki-rin Shrine in Phoenix lands and organized by the Council of Elemental Masters of the Isawa Family. The shugenja who wins the competition will be awarded the prize by the Phoenix Clan. The prize is a collection of magical spell scrolls and esoteric, unpublished writings on magic and theology collected from throughout the Empire.
+
+Doji no Tohei Gidayu is responsible for the transportation of the prize, so you will take orders from him. He has arranged for you to join a caravan organized by Lion samurai, which will travel toward the Ki-rin Shrine for most of the journey. The caravan will go north from Lion lands, pass through Dragonfly lands and continue through Dragon lands until the Drowned Merchant River bends northward, at which point you will separate from the caravan and meet Phoenix troops at the Dragon-Phoenix bridge at Yotsubashi. You will continue from Yotsubashi with the Phoenix escort until you reach the Ki-rin Shrine, where you will hand over the scrolls to Gidayu.
+
+Doji Gidayu emphasized the politically sensitive nature of the scrolls. You are traveling with the Lion caravan only for safety in numbers, and they are independent from Gidayu and the scrolls. They have nothing invested in the scrolls and don't really care what happens to them. You are the ones who have been entrusted with the scrolls, and you are to be personally responsible for them at all times.
+
+Accompanying you will be one of Gidayu's people, a shugenja named Doji no Tohei Taiga. He shares your responsibility for the scrolls.
+
+Long live our revered Emperor,
+
+MATSU NO ISHO-EN CHIKOKU
+
+
+The letter is absolutely authentic and there is no reason to suspect otherwise. Any PC who has suspicions is being overly paranoid.
+
+Doji Gidayu is in charge of the scrolls because of his position in the Crane Clan, which makes him responsible for all Crane Clan trade routes in Phoenix lands. After the Crane Clan agreed to provide the prize for this year's Setsuban Festival, he negotiated with the Phoenix Clan exactly what the prize would be.
+
+There is little to be done before the "Stopover at Kyuden Tonbo," but there should be a conversation between the PCs and Doji Taiga, the Crane shugenja who carries the Setsuban scrolls. He seems unhappy and does not make much of an effort to be pleasant or conversational, and will excuse himself by saying that he hates traveling and that the ordeal is aggravating a chronic headache problem.
+
+The scrolls, by the way, are in a small chest made of sacred sakaki wood carved with figures of the Four Winds on the four sides, Lady Sun and her son Hantei I on the top, and a moon crest on the bottom. The chest is just big enough to hold all of the scrolls, without enough room for them to jostle around.
+
+Doji Taiga, who has 3.5 Rank, is a rational person, but he doesn't think before he speaks, so he often says offensive things. He also shouts angrily and longwindedly at the nearest person he can find to blame when something goes wrong or against his plans. This will be a source of trouble repeatedly in the adventure.
+
+
+
+STOPOVER AT KYUDEN TONBO
+
+Kyuden Tonbo, or Dragonfly Castle, is the palace of the daimyo of the Dragonfly Clan. The Dragonfly are a Minor Clan located between the Dragon Clan to their north and the Lion Clan to their south. They serve the Dragon Clan by policing their border with the Lion Clan. There are about ten thousand samurai in the Dragonfly Clan in several Houses, one of which is the House of Ashijin that founded the Clan.
+
+The caravan is stopped upon entering Dragonfly lands. A patrol of Dragonfly bushi led by Tonbo no Ashijin Sako examines their traveling papers and escorts the caravan to Kyuden Tonbo. Most of the samurai will stay in the castle-town, with an open invitation to sleep in the bachelors' barracks with the Dragonfly samurai. However, because the Setsuban scrolls are so important the PCs are guests of Tonbo no Ashijin Sodan, the Dragonfly daimyo, at the castle. This was arranged by Doji Gidayu.
+
+Upon arrival at Kyuden Tonbo, Doji Taiga hands the scrolls over to the PCs and says, "I don't want these to leave your sight. Do you understand?" He does not have the authority to order the PCs so they don't have to listen to him, but he will make a big deal if they do not agree with him.
+
+Tonbo Sodan is like any other daimyo, although he has a bit more responsibility and a lot more to look out for. Right now, like any other daimyo would be to high-profile guests, he wants to be a good host. He invites everybody to dinner, but Doji Taiga excuses himself from coming to dinner, saying that he feels ill. This is the truth. However the PCs are expected to come.
+
+In addition to Sodan, Tonbo no Ashijin Ekai will be at dinner. Ekai is a shugenja who helps deal with visitors and other social situations, and is there mainly to add to the majesty of the Dragonfly Clan. He also participates in the religious life of the Dragonfly Clan. Because of his importance to the Dragonfly Clan, he is not able to participate in the Setsuban Festival competition, although he wanted to do so. If he is asked about the tournament he will say that it is a great thing and that it is good for shugenja to do something like that. If he is asked specifically why he is not going, he will say that he wanted to go but was not granted permission.
+
+At dinner, Sodan is polite, and eventually he offers to the PCs to have his trusted bushi guard the scrolls, which will allow the PCs to get a full night's sleep instead of taking shifts around the scrolls. He is making this offer to extend the best possible hospitality to the PCs, and it is not an unusual arrangement that he is proposing. However, the PCs may remember Chokoku's letter, in which he passed along instructions from Doji Gidayu that nobody else be trusted with the scrolls. This was in the context of the Lion caravan, so it could be interpreted only to apply to bushi from the Lion caravan. However the PCs would still be breaking the letter of their agreement. This is a very gray area, and it would not be dishonorable to go either way with it. However, the PCs would offend Sodan by rejecting his hospitality and saying that they cannot trust him with the scrolls. If they explain to Sodan that they have these orders then he will be understanding, and will propose a compromise: he will lock the scrolls in a secure storeroom, and the PCs can stand watch. This is acceptable to Sodan because he is still offering increased security through the locked room, but the PCs will not have to break their orders. Alternatively the PCs can just forget about their orders and agree.
+
+When the PCs go down to the secure storeroom they discover that it is the storeroom where Sodan keeps his sake supply. The room is completely secure, but the PCs will not be allowed inside with the scrolls. Nobody is trusted in a room full of sake. The PCs may protest, but Sodan doesn't even trust his own men in that room, and the PCs would be going too far to ask for more trust than Sodan extends to his own vassals. Besides, the orders said not to trust others with the scrolls, but said nothing about leaving sight of the scrolls - that last was only Taiga's condition, which did not carry the weight of authority. The PCs would not be in the wrong for doing this, although it will come up later. Further, they can't back out of the agreement without offending Sodan so they probably will have to go through with it.
+
+If the PCs stubbornly refuse to leave sight of the scrolls, either at dinner or after dinner, then they will remain safe. The PCs will not gain back any spent Void Points because they will not have slept, however. Worse, Sodan will be offended. The PCs and Taiga will be served cold rice in the morning, and Taiga will shoot the PCs a dirty look, wondering what they did to offend their host. He will later yell at them about it. If the PCs explain that they were refusing to leave sight of the scrolls, as he asked, then he will back off a little but will not apologize or take back his remarks, and will insist that they still screwed up by ruining relations with the Dragonfly Clan for Doji Gidayu. Skip the rest of this section and advance to "Yotsubashi."
+
+If the PCs go with the agreement (whether or not they make the compromise with Sodan), then the scrolls will be locked overnight in a room, guarded by Sodan's people if they said nothing, guarded by the PCs if the PCs asked Sodan not to make them disobey their orders. The PCs will see and hear nothing. However, during the night, Tonbo Ekai, ruffled over being stuck at Kyuden Tonbo and curious about the prize, will cast a spell called "Path of the Zokujin" to travel through the earth into the storeroom, and will read some of the scrolls. He will not damage them or steal any of them but he will accidentally replace some of them the wrong way. He wasn't worried about being caught because he had no reason to expect that anybody was going to be so paranoid as to check the scrolls for rearrangement.
+
+That morning, when Doji Taiga wakes up and finds that the PCs left sight of the scrolls, he will be furious and will publicly accuse them of disobeying orders. (If the PCs just agreed outright to Sodan's offer and didn't even guard them personally then he will talk about that too.) He will insist that the scrolls were probably tampered with, because they weren't being watched. This is outrageously paranoid, but it turns out that he is right - the scrolls are oriented differently than they were when they were originally placed in the chest.
+
+Tonbo Sodan will come down personally and is very apologetic when it is discovered that the scrolls were compromised. He does not explicitly apologize but he's coming close to it. Tonbo Ekai comes with him and also acts surprised. (He actually is very surprised that Taiga bothered to examine them so closely.) However, Taiga is very rude to Sodan, saying that his security was not sufficient to protect the scrolls and insinuating that Sodan was setting this up. He outright accuses Ekai of tampering with the scrolls, since only a truly erudite scholar of religion and magic would care about the scrolls and have the means to enter the room. Also, if at any point somebody suggests that he's just being paranoid and nobody could have messed with the scrolls, he will commune with the Earth kami in the walls of the room and say, truthfully, that the kami say that somebody used Path of the Zokujin on their wall.
+
+Tonbo Sodan will be deeply insulted by Taiga. Ekai will also feign being insulted, and says that he was sleeping in his room all night and never came near his lord's storeroom. Neither reaction is unjustified; Taiga is being a jerk, as usual, in addition to being bizarrely paranoid.
+
+The PCs can handle this in many different ways. They can side with Taiga, but this would ruin Gidayu's relationship with the Dragonfly Clan if handled badly, and Gidayu would be very upset about it. If they side with Taiga will being extremely apologetic and/or telling Taiga off they might be able to win over Sodan without angering Taiga. They can try to smooth things over by accepting Sodan's apology and telling Taiga to shut up, which is a very good idea, although it will get Taiga even angrier with them. It is also possible to agree with Taiga's line that a wrong has been committed, but promise Sodan that although you have to tell Gidayu that a Dragonfly shugenja tampered with the scrolls, no lasting harm was done, and everything will be kept private, for Gidayu's ears only.
+
+Pointing out to Taiga that he had no authority to order them to stay within sight of the scrolls will prevent him from holding a serious grudge, although he will of course still yell at them about it. They can even accuse him of lying about the scrolls having been tampered with, which would be a big deal. He would become even angrier and insult them viciously, while hinting that Kakita duelists are extremely strong. If the PCs manage to get into a duel with him, then a Kakita duelist will stand in for Taiga at the Ki-rin Shrine. They can also try to determine whether Ekai actually was guilty. Whether or not you get Ekai to admit his guilt to you privately, there will be no consequences for this because it's too shameful to make public. Tonbo Sodan will not allow it. However the PCs solve this, the consequences will follow them out of Dragonfly lands.
+
+
+
+YOTSUBASHI
+
+The PCs leave Dragonfly lands and travel through Dragon lands with the Lion caravan. As was said in the letter from Chokoku, the PCs were supposed to meet with Phoenix bushi when they separated with the Lion caravan at Yotsubashi. The Lion caravan continues southward through Crane lands. Unfortunately the Phoenix troops are not where they are supposed to be by the bridge and there are no couriers there to explain their absence. Doji Taiga is furious and starts yelling, but eventually shuts up since there's nobody specific for him to yell at. He suggests that they should go to the town guard for an escort and to see if there was any word sent to them of why the troops are missing This is a good idea since they are a very small group carrying a very valuable cargo.
+
+Before the PCs can reach the town guard barracks, they are ambushed by a group of thugs armed illegally with swords, who rush out of a neighboring alleyway. As soon as the thugs surround the party, Taiga tightens his grip on the chest of scrolls and casts a spell, specifically Gift of the Wind Spirits, and flies out of the alley and quickly out of sight. The thugs are startled, but they would by this time be locked tightly in combat with the rest of the PCs. Should any shugenja PC attempt to fly after Taiga, warn them that if they leave then their companions are likely to die without their help, because it is true. However if they insist then let them - if the other characters die because their friend left them behind then that is awesome for you as the GM.
+
+After defeating the thugs, the PCs will probably be very concerned about finding Taiga. He is shortly tracked down - he fell into a large pile of manure not far outside of town. He is weak and dizzy, and says that he was struck by a rock in midair and fell here. He says that somebody took the scrolls while he was still dazed. He does not share with the PCs that the individual who took the scrolls said something to him.
+
+The PCs should be distressed. Taiga certainly is, so much that for once he has nothing to say. No doubt they will organize an investigation - if the PCs are too dense to think of this then Taiga will suggest it. They will discover that a serving girl at the bar served a tall man who was talking to local thugs and left the bar in their company. This man was not carrying swords. She also mentions that while she was serving him, he oddly referred to the tea as "the aromatic brew of your plot of our Lady Sun's sweet earth".
+
+When the players ask what they can do to figure out what the man's odd comment meant, they will find on a roll of 25 on the Culture knack that the man was making a literary reference. That line comes from a Kabuki play about the meeting between Akodo and Ikoma; in the play, Akodo requested of a serving girl a cup of local tea when he began to enjoy Ikoma's stories.
+
+The PCs will also discover another knot of dead thugs in an alley near the one where they were ambushed. They are very much like the thugs that jumped the PCs, except they are all dead, very recently, each from a single clean but grievous sword cut.
+
+While the PCs are investigating, the Phoenix troops will show up and explain why they were late. They encountered a group of bandits on the way. The bandits shot arrows at them and then fled when chased. The troops were always just one arrow's breadth behind the bandits, and the bandits gave hard chase before finally disappearing. Taiga will of course yell at them, and they'll pretty much take it when they find out that the scrolls were stolen in their absence, although their captain will say that it wouldn't have been safe to have led bandits to the scrolls.
+
+In the investigation the PCs will discover that there is a ronin in the area named Niban who makes deals with caravans to arrange protection for them. The town guard points out that he would be a good person to talk to to try to get the scrolls back, since he would know a lot about the local bandits. No matter what the PCs do, Doji Taiga is stuck in Yotsubashi. Landing in manure has caused him to become ritually impure, and so he will remain in the local temple performing rituals to cleanse himself. Shugenja take ritual purity very seriously.
+
+
+
+WHAT THE HELL JUST HAPPENED?
+
+So what just happened exactly? To truly understand this you must read the character descriptions in "Dramatis Personae" at the end of the file of Niban and Doji no Tohei Gidayu. However, to make a long story short, Niban used to be Gidayu's karo but he's a ronin now because Gidayu is a jerk. Niban, knowledgeable about trade routes and bandits from his position with Gidayu, went into the protection business, assuming a leadership role over the local bandits and forming them into elite troops of outriders. For several years now he has been offering his services to the Phoenix and Dragon Clans and caravans traveling through Phoenix lands. His goal has been to found a Minor Clan, and he is at the point where he's looking to achieve that goal. He calls his troop the Nightingale Clan, and is based at a walled village in the northern extremes of Phoenix lands.
+
+Koan, a brilliant shugenja with whom Niban is fortunate to work, came up with the idea of taking advantage of the Setsuban Festival competition to speed along the process. He figured that winning the competition would be a big boost to their budding Nightingale Clan, but even better, he decided that by stealing the scrolls and ransoming them, the Nightingale could force the Crane and Phoenix to back them as a Minor Clan in exchange for the scrolls. Normally, to get the support of the Phoenix Clan to become a Minor Clan, the Phoenix would extort a ridiculous amount of things out of them for the next two decades. However, with the scrolls, Koan figures that the Nightingale can be the ones doing the extorting.
+
+Which leads us to the stealing of the scrolls. Niban arranged to have some of his troops attack the Phoenix troops en route to Yotsubashi. The Nightingale bandits harried the troops, fled across the horizon, and then harried them again before fleeing again - letting the Phoenix think they were always just one step behind their quarry. He then personally went into Yotsubashi ahead of the scrolls and wrangled thugs at the bar, telling them that there was a very valuable cargo passing through town but that their escort had been destroyed by bandits. He split the thugs into two groups under the pretense of planning to catch the PCs in a pincer attack, but killed all of the thugs in his group, since he didn't actually want the thugs to kill anybody. The remaining thugs were incapable of destroying the PCs on their own. Niban and Koan also expected Taiga to fly away when ambushed, so Koan lay in wait and magically propelled stones to knock out Taiga's concentration, which caused him to drop his spell and fall. Then Koan's assistant, Kocho, ran up and took the scrolls. Before running off, Kocho said to the still-dazed Taiga, "Your family really shouldn't have done that," just to mess with him. When Taiga reports this to Gidayu, Gidayu will assume that it is a personal message from Niban, heightening his paranoia.
+
+So now the scrolls are held at the Nightingale Village under heavy guard, and Niban is waiting for somebody to ask him to retrieve the scrolls from the local bandits so that he can play the rest of his hand.
+
+
+
+MEETING NIBAN AT NIGHTINGALE VILLAGE
+
+This can occur before or after the players return to the Ki-rin Shrine and meet Doji Gidayu. They will be advised to ask for Niban's help before they leave Yotsubashi, and are told of his location at Nightingale Village, where his troops live. Nightingale Village is surrounded by a wooden palisade and is inhabited by a few dozen ex-wave men who have sworn fealty to Niban as well as many who have not yet sworn fealty to him. Those who are Niban's vassals wear a mon, not recognizable on Heraldry, of a stylized bird which is recognizable as a nightingale.
+
+When they meet Niban in his house, he is alone and meets the PCs in a formal, if sparse, meeting room. He asks the PCs, "What do you think of my little chrysanthemum seed?" He is referring to the village, alluding to a story by a Crane author in which Hantei I refers to newly founded Otosan Uchi as a chrysanthemum seed; determining this takes a roll of 25 on Culture. If the PCs express confusion he will simply say "I mean my town, my fledgling Nightingale Clan."
+
+When asked about the scrolls, he says that he can probably get the scrolls back. Specifically he says "I guarantee I could have them by the Hour of the Wolf," alluding to Kakita Ryosei's Tragedy of Saioji in which the cruel general Bayushi Goma forces the ronin Saioji to fight in the Crane vanguard at the Battle of the Hour of the Wolf by holding his family hostage. Although Goma never admits to having Saioji's family, it is common knowledge in the story that he has them and is forcing Saioji's wife to be his own mistress. A roll of 35 on Culture will recognize this quote. Back to Niban: but in exchange, he wants unconditional support as a Minor Clan and for his vassal Koan to be able to compete in the shugenja competition. He also suggests that if they find it difficult to grasp the politics of the situation then they should talk to "Gidayu's new karo, who I understand is a courtier."
+
+As the players leave, Niban says, "Oh, give me regards to Doji Gidayu." If they question whether Gidayu would know him, he responds, "I'm as confident as everyone else that we've never met." Another Culture roll of 30 reveals that this is a line from a mystery novel in which the smuggler Daidoji Homare taunts the crooked magistrate Yogo Okahito through a clueless yoriki.
+
+The plot reason for the literary references is so that the PCs can realize that Niban was the guy wrangling thugs at Yotsubashi. It also is a part of Niban's personality - he is no longer a part of respectable society, but he still views himself as a cultured person, and preserves that image by keeping himself intimate with literature.
+
+
+
+MEETING DOJI GIDAYU AT KI-RIN SHRINE
+
+When the PCs arrive at Ki-rin Shrine Doji Gidayu will be there to meet them. He quickly becomes unhappy and distressed to discover that the scrolls are missing. It would be very expensive for the Crane Clan to have to replace the prize, and embarrassing to both the Crane and the Phoenix to have to provide a different prize than they promised. Therefore before anything else Gidayu is opposed to making the loss of the scrolls public - it has to be taken care of in secret. The Phoenix Clan will feel the same way.
+
+Gidayu's reaction is not to be angry with the PCs. It is clear that what happened was beyond their ability to stop. Furthermore it was Taiga who actually held the scrolls when they were taken. However, he is also not forthcoming with suggestions because there is little he can do.
+
+Whether or not the PCs have spoken to Niban yet, when the topic of getting Niban's help is raised, Gidayu is absolutely opposed. "I forbid you from involving some honorless dog ronin in the business of the Great Clans!" He will point out that they cannot know that Niban will actually be able to find the scrolls, and that he's trying to take advantage of a desperate situation.
+
+Gidayu proposes instead that they go back out around Yotsubashi and try to track down the scrolls and where they were stolen. He points out that since bandits are territorial they can't have gone far, and that since the scrolls are only valuable to a shugenja they will have to hold on to them until they can find a shugenja willing to buy them.
+
+The players are ideally going to work around Gidayu or tell him to shut up. He's dismissing the best idea to protect his secret, although he'll never admit that. He doesn't want to see Niban become a daimyo of a Minor Clan because if he does then people will ask questions about Niban's past, which may lead to the revelation of his ugly secret.
+
+Whether or not the players go back to investigate, all signs point to Nightingale Village as the probable resting place of the scrolls. Niban all but confirmed it with the allusion to the Tragedy of Saioji. The players may spend as much time as they want but things won't get much more certain than they already are. They cannot "track" the scrolls back to Nightingale Village because Koan picked up Kocho and the scrolls and flew them back, leaving no signs of his passage. None of the thugs are probably alive to identify Niban (although if they are, that would be really cool, and definitely worth XPs for the players if they think of it).
+
+Ultimately the PCs will have to work around Gidayu through his karo, Doji Kento. Kento will do it, too - he recognizes what's going on, and unlike Gidayu he has nothing to lose from Niban's inevitable rise to fame. Not only does Kento not want to be responsible for causing the Crane Clan to have to pay to replace the scrolls, but he also sees an advantage to be had in allying early with the Nightingale. (It's a Crane tradition to always ally with people who are obviously about to rise to power.) If they get Kento to make promises on behalf of Gidayu, then Gidayu will have no choice but to back those promises.
+
+However, Kento will not back the PCs against Gidayu if he is not confident in them. He will be guessing their Honor every chance he gets, and if their Honor ranks are low across the board then he will be less inclined to help them. As it is he will always address the PC with the best compromise between Honor and Rank. A PC with high Rank trumps a high-Honor PC with low Rank, but a PC with moderate Rank and high Honor trumps a PC with higher Rank but a comparatively low Honor score.
+
+More important to him is whether or not he is confident in their ability to handle the situation well, and if they have to go to him for help too many times, he won't back them when the time comes, and they might not be able to get the support of the Crane Clan. This would be bad but not impossible to overcome.
+
+Kento will explain to the PCs the information in the fourth paragraph of "Playing Politics with the Council of Elemental Masters." He will not count this as one of their consultations with him, since the PCs would have to be Phoenix courtiers to have known that information.
+
+The support of the Dragon Clan is a simpler matter. Agasha no Gisasho Kasuga is the Agasha in charge of the Dragon shugenja at Setsuban Festival, and she will outright say that whatever the Phoenix Clan decides, she will back.
+
+What is most important of all, and also the most interesting to gain, is the support of the Council of Elemental Masters, which represents the support of the Phoenix Clan.
+
+
+PLAYING POLITICS WITH THE COUNCIL OF ELEMENTAL MASTERS
+
+The Isawa Family is an meritocratic oligarchy run by the Council of Elemental Masters. Formed of the Masters of Earth, Water, Air, Fire and Void, the five determine the policies of the Isawa Family and therefore most of the policies of the Phoenix Clan. They are described below under "Dramatis Personae" in "The Council of Elemental Masters."
+
+However, players don't interact with personages as lofty as the Elemental Masters. Instead they will speak to the karo of the Elemental Masters, who are also detailed individually in "Dramatis Personae." The karo more or less speak for the Elemental Masters in this matter, as they are highly trusted and know what their lords and lady care about.
+
+The players need to secure the approval of four out of the five Elemental Masters to get the approval of the Council. Although the Master of Fire is described as the leader, that only very faintly affects the decisions of the other Masters.
+
+It is simple to get the approval of Kaede, the Void karo. It is easy to get the approval of Issui, the Water karo, and Fusao, the Earth karo, especially since they only have to win over one to get the other. It is Yuzuki, the Fire karo, and Junsuke, the Air karo. Yuzuki doesn't want to see Koan compete since he might defeat Tsuke's people. Junsuke will realize that something is wrong and will start using the Interrogate knack to ask the PCs embarassing questions. Therefore the PCs will need to choose whether to go for Yuzuki or Junsuke.
+
+All of the karo will ask the PCs some variant of, "Why are you the ones dealing with this?" This is more alarming when Junsuke asks it since he has the Air ring rank and Interrogation knack rank to actually figure it out.
+
+To get the approval of the Master of Void's karo, the PCs merely have to present their case well. Ujina and Kaede will be inclined to support the Nightingale because they know that they are on the up and up, and will be inclined to support Koan since their ishi Void magi are unable to compete in the competition anyway. If the players offend the ishi then the ishi will steal all of their Void Points. Probably Kaede will do it on the spot. On the other hand, if Kaede is impressed by the PCs because they made a lot of excellent rolls while talking to her then she and her creepy friends will pump the PCs up with numerous Void Points.
+
+To get the approval of the Master of Earth's karo, the PCs can exploit the same weaknesses of the Master of Water: Tadaka will go along with whatever Tomo does, and besides, he's not that strong against Air knacks. He's also weaker against Water knacks. The Earth karo should be a pushover, especially if the PCs exploit his lord's closeness to the Master of Water.
+
+To get the approval of the Master of Water's karo, the PCs should try to outspeak him. Manipulation is a very good choice here. His other weakness is that his lord the Master of Water will go along with whatever the Master of Earth will say. Either securing the approval of the Master of Earth first, or claiming that the Master of Earth is already inclined to support the Nightingale, will win over the Master of Water. The strength of the Water karo is that he cannot be outargued using Water knacks.
+
+To get the approval of the Master of Fire's karo, the PCs will probably have to get Koan to agree not to win the final round of the competition. This is something that they would have to suggest themselves - Yuzuki will not suggest it himself. However he will be very happy about that idea if it is proposed. They could also flatter the karo and say that Koan sucks, and if they're believable then it will work, although he'll be annoyed with them later.
+
+To get the approval of the Master of Air's karo, the PCs should make intellectual appeals using Water knacks. He will listen to reason. However he cannot be outspoken; Manipulation has no chance of defeating a powerful Air shugenja. The PCs will probably have to tell Junsuke about the scrolls - when he starts Interrogating them about why they're dealing with this problem, he'll probably force them to explain about the scrolls. At that point he will attempt to extort things out of the Crane Clan to keep it quiet about the scrolls. Specifically he'd want tariff cuts for Phoenix trade through Crane lands. Although this adversely affects the House of Tadame, they won't have any say in it since this whole thing is supposed to be kept quiet. The PCs can dodge these concessions by going to Yuzuki or by doing really well with Junsuke.
+
+Getting four out of five of the Elemental Masters' approval is sufficient to win the approval of the Phoenix Clan. Getting the unanimous approval of the Council is worth laurels and also is sufficient to outweigh a lack of support from the Crane Clan.
+
+
+
+THE SETSUBAN FESTIVAL AND THE COMPETITION
+
+At last, the competition. This scenario begins once the PCs either secure approval for Koan to enter the competition and the Nightingale to be a Minor Clan, or once they are thoroughly defeated.
+
+If Niban's conditions are not met, then the competition goes on without Koan or the scrolls. The winner, one of Isawa Tsuke's shugenja, will, to his annoyance, receive an IOU for a new prize from the Crane Clan instead of the promised scrolls. This is bad for many reasons, as described in "Resolution" and "Debriefing the PCs" below.
+
+If the PCs secure permission for Koan to compete and Minor Clan status for the Nightingale, then Koan will return bearing the scrolls ("Niban defeated the bandits who held them and vouchsafed me to return them to you!") and will enter the Setsuban Festival competition wearing the Nightingale mon. If Koan agreed not to win the competition but did not give his word then he will win it, much to the annoyance of anybody to whom it was agreed that he would not win. If he gave his word then he will throw the competition and lose in the final round, and one of Tsuke's people will win and will be awarded the promised rare magical writings.
+
+
+
+RESOLUTION
+
+This adventure is much more dangerous than the Hare Clan adventure. It is extremely possible for the entire party to die - they will be whittled away by the thugs at Yotsubashi and possibly by duels. If they draw their swords on Niban then he will kill several of them mercilessly before the 4:1 odds finish him off. If he doesn't get them then his vassals Koan and Tobuko, definitely will. Also if the PCs try to use force then Koan will just fly away with the scrolls.
+
+It is also possible for the PCs to fail to secure the concessions that Niban wants. In this case, the Crane Clan will have to pay for an alternate prize and will look bad to the Phoenix, the Phoenix will look bad for providing a different prize than the one they promised, and Gidayu and the players will look bad for failing to deliver the prize promised by the Crane.
+
+The PCs may also anger one of the Elemental Masters, most likely the temperamental Master of Fire Isawa Tsuke. This is not catastrophic, but it could add up to a Bad Reputation if the behavior repeats itself in a later adventure or if it happened in a previous adventure.
+
+If the PCs upset Tonbo Sodan then it is very bad for Gidayu, who will be angry at the PCs. Also if they were in the past or are ever again bad guests, then a Bad Reputation will follow each of them forever after.
+
+If the PCs do not horribly offend anybody (except for Doji Taiga who doesn't count) and fulfill all of the goals set forth in the adventure, then they deserve props.
+
+If the PCs perform spectacularly well then their praises should be sung to the heavens. They will have performed spectacularly well at Kyuden Tonbo by smoothing over the situation in a way that also leaves Doji Taiga happy, which is basically impossible to do. They will have done spectacularly well at the Ki-rin Shrine if they get the approval of the Crane and Dragon and the unanimous approval of the Phoenix, especially if they impress Doji Kento by consulting him  no more than once. They could also be considered to have done spectacularly well if they made a lot of people upset but were real badasses about it and didn't ruin Crane-Dragonfly relations.
+
+
+
+DRAMATIS PERSONAE
+
+DOJI NO TOHEI TAIGA
+Doji Taiga is of average height and kind of soft. He has lines forming at the corners of his eyes and mouth even though he is only about thirty. Throughout the trip he will be very cranky because he hates traveling and is out of his element. Whenever something goes wrong he will look for somebody to blame and yells at them, often insulting them. Even when he's in a good mood he doesn't think very much about what he says before he speaks, which causes trouble frequently. Taiga has one of those veins that throbs when he gets angry. He frequently gets migraine headaches, which are being aggravated by the stress of the trip, contributing further to his distress.
+
+TONBO NO ASHIJIN SODAN
+Tonbo Sodan is the daimyo of the entire Dragonfly Clan and of the House of Ashijin that founded it. He has a lot of responsibilities as the leader of ten thousand people who guard a large part of the Lion-Dragon border for the Dragon Clan. He is very competent, and even though his clan is very solidly established and strong, he still thinks about being a Minor Clan constantly and consequently treats social situations very delicately. He is very concerned with etiquette and appearances. He is an imposing and large person, but still cautiously soft-spoken and restrained.
+
+TONBO NO ASHIJIN EKAI
+Tonbo Ekai is the only shugenja in the House of Ashijin, making him a busy, valued and responsible person. He has important duties at Kyuden Tonbo, in particular impressing guests, so he is kept there throughout most of the year. Around the PCs he will be reserved but still sociable. His reserve is due to nervousness, because he already has a plan worked out for reading the scrolls.
+
+NIBAN
+Niban is a ronin. He used to be a Kakita duelist of the sort kept around by Crane courtiers in case they got into trouble. Specifically, he was Doji Gidayu's karo. However, he knew a secret of Gidayu's that got out of hand, and Gidayu ordered him to commit seppuku to take the secret into Jigoku. Niban was outraged that his lord did not consider his word to be good enough, and was disillusioned with the two-faced nature of courtly politics, where sincerity counts for more than honesty. He abandoned his lord and became ronin, taking advantage of knowledge of caravans and bandits picked up from his position with Gidayu. He also likes to make literary references, and is very well-read.
+
+The specifics of the secret are complicated. As explained in Gidayu's character description, Gidayu had an affair with one of the Emperor's sisters. This woman became pregnant, and Niban was present with her shortly after childbirth. After the ordeal she was feverish and dying. In her fevered haze she mistook Niban for Gidayu and begged him to be with her. Niban, feeling bad for her and wanting to comfort her in her last moments by letting her think she was with somebody important to her, obliged. To his surprise, she confided in him that the child was his (meaning Gidayu's). Gidayu was very upset when Niban told him about this, and it was partially his distress from being replaced by Niban at such an intimate moment that he reacted as he did.
+
+Niban is tall, neither thin nor bulky, and moves like a bushi. It would take the entire party to kill him, and he would still kill one or two of the party members
+
+DOJI NO TOHEI GIDAYU
+Doji Gidayu is responsible for all Crane trade routes through Phoenix lands. His House of Tohei is wealthy and powerful. As a prestigious man from a high background, Gidayu is a very lofty personality. However, he has a dark secret: as a young man, while serving as a court official at Otosan Uchi, he had an affair with one of the Emperor's sisters and produced a child with her. This child is the princess Otomo Yoroshiku. His karo, Doji no Tohei Niban, became privy to this secret, so Gidayu ordered Niban to commit seppuku to take the secret with him to Jigoku.
+
+Gidayu is a heavily muscled man with a pot belly. He speaks with the great authority that he has. He is always very sure of himself, and is used to giving orders.
+
+DOJI NO TOHEI KENTO
+Doji Kento is a courtier and the karo to Doji Gidayu. He is a very stereotypical Crane courtier - vain, polite, and kind of effeminate. None of this will be played up but there's no reason to dispel the image players probably have of Crane courtiers. Kento is very concerned with smoothing over the trouble caused by the lost scrolls, and will be in favor of listening to the PCs' ideas when they talk to Gidayu, even when he wants to dismiss their ideas because they are related to asking Niban for help. The idea behind the karo is that the players will be able to work around Gidayu through the karo. However, Kento will not support them if they all have low Honor and constantly rely on his advice to figure out how to make the deal with Niban. Incidentally, Kento has been Gidayu's karo for ten years now, and is hardly "Gidayu's new karo" as Niban says - Niban is just being antagonistic to Gidayu when he says this.
+
+KOAN
+The ronin shugenja Koan works with Niban. He is an intellectual, which has gotten him into trouble several times but also gotten him out of trouble on most occasions. He is a brilliant shugenja, and is also talented with a sword. His appearance is comically thin and small; he wears billowing worn-out robes and a wide-brimmed straw hat, and the appearance is to make him look like a scarecrow. However Koan is also the image of confidence: his habitual expressions are a faint assured smile and a deeply pensive scowl. Although he is the mastermind of the scheme to steal the scrolls, Koan is not antagonistic or villainous.
+
+SEPPUN NO GINTA BARAMI
+Seppun no Ginta Barami is a Seppun Air shugenja in the service of the Hantei, She is highly respected and very skilled, and unbiased to boot. She is the most respected judge, and is the head of the panel. However she is very quiet and reserved, maintaining the cold dignity that is supposed to be associated with high officials, and only speaks her opinion publicly if there is disagreement between the other two judges. However she is seen writing notes during the competition, and writes letters addressed to most of the shugenja competing giving her professional advice.
+
+OTOMO NO KAJIMITSU YOGOSHI
+Otomo no Kajimitsu Yogoshi is a Water shugenja in the lineage of Hantei Kajimitsu. He is intelligent and very well-read, and is fond of discussing his ancestor's history book. Since he already personally enjoys the benefits of high birth, he is vaguely a meritocrat, but is not immune to politics.
+
+MIYA NO TADAME RONJI
+Miya no Tadame Ronji is an experienced shugenja, but in his age he has become a consummate politician. He is much more concerned that the Great Clans do not lose face and that harmony is maintained, but also that no one group gets too strong of an edge. In particular he wants the Crane, Phoenix and Lion to be happy with one another. His rulings will reflect this.
+
+ISAWA NO TAKAO YUZUKI
+Isawa no Takao Yuzuki is the karo of Isawa Tsuke, the Master of Fire. She will be Tsuke's agent in negotiations. She is a Rank 3 shugenja with a Fire ring rank of 5. Her Air ring rank is 3 and, her basic social knack ranks are 3, her Interrogation and Manipulation knack ranks are 2. The concern of Tsuke's people is that Koan would possibly beat their people, since he very probably is specializing in Fire magic as well. They could be won over if Koan promised to throw the competition such that he did not win in the final rounds.
+
+ISAWA NO REIHO FUSAO
+Isawa no Reiho Fusao is the karo of Isawa Tadaka, the Master of Earth. Since Tadaka is so obsessed with the Shadowlands and other magic-related studies, Fusao is saddled with much of the day-to-day details of his lord's responsibilities. Fusao's Earth ring rank is 5, his Air ring rank is 3, his basic social knack ranks are 3, his Interrogation and Manipulation knack ranks are 2, Tadaka and Fusao will go along with whatever Isawa Tomo, the Master of Water, decides to do.
+
+ISAWA NO MAGANO ISSUI
+Isawa no Magano Issui is the karo of the Master of Water. His Water ring rank is 5, his School Rank is 3, his basic social knack ranks are 3, his Interrogation and Manipulation knack ranks are 2, and he has basic knowledge knack ranks of 5 as well. He is a brilliant and knowledgeable person who can outargue anybody, but he can be beaten in the game of politics. Additionally, he and his master will go along with whatever Tadaka decides.
+
+ISAWA NO SESHIDA JUNSUKE
+Isawa no Seshida Junsuke is the karo of Isawa Uona, the Master of Air. His Air ring rank is 5, his basic social knack ranks are 3, and his Manipulation and Interrogation knack ranks are at 2. He is a political genius who sees every side to a debate and knows exactly how to say things. He works hard to please his lady, who is extremely ambitious. Junsuke cannot be outargued but can be swayed with intellectual arguments. He will want to extort more from the Nightingale Clan before making them a Minor Clan, so he will be hard to sway. Telling him about the scrolls would be a good way to get his support and that of the ambitious Isawa Uona. So would pointing out that sponsoring Koan is probably going to one-up Tsuke's people.
+
+ISAWA NO DORYU KAEDE
+Isawa no Doryu Kaede is the karo and daughter of the Master of Void. She is an ishi like her lord and father, and therefore is extremely creepy and hard to deal with. However, since Ujina's people cannot compete in the shugenja competition with their internal magic, Kaede and her father will definitely be okay with Koan competing, and will probably be willing to support the Nightingale as well, so long as the PCs look like they know what they're doing.
+
+
+THE COUNCIL OF ELEMENTAL MASTERS
+The treatment of the Council of Elemental Masters will be minimal, since the PCs will be interacting with the Elemental Masters' karo rather than with the Masters themselves.
+
+Isawa no Takao Tsuke is the Master of Fire; he is the most militant leader in the Phoenix Clan and also the de facto leader of the Council.
+
+Isawa no Reiho Tadaka is the Master of Earth; he is obsessed with the Shadowlands and with winning salvation for his blood ancestor Isawa Akuma. As a boyhood friend of the Master of Water, he will go along with whatever Tomo does.
+
+Isawa no Magano Tomo is the Master of Water. He loves nature, takes his obligations and debts very seriously, is extremely crafty and mentally agile, and is filled with a childish love for life. Because of his boyhood friendship for Isawa Tadaka he will go along with whatever Tadaka does.
+
+Isawa no Seshida Uona is the Master of Air. She was fostered by a prominent Crane Clan family and was originally schooled in fine arts, particularly poetry and music, but was then discovered to have immense magical talent. She is the youngest member of the Council of Elemental Masters and only recently succeeded her predecessor and sensei Isawa Eju, but is also considered to be the second-most powerful member of it after Tsuke since Tadaka is obsessed with his studies, Tomo has few leadership qualities and Ujina's hopes are in his daughter rather than in his career, leaving only her and Tsuke to fight over dominance.
+
+Isawa no Doryu Ujina is the Master of Void. Ujina has had an intensely horrible life. He was scarred extensively on his left side by fire while rescuing his kidnapped love Isawa Ninube, and was extremely weak for nearly a year. During this time his father died, and at the time there was an emotional distance between them created by his father's revulsion for what had happened to Ujina. He then married Ninube only to find years later that the Ninube he had rescued was a horrible demon in disguise that further injured his left side with horribly venomous barbs. Ujina is in constant physical pain from his wounds and constant emotional pain from his tragic life. The only joy in his life is his daughter, Isawa Kaede, who shares her father's ishiken talent. Ujina's joy and efforts are tied up in his daughter.
+
+
+HOUSES APPEARING IN THIS ADVENTURE
+
+ASHIJIN: the House of Ashijin is the House founded by Mirumoto Ashijin and Isawa Maroko that established the Dragonfly Clan.
+
+DORYU: an unusual shugenja House of the Isawa Family, the House of Doyu has produced more ishi than any other House in known history has produced shugenja. The talent is thick as a syrup in the blood of the House of Doryu.  The current Master of Void come from this House.
+
+GINTA: a House of the Seppun Family with strong ties to the Hantei line and strong shugenja blood, their most skilled children are guaranteed high positions in the Imperial government.
+
+KAJIMITSU: a House of the Otomo Family founded when the shugenja Hantei Kajimitsu left the Hantei Family following the coronation of his brother. Kajimitsu married Otomo no Gunta Chiroyu and founded a strong line of shugenja. Kajimitsu also is known as the author of Early History of Rokugan.
+
+MAGANO: a House of the Isawa Family founded by fishermen on the Seikihi River, it gave rise to Isawa Tomo, the current Master of Water.
+
+REIHO: a House of the Isawa Family founded in the distant past. It gave rise to the lineage that produced Isawa Akuma, although that lineage is not known by Akuma's name. Isawa Tadaka is in that specific lineage.
+
+SESHIDA: a House of the Isawa Family founded long ago, it produced the current Master of Air, Isawa Uona. The House is located in the southern Isawa lands near the Crane border and has extremely good relationships with the Crane Clan, which it uses to arrange helpful foster relationships and educations for its children.
+
+TADAME: a House of mostly trade officials in the Miya Imperial vassal Family. The Tadame's fortunes are strongly tied to there being a lot of trade across Clan borders between Crane, Phoenix and Lion lands, and therefore they are against anything that might inhibit or harm that trade. In particular, it is to their advantage if all of those groups are locked in unhostile competition.
+
+TAKAO: a strongly shugenja House in the Isawa Family founded by Isawa Takao, who was a brash and brilliant Master of Fire.
+
+TOHEI: a rich and influential House in the Doji Family, nobles of the Tohei Family frequently are assigned to take significant trade-related posts throughout the Empire. They are important enough to have more than one shugenja.

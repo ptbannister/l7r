@@ -1,0 +1,318 @@
+SETUP
+-----------
+Two of the village attacks so far have been perpetrated by a small
+band of man-eating ogres.  The PCs get word that these ogres have
+struck again, this time in a much bolder attack.  The local daimyo has
+requested a large number of troops to help deal with this problem.
+Hida Ryuden wants the PCs to assess the situation and send a letter
+back saying whether they thought additional men were needed.  If more
+men are needed, he wants them to explain whether the need is limited
+to this specific case or if he should assign troops to domains
+throughout the bandit corridor.
+
+
+TIMELINE
+---------------
+7 days ago:
+   Hida no Fumio Taka, the county magistrate of Onomachi, visits the
+village of Kokin Mura to deal with a heated rent dispute.  While in
+the village, 6 ogres attacked and killed the magistrate and the bushi
+with him.  Two of the ogres spoke human language, and told the
+villagers that the ogres were their new bosses and they'd die if they
+resisted.  The ogres carried off the magistrate and his bushi as well
+as some of the town ashigaru, presumably to eat them.
+
+6 days ago:
+   Hida no Fumio Yuichi, the town's ogre hunter, arrives at Onomachi
+with several dozen mounted bushi.  They spend the day doing a sweep of
+the countryside, especially the hills near Kokin Mura, hoping to find
+the ogres.  They turn up nothing.
+
+5 days ago:
+   Yuichi has a fast horse posted at every village in the tri-county
+area, as well as having more bushi posted at the two neighboring
+towns; an ashigaru at each location is instructed to ride to Onomachi
+to fetch the bushi.  Yuichi and his most skilled hunters begin making
+trips to hunt these ogres.
+   Meanwhile, Hida no Fumio Kosara is appointed acting county
+magistrate for Onomachi along with several dozen more bushi.
+
+4 days ago:
+   Word of the ogre attack reaches Kyuden Akito late in the day.
+   Meanwhile, Kuni Shimura departs from his post in the neighboring
+domain after hearing about the attack, fearing that bloodspeakers may
+be involved, due to the fact that a well-known public figure was
+abducted.
+   Meanwhile, Jama Satoru hears about the attack and also sets off
+for Onomachi County (aka the OC), hoping for the opportunity to spread
+his name.
+
+2 days ago:
+   In continuing his hunt for ogres, Yuichi widens his search area to
+the surrounding villages, specifically the town of Kingome Mura.
+   Shimura arrives at Onomachi and begins feeling out the town.
+
+Current day:
+   The PCs arrive in Onomachi in the evening.
+
+
+OGRE HUNTING
+-------------------------
+Hida Yuichi follows the standard ogre hunter procedures perfectly.
+Here's an explanation of what ogre hunting typically involves.
+
+Initially Yuichi used a large number of mounted bushi to make a sweep
+of the countryside looking for obvious signs of ogres.  These men both
+looked for tracks and talked to peasants from the countryside; the
+local ashigaru were instructed to make rounds asking absolutely
+everyone if anyone had any useful information.  This could be either
+direct ogre sightings or reports of theft for which ogres may have
+been responsible.
+
+Afterwards Yuichi and several of his most talented hunters began going
+out individually.  A lone tracker is often more effective at finding
+ogres, since a large group of bushi are easy to spot and ogres will
+run and/or hide when they see them coming.  Individual hunters can
+both look for signs of ogres (waste, tracks, signs of an improvised
+sleeping area, etc) and quietly search areas where ogres may be hiding
+or passing through.
+
+Of course, a lone hunter is typically not able to singlehandedly
+defeat an ogre, much less a mated pair of ogres.  This makes being
+discovered especially dangerous.  Hunters work out of a base of
+operations, usually a nearby village or hamlet, and return there to
+get reinforcements as soon as they discover where an ogre is staying.
+
+Additionally, hunters typically check in with their base of operations
+at pre-agreed-upon times one to three times per day.  If they ever
+fail to check in, then reinforcements are dispatched to wherever they
+were hunting to kill the ogre that probably found them.
+
+While hunters work alone, multiple hunters will often search the same
+area and coordinate with each other; in cases where many hunters are
+tracking a single ogre, there may be enough hunters to defeat the ogre
+if one of them is discovered and can alert the others through sounding
+a horn and making it to a fallback point.
+
+
+CHARACTERS
+----------------------
+Hida no Fumio Yuichi ->
+   The ogre hunter for the Fumio house.  Yuichi was prepared for
+ogres but not bloodspeakers, and thus is killed at the beginning of
+this adventure by Jama Satoru.
+
+Kuni no Kuni Shimura ->
+   The witch hunter for this area of Crab lands.  Shimura is
+suspicious of the fact that a well known public figure was abducted.
+While it's very rare of bloodspeakers to work with ogres, it's not
+unheard of, and Shimura wants to know whether a local bloodspeaker
+coven exists in Onomachi.
+   While Shimura shares the intense dedication of most all Witch
+Hunters, he lacks Machiko's fanaticism.  He's more understanding about
+the difficulties that magistrates, governors, and daimyo face, and
+understands that they have many concerns other than catching
+bloodspeakers.  However, like any Witch Hunter, he's constantly
+testing his boundaries and tries to do as much as possible to catch
+bloodspeakers whenever he can.
+
+Hida no Fumio Kosara ->
+   The acting county magistrate for Onomachi, it's unndetermined
+whether Kosara will be given this position permanently.  Kosara
+believes that by showing strong leadership and performing his job well
+he may impress the governor enough to keep the job.  Kosara will not
+bargain with the PCs for an endorsement, since he considers it wrong
+to make a policy decision for personal gain.
+   Kosara is the younger brother of Hida Motoshi from the last
+adventure; they are both from a wealthy and well-respected lineage,
+which is why they both have such high-ranking positions.  Motoshi will
+have written his family to tell them what happened in the previous
+adventure, and so Kosara will know of their actions.  Depending on
+what they did, he will either be very impressed with them or
+prejudiced against them.
+
+Emiho ->
+   Runs the stables in Kingome Mura.  She is a 25 year old widow with
+one living 9-year-old son.  She's very introverted and thus is
+somewhat of a recluse, preferring the company of animals; in addition
+to the horses in her stable, she keeps several pets.
+
+Mariya + Ikkaku ->
+   Husband and wife who run the village inn and general store,
+respectively.  The used to only own the inn, but many years ago they
+bought the general store from its previous owner.  They want to buy
+the stables as well, which is very close to their inn and very
+profitable.
+
+Taishuu ->
+   Salt merchant who's passing through.  Like many merchants, he
+usually does business in Ryoko Owari, but is now trying his hand in
+Crane lands.  Fortunately, salt merchants don't seem to be killing
+each other due to this new competition, so he has no idea about any
+kind of gang war.
+
+Natsuhi ->
+   Tea merchant from another domain to the northwest of the Fumio
+domain.  His family usually sells their wares in Ryoko Owari, but due
+to the recent troubles and tariffs, he's making a trip into Crane
+lands.  He will be murdered shortly after the start of the adventure.
+
+Nobumi ->
+   Tea merchant from the Misha family in Fumio lands.  Her family
+discovered that Natsuhi was passing through and sent her after him
+with some armed men with the intention of waylaying him on the road
+and making it look like bandits, then stealing his tea and selling it
+as their own on the trip.
+
+
+EVENTS
+-------------
+When the PCs arrive at Onomachi, Kuni Shimura will approach them
+wanting their help.  Because of the abduction of the former county
+magistrate, Shimura believes that there might be bloodspeakers in
+Onomachi and wants permission to perform prolonged interrogations on
+specifically high-risk peasants.  In other words, while he's not
+pushing for tying up the entire town, he'd like to go after anyone who
+remotely fits the profile possibly being a bloodspeaker.
+
+Kosara is inclined to cooperate somewhat, but objects to the scope of
+Shimura's proposal.  Shimura wants to tie up about one fifth of the
+population of the town, which Kosara sees as extreme, especially
+considering that there's absolutely no evidence of bloodspeakers and
+man-eating ogres were clearly behind the attack.  Kosara would be okay
+with Shimura interrogating a few dozen townfolk, but anything more
+than that seems overly extreme and disruptive.
+
+Shimura understands Kosara's objections, but still wants to target as
+many peasants as possible.  He asks the PCs to help him put pressure
+on Kosara to be more flexible.  Depending on the PCs' history with
+Machiko, they might be inclined to help or hinder Shimura.  Kosara can
+be swayed somewhat with persuasive arguments, but will react badly if
+the PCs try to put political pressure on him or try to influence him
+with promises of political support, which he considers dishonorable.
+
+Meanwhile, Kosara will urge the PCs to recommend to Ryuden that the
+area be given more troops.  However, he will scrupulously avoid
+discussion of any kind of quid-pro-quo on the issue, and will mainly
+try to convince the PCs through persuasive arguments.  In particular,
+he will urge them to speak with Yuichi, explaining that Yuichi can
+explain the benefit of the men and the dangers of the ogres far better
+than Kosara himself ever could.
+
+The PCs will thus be sent to meet with Yuichi early the following
+morning in Kingome Mura where he's staying.  Shortly after they arrive
+in town, all of the animals in the stable will be let free and bolt.
+The PCs will be alerted immediately as everyone scrambles to get their
+horses back.  While the PCs are out looking for the horses, they will
+be attacked by Oni no Yuichi.
+
+It turns out that Yuichi was killed during the night and his name used
+to create an oni, which bore both his name and the name of Jama
+Satoru.  Shimura and Kosara arrive soon afterwards with a lot of men
+to help track down Satoru.  Kosara asks the PCs to stay behind, since
+they're wounded from their fight and their presence will help calm the
+villagers, who want to know that they are in good hands.  Shimura asks
+them to investigate around town to see whether anything suspicious had
+occurred recently.
+
+Mariya the innkeeper will see this as an opportunity to discredit
+Emiho the stable owner.  She speaks with the three merchants who had
+animals at the stable and all of their men and asks them leading
+questions.  In particular, she claims that other guests talked about
+having funny feelings while in the stables, and that some of them
+thought they detected a very odd smell.  Having just learned of an oni
+attack, many of the guests will unconsciously insert these new facts
+into their memories.  ("You know, now that you mention it, I DID smell
+something odd.  I didn't think much of it at the time, but now...")
+
+If questioned herself, Mariya will feign sympathy for Emiho and talk
+about how difficult her life must be, since her husband died so
+suddenly last year.  She'll also talk about Emiho being a recluse and
+not really fitting in with other villagers.  Finally, she'll pretend
+to be reluctant to gossip, but if pressed she'll discus how Emiho's
+husband was abusive and a drinker that she's probably better off
+without him.
+
+It's possible for the PCs to discover that Mariya is the source of
+these rumors, but only if they do some detailed investigations.  By
+spreading these rumors, Mariya has arguably committed a very serious
+crime, by interfering with the bloodspeaker investigation.  However,
+she'll argue that she fabricated nothing and it will be difficult to
+prove otherwise.  If the matter is brought to Kosara, his inclination
+will be for Mariya to pay an enormous fine, 100% of which would be
+awarded to Emiho for the potential damage to her reputation.
+
+Emiho herself was in her house when the animals were let free.
+Although her house is directly next to the stables, she didn't see or
+hear anything until the animals all bolted, and she believes
+(correctly) that supernatural forces were at work in letting them go.
+As for Emiho's past, it's true that her husband died suddenly last
+year, but this was from a virulent flu that killed several villagers.
+
+That evening, Nobumi will visit Natsuhi's room and say she wants to
+discuss some business.  She'll be flirtatious enough to lead him on,
+but also bring up the possibility of buying his tea.  She says she'd
+like to discuss it over some fine wine, and that the innkeeper has
+said that the best wine in the village is sold at the general store.
+She tell him that if she's interested in what she has to offer, he
+should go ahead to the general store and pick out a nice bottle of
+wine while she gets changed before meeting him there.
+
+He heads out almost immediately, and she hurries out after him to
+catch him on the way.  After she catches up to him, she distracts him
+and then stabs him in the back and carves the name of Jama Satoru onto
+his chest with the knife, then heads over to the general store.  Once
+there she asks Ikkaku the proprietor whether Natsuhi has left already
+and expresses dismay when he says that Natsuhi hasn't shown up at all.
+ She says she'll wait for him in the hopes that he'll want to meet her
+and then stays there.
+
+The body will soon be discovered by a peasant family on their way
+home.  The PCs are alerted immediately.  Here are ways in which they
+can crack Nobumi's story if they investigate especially well:
+
+ - Nobumi will claim that it took her quite some time to get changed.
+However, in fact she left shortly after Natsuhi so as to catch up with
+him, and one of Natsuhi's men saw her leave only a few minutes after
+him, rather than the 15-20 minutes that Nobumi claims.  Natsuhi's men
+didn't find this odd, since they assumed that Satoru killed their
+employer and don't even suspect Nobumi.
+
+ - The reason why Nobumi knew Satoru's name is that she asked the eta
+who burned the remains of Oni no Yuichi.  If the PCs think to ask
+those eta whether anyone talked to them, they'll explain that Nobumi
+paid them for a drawing of the bloodspeaker's name.  She claimed that
+she simply wanted to know it so that if this bloodspeaker ever struck
+again within this domain that she'd know that it was the same one.
+She claimed to be worried that he might track down some or all of the
+other well-known visitors to this town, and that this information
+could later help set her mind at ease.
+
+- Nobumi did talk to Mariya about wine, but in fact all Mariya said is
+that the general store did sell good wine.  In fact, their best wines
+are sold both at the inn and general store, making their proposed
+rendezvous unnecessary.  Mariya will assume that this was simply a
+misunderstanding, which is what Nobumi will claim if asked.
+
+If the PCs really press her on this and come to the point where it's
+clear they believe or suspect her of the murder, she'll have her men
+attack them.  The PCs will already be wounded from their fight against
+the oni, but they should still be able to win this fight.  However,
+one thing should be noteworthy; her most senior and trusted man is an
+extremely capable fighter; he's actually a ninja that works for her
+family.  The only really unusual thing he can do is that the TN to hit
+him is 35.  He also has the initiative ability and the attack boosting
+ability, so he'll act early and hit hard.  He will also refuse to
+surrender even if the others do and the PCs will be forced to kill him
+because he won't stand down.
+
+Nobumi will still deny having committed murder and will claim she
+attacked the PCs to protect her reputation.  She'll say she was
+planning a romantic tryst with Natsuhi (which is what his men believed
+was happening) and she was afraid that she would look like a slut to
+everyone if the PCs' ridiculous murder accusations were made public,
+even after they were debunked.  Kosara and Shimura will both find this
+argument unpersuasive and she'll be quickly executed; bloodspeaker
+investigations are a notable exception to the rule that wealthy
+merchants can usually get away with light sentences even when they're
+caught.

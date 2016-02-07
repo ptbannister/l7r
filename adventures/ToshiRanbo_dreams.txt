@@ -1,0 +1,123 @@
+
+Dreams are a major reoccurring theme in the Toshi Ranbo campaign, though their significance will be difficult to discern.
+
+Baiten has the ability to interpret dreams, but he may be difficult to consult, as it's likely that he will be banished by the Prince and governor unless the PCs strongly advocate for him.
+
+Below are some longer summaries of the specific dream events, and there may be others not listed depending on the actions of the PCs, but here are some dream examples which I won't bother to summarize in detail:
+
+ - Tsume Tadanori, one of the district captains, had a series of reoccurring dreams which greatly troubled him.  He eventually sought out Baiten, who managed to interpret them correctly.  Tadanori had inadvertently offended one of his subordinates, and this was causing a rift in his units.  Baiten's guidance allowed him to make amends and correct the situation, which led Tadanori to become an advocate for Baiten and his ministry.
+
+ - One or more PCs should have at least one mysterious dream, based on one of their disadvantages, especially Dark Secret or Driven or Unconventional.  If they consult local monks and shugenja about this dream, they will receive several differing interpretations, at least one of which will be correct.  Baiten will also give the correct interpretation.
+
+ - A PC will have a dream which ends with a horse whinnying.  This will seem to have nothing to do with the rest of the dream, and no one will know what this means, including Baiten.  However, some monks will reveal that many people and peasants alike have had similar experiences in their dreams, and no one is sure of the meaning.
+
+
+
+MIRROR MIRROR
+-------------
+The PCs will be awoken by the governor shortly after retiring for the night.  The governor explains that his official seal has just been stolen, and he suspects that the Prince's secretary is responsible.  The Prince is out of town, traveling to Otosan Uchi to give a report to the Emerald Champion, and thus the PCs are the only ones with the authority to investigate the secretary.
+
+The governor explains that earlier that evening, he had met in his office in Shiro Regei with the secretary, where they had discussed some routine administrative matters.  The governor had just finished signing and stamping some orders for his Ministers, and his seal was on the desk while he was speaking with the secretary.  After the conversation, they both left the room, which was immediately locked.
+
+Just minutes after the secretary departed, orders stamped with the governor's seal were sent to every monastery in the city, ordered all of them locked and shuttered until further notice.  The governor checked his office immediately upon learning this, and found that his seal was missing.  He believes that the secretary may be responsible, and asks the PCs to search the Prince's manor where the secretary lives, and also to forcefully interrogate the secretary to determine whether he is responsible.
+
+Upon arriving at the Prince's manor, the PCs will find that the secretary is nowhere to be found, and his belongings are gone from his room.  Bizarrely, his bed is also gone, and in its place is a large, ornate golden mirror.  Interrogating the Prince's servants reveals that they have no idea what's going on, where the secretary is, or when his belongings were taken or the mirror was placed there.
+
+The following morning, the PCs will awaken and discover that none of this actually happened; it appears to have all been a dream which they shared!  No NPCs have any memories of their conversations, and none of the events of their dream actually occurred.  In fact, the Prince's secretary is actually the one on his way to Otosan Uchi, while the Prince himself is still in the city.
+
+Several other notable NPCs turn out to be in different places than they were in the dream.  The Witch Hunters are actually in the city, despite being in the countryside surrounding Toshi Ranbo in the dream.  The governor's yojimbo was sick with the flu in the dream, but is actually perfectly healthy.  Other example will depend on the events of the campaign, and the significance will not be clear unless the PCs can find someone able to interpret the dream, which almost certainly would have to be Baiten.
+
+Ultimately, two things about the dream turn out to be revealing.  First, the governor's seal actually does turn up missing that morning.  Second, the secretary's room is discovered to have some sort of spiritual disturbance upon being examined by shugenja, possibly even some sort of curse.
+
+The specifics of this imbalance/curse are impossible to determine through simple consultation with the kami.  A shugenja will admit that spending the night sleeping in that room could possible reveal more, but emphasizes that this would be foolhardy, and could likely result in anyone doing so becoming cursed as well.  Anyone who falls asleep in this room may very well never wake up again, and the room is ordered shut and sealed until at least after the Setsuban Festival.
+
+
+
+DARK FORTUNES
+-------------
+At some point during the campaign when the PCs are sleeping somewhere outside the city (probably in Hikobayashi), one of the PCs will go to sleep and find themselves speaking with a tall figure who seems to be made of blackness.  The figure appears solid, and indeed there are different shades and hues of blackness, but no other colors are visible on either the figure or the clothing and armor he wears.  The figure will introduce himself as a servant of Onnotangu, aka Lord Moon.
+
+This figure presents a piece of black parchment with white ink which form travel papers for himself and his servants to enter the city of Toshi Ranbo and remain there for a period of three years.  Although the papers are written in regular kanji, the figure's name appears in an unrecognizable, inhuman language.  When the PC awakens, they will not be able to remember precisely how the name appeared, and thus will be unable to reproduce it.
+
+The figure asks that the PC sign the travel papers.  There will be a slight, unspoken threat of reprisal if the papers are not signed, but mostly the figure offers rewards in exchange for this service.  He can provide money, powers, or favors to be repaid later.  He can provide some extra XP, or perhaps directly raise a ring and/or knacks.  The exact repayment will depend very much on the PC and what they want.
+
+This figure will approach the PC whom the GM feels is most likely to be receptive to such a deal.  The figure is willing to let the player take time to consider the offer.  However, the figure may end up approaching another PC if the first player declines or takes too long to decide.
+
+If a deal is not struck, the PC can speak with the figure again by going to sleep once more in the countryside surrounding the city anytime within 3 nights before or after of the full moon.  If a deal is struck, the PC may contact the figure by drinking tea mixed with obsidian powder before going to sleep.
+
+
+
+THE WASTING DISEASE
+-------------------
+The prospect of sleeping in the haunted room mentioned above should be raised but STRONGLY discouraged by every NPC.  This should be done in such a way as to make the players themselves grasp the danger involved.  This could theoretically kill the entire party, and so any player whose character is put into this situation should not feel that they were led to believe that this was a necessary or expected course of action, and should especially not believe that they needed to do this in order to "solve" the campaign, or anything like that.
+
+If any PCs do spend the night in the haunted room, they will have dreams of a conversation with a white-clad figure.  Different PCs will have differing memories of what the figure looked like (old/young, strong/scrawny, etc), but no one will be able to remember specifically what the figure looked like.  No one will be able to remember any details whatsoever about the conversation, or even whether there were any other parts to the dream.
+
+These PCs will wake up the following morning having taken 5 light wounds.  The following morning, they will awaken having taken 10 light wounds.  The morning after that, they will awaken having taken 15, and so on.  The PCs will not be able to heal or regain void points for so long as this continues.
+
+Local monks and shugenja will offer advice; that the PCs ritually cleanse themselves, that they sleep wearing holy seals, that they give away their money to some religious order, that they stay awake through the night and only sleep while the sun is in the sky, that they string their bows and twang them every hour to scare away evil spirits, that they sleep in monasteries and have the monks pray over them, etc.  None of these suggestions will ultimately work, though some of them or some combination of them may succeed in slowing down the rate of damage.
+
+The PCs will only have two reasonable options in this situation: seek out Baiten, or journey to Shiro Isawa to meet with the Council of Elemental Masters.  Although there are a small number of others in Rokugan who may possibly be able to help (e.g. Grant Abbot Okawa of the Order of Daikoku in Ryoko Owari who is said to be a prophet, Isawa no Naka Kuro the Grand Master of the Elements, etc), they are all too far away to possibly be reached in time.  Thus, they will have to decide which option to take; each has its advantages and disadvantages.
+
+
+Even if he's been banished, Baiten will be much closer and thus potentially safer.  Here are the guidelines for Baiten's assistance:
+
+ - Any PC who has consistently been in Baiten's corner will be healed, no questions asked.  If Baiten has not been banished, then this probably includes every PC, unless someone was especially outspoken against him.
+
+ - Any PC who has been lukewarm about Baiten will likely be faced with some manner of demands.  If Baiten has been banished to Nightingale lands, then this probably includes every PC, unless someone spoke out against his banishment as or after it happened.
+
+ - Any PC who has been harshly anti-Baiten is likely to be turned away.  If they've had to journey to Nightingale lands to reach him, then they will surely die before reaching the Council of Elemental Masters at this point.  Only a HUGE show of conversion will change Baiten's mind about this, so much so that such a change may render a PC unplayable, depending on the player's outlook.  For example, a merchant may have to swear a vow of poverty, a duelist may have to swear to never challenge or insult another person even when justified, a courtier may be forced to forgo any drink other than water and any non-simple foods, etc.  In such cases the PC would need to swear a Blood Oath, witnessed by the other PCs.  A player in this situation may choose to lose their character rather than acquiescing to such demands.
+
+
+The Council of Elemental Masters is much farther, but still theoretically reachable.  Each of the Masters would have a different condition for their aid; here are some examples which may or may not be appropriate to a particular PC or group of PCs:
+
+ - Isawa Tsuke, the Master of Fire, wants the PCs to help the Lion re-take the city of Toshi Ranbo by whatever means necessary.
+
+ - Isawa Uona, the Master of Air, wants the PCs to renounce their Family names and swear fealty to the Isawa.
+
+ - Isawa Tomo, the Master of Water, wants the canal connecting Toshi Ranbo to be filled in and re-dug to lessen the polution of the Drowned Merchant River.  If the PCs agree and then fail to make this happen, they must accept the terms of any one of the other Elemental Masters.
+
+ - Isawa Tadaka, the Master of Earth, wants the mirror from the initial dream which marked the haunting of the cursed room.  He has identified it as an ancient artifact, known as The Eye of Our Lady Sun, and he wants the PCs to journey into the dream world and bring it back out with them.  This is known as Walking the Way, and it's extremely dangerous, and there's a non-trivial chance that some or all of the players may not make it through the ordeal alive.
+
+ - Isawa Ujina, the Master of Void, asks for no price at all, but his methods are significantly different than that of the other Masters; he would let the disease run its course and eat away at the life force of the PCs, but keep them from dying as this happens.  Each PC would spend one full day and one full night in a state of neither life nor death nor undeath, after which they would awaken with the disease completely gone.  However, there will be side effects, probably different ones for each PC, which are impossible to predict.
+
+
+When all is said and done, regardless of whose help was sought, the surviving PCs will have only fragmented memories of a spiritual encounter which only raises further questions.  However, they will be advised that when they have more fully recovered, it may be possible to meditate upon the experience to reveal the meaning; this will be far less dangerous than the initial act of sleeping in the haunted room, and it may yield some valuable clues regarding the spiritual threats facing the city of Toshi Ranbo.
+
+
+
+WALKING THE WAY
+---------------
+GM's note: This section is highly specialized to the group with which I originally ran the Toshi Ranbo campaign: the PCs spent the night in the haunted room, only one of them sought the Elemental Masters of support, he took Takada's offer, and Dark Fortune had not yet approach any of the PCs.  Another group may have vastly differing circumstances, so this kind of dream quest would likely either not happen at all or need to be much different.  However, the basic ideas are interesting and probably useful to other groups, and we're rather proud of this mini-adventure, so we're including it despite these issues.
+
+Isawa Tadaka, the Master of Earth, sends the PC on a dream quest to retrieve the mirror from the shared dream earlier in the campaign; this sort of spiritual missiion is known as Walking the Way. This mirror is an ancient magical artifact known as The Eye of Our Lady Sun. However, he warns that the artifact is also desired by Lord Onnotangu and it's likely that his servants will pursue it. In addition, the artifact has long been sought after by the Isawa Akuma, who will likely interfere as well.
+
+Here's a summary of the dream quest:
+
+The PC finds himself at a party in Shiro Reigi, the castle keep at the center of Toshi Ranbo. The Lion have surrounded the city and their victory seems imminent. The party is filled with bushi who are celebrating the glorious deaths in battle which await them.
+
+The PC is sitting at a table with 4 bushi who are discussing the tenants of bushido. There are two arguments about which tenants are the most important. The PC is asked to make two choices:
+
+1) Tsume Yuushi and Tsume Chuuichiro are arguing about whether courage of loyalty is the more important virtue. The PC must choose between them.
+
+2) Tsume Ichiriki and Tsume Kochi are arguing between strength and cunning, and the PC must choose between these as well.
+
+Soon afterwards the PC will find himself speaking to the Prince while still at the party. The Prince gives the PC a mission: to transport The Eye of Our Lady Sun out of the city before the invasion. There is a tunnel leading out of the city and to the canal, where a riverman will take the PC out to the Drowned Merchant River.
+
+The PC then finds himself in the tunnel walking towards the edge of the city where they will find the canal. With him are the two bushi whose sides he took at the party, as well as a monk who is carrying the mirror. Each bushi embodies the virtue they argued for, but lacks the virtue they argued against. For example, Tsume Kochi is cunning but not especially strong, etc.
+
+While the party walks through the tunnel, if Kochi the cunning bushi is present, he will notice that the monk carrying the mirror casts no shadow. In addition, he wears gloves as he carries the mirror and seems careful not to let it touch him. Kochi quietly advises the PC that the monk must be an evil spirit and should be quickly dispatched - killing the monk will be a quick fight, although the monk will die instantly if touched by the mirror.
+
+The tunnel soon opens into a small cavern. Blocking the exit is a large bushi, whose skin and eyes and clothes and armor are entirely black - he seems constructed entirely from obsidian and shadows. He greets the PC politely and identifies himself as a servant of Lord Onnotangu. He explains that he cannot allow the PC to pass through with the mirror, unless a deal is struck.
+
+Specifically, he presents spiritual travel papers, granting him entry into Toshi Ranbo for a period of 3 years. He explains that servants of Lord Moon cannot enter cities where the influence of the Son of Heaven is strong. If the PC does not sign his travel papers, he will attack them to prevent them from continuing. Ichiriki the strong bushi will be especially helpful in this situation. The shadow monk will join in the fight against the PCs if he has not already been detected. If the travel papers are signed then he will depart, heading back through the tunnel into the city, leaving the PCs free to continue.
+
+After leaving the cavern, the PC will find himself separated from his companion by a cave-in. He is confronted by Isawa Akuma, who binds him in place by molding the earth around him into a vice. He demands that the PC throw the mirror into the canal rather than take it out of the city. To assure that the PC will comply, he demands that the PC give his name to Akuma, who swears that he will return it when the task is complete.
+
+While Akuma is clearly able it kill the PC, it seems clear that he can't simply take the mirror, nor can he be present when the PC is at the canal - hence the need for the PC to give up their name as collateral. However, Akuma can be bargained down to some other form of collateral, such as several permanent wounds or several ranks of unluck, etc. The PC must make some sort of deal with Akuma, who is too powerful to be overcome - refusing to make any deal at all will end in the death of the PC.
+
+Once the deal is made, the other bushi will finish digging through the cave-in, having overheard the deal. The party will continue on its way, and finally come to the canal. However, the riverman will throw the mirror into the canal before anyone can stop him, at which point he will quickly be dispatched by the party. The canal itself reeks of the Shadowlands Taint, and the mirror is barely visible as it's dragged out towards the river.
+
+Yuushi the courageous bushi will dive in after it and rescue it, even though this produces several points of taint in the process. However, if the PC struck a deal with the servant of Lord Onnotangu, he will proceed to attack the PC, believing that he can't be trusted with the mirror. Conversely, Chuuichiro the loyal bushi will tolerate any deal that the PC makes, even if this means throwing the mirror into the canal, but will flee rather than risk becoming tainted by the river.
+
+If the PC has to dive into the canal, he will quickly start taking taint, and may have to choose between racking up 0.5 points and rescuing the mirror. Some good rolls will make this take less time, but it's still dangerous. However, this is the final obstacle, and if the mirror can safely be taken back out of the canal, then the PC will safely make it back to the Drowned Merchant River and thus bring it back out of his dreams.

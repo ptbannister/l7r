@@ -1,0 +1,13 @@
+Population breakdown in thousands of samurai in each Clan/Family.
+
+500 Lion (275 Matsu, 150 Akodo, 50 Ikoma, 25 Kitsu)
+300 Crab (175 Hida, 75 Yasuki, 25 Kaiu, 15 Kuni, 10 Hiruma)
+275 Crane (100 Doji, 90 Daidoji, 75 Kakita, 10 Asahina)
+225 Scorpion (125 Bayushi, 80 Shosuro, 15 Soshi, 5 Yogo)
+225 Unicorn (75 Shinjo, 75 Otaku, 40 Moto, 20 Ide, 15 Iuchi)
+175 Dragon (125 Mirumoto, 20 Togashi, 15 Agasha, 15 Kitsuki)
+175 Phoenix (100 Shiba, 60 Isawa, 15 Asako)
+
+75 Imperial (45 Seppun, 15 Hantei, 10 Otomo, 5 Miya)
+
+50 Minor Clans (30 Mantis, 15 Dragonfly, 5 Fox/Wasp/Sparrow)

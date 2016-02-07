@@ -1,0 +1,37 @@
+
+Each PC has three main sources of income: their stipend, their budget, and gifts.
+
+At the beginning of the campaign, each PC is given a temporary bonus of 3.0 to their Rank and Recognition due to their high positions; this applies to their stipend.  All bonuses to their Rank and Recognition which they obtain during the campaign will be deferred until after the end of the campaign, at which point the temporary bonuses will go away and their earned bonuses will kick in.  Other than this, the rules on stipends are unchanged.
+
+Every PC has a yearly discretionary budget of 50 koku; their budget is actually larger but most of it is committed to paying for their staff, operating expenses, food and lodging, etc.    The PCs will receive 15 of this koku at the start of the campaign, and then will gradually receive the rest in 3-10 koku increments throughout the year.
+
+The PCs will receive gifts from various sources, and they'll have to decide how to respond to each gift.  In some cases they may want to turn down a gift if they don't feel comfortable accepting money from the source.  Although these gifts are often not actually money, we'll be treating them as if they were all just cash for the sake of simplicity, since they're easily sold or re-gifted, so there isn't too much difference.  Each source is a group of individuals, and the totals listed are the sum total for the whole group.  Each group gives an initial gift and then another gift on each of the various gift giving holidays.
+
+Note that the recurring gifts will be heavily impacted based on the actions of each PC.  When a player goes out of their way to reward a group, the gifts may increase, but when they rule against a group, that can make the gifts go way down or even stop entirely.  Here are the initial and recurring amounts for each group with an explanation of who belongs to each group:
+
+Bushi officers -> 3 koku initial, 1 koku recurring
+    The bulk of this will come from the district captain, although a collection will have been taken from the lower officers.
+
+Diplomats -> 8 koku initial, 2 koku recurring
+    This is mainly from the Dragon, Phoenix, and Lion ambassadors.
+
+Eta -> 1 koku initial, no recurring gifts
+    Because eta are usually fairly powerless, they've banded together and collected as much money as they can scrounge up to make a show of their friendship and respect for the Emerald Magistrates.  Although the amount is paltry, the gesture may be seen as moving.
+
+Monks -> 3 koku initial, 1 koku recurring
+    Each neighborhood has a temple with an abbot, and each district has 3-6 neighborhoods.  These gifts are decided upon and distributed by the abbots of each of these temples.
+
+Large Crane merchant families -> 10 initial, 3 recurring
+    Note that there are no longer any large ex-Lion merchant families.  All of the large merchant families had so much of their property confiscated that they have been reduced to being small merchant families.  Most of these families are Tsume, though some are from other Doji houses.
+
+Small, sketchy Crame merchant families -> 5 initial, 5 recurring
+    This is from merchants with questionable businesses, such as inns who offer "beds with service", teahouses where opium is easily obtainable, restaurants where gambling occurs, etc.
+
+Small, sketchy ex-Lion merchants -> 5 initial, 5 recurring
+    This is the same types listed above, though these families have a different and complex set of relationships with each other that are much different than the typical network of organized crime groups.  In every case where a "community leader" comes before the Board of Justice, that community leader will be from this group.  The PCs will likely not realize this immediately, although that may come to see this pattern based on the way that their actions influence the gifts they receive.
+
+Other small Crane merchant families -> 5 initial, 2 recurring
+    Again, most of these are Tsume, though some are from other Doji houses.
+
+Other small ex-Lion merchant families -> 5 initial, 2 recurring
+    Again, many of these used to be large merchant families, but had so much of their property confiscated by the Tsume that they now run small businesses rather than vast business empires.

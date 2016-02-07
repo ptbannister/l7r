@@ -1,0 +1,323 @@
+
+Asako no Asako Kagetsu ->
+    Daimyo of the Asasko family.  Remains largely uninvolved with the courtship
+    so as not to be a bas host by favoring any one of his guests.
+    
+    constantly looks tired; not accustomed to quite so many late nights due to
+    social events quite so often
+
+Kuni no Kuni Mugen ->
+    Imperial magistrate assigned to the Asako family.  Wants to avoid getting
+    caught up in the politics of the courtship.  About to retire due to old age
+    and failing eyesight.
+    
+    in his early 60s with gray/white hair and beard
+
+
+
+Otomo Yorishiku ->
+    Imperial Princess, 18 years old, the Emperor's sister's daughter
+    
+    small and dainty, but always collected and graceful
+
+Kakita no Kakita Nantoko ->
+    A handmaiden and friend to Yorishiku's for over 10 years.
+    
+    mid-thirties, very beautiful
+
+Hida no Hida Younta ->
+    Another handmaiden to Yorishiku, she has been a mother figure to
+    Yorishiku, whose real mother died shortly after giving birth to her.
+    
+    mid-fourties, very overweight, boisterous
+
+
+
+Dojo no Tohei Gidayu ->
+    Crane clan ambassador to the Phoenix clan.  He's been friends with 
+    Yorishiku's father (Tadahiro) since before she was born, and has 
+    worked with her older brother (Banu) in negotiating trade agreements
+    between the Otomo/Crane and even the Otomo/Phoenix.
+    
+    heavilly muscled with a pot belly, which seems to be even larger
+    than it was the last time the PCs met him
+
+Doji no Tohei Kento ->
+    Gidayu's karo, he realizes that Gidayu's antagonism towards Niban
+    probably stems from the fact that Niban was Gidayu's old karo (which he
+    now knows, although he was not aware of this in the previous adventure).
+    He will refuse to discuss this, saying truthfully that he does not know
+    why Niban became a ronin and that it would be wrong to speculate.  He
+    believes that it would be worthwhile to be on good terms with Niban,
+    but doesn't want to directly go against the wishes of Gidayu.
+    
+    vain and perhaps a little effeminate
+
+Niban ->
+    Formerly Gidayu's karo, very cultured and well-mannered.
+    
+    large and muscular
+
+
+
+Akodo no Akodo Idomu ->
+    Lion suitor, high-ranking magistrate and bandit hunter.
+    
+    either poorly groomed or rugged, depending on your perspective
+
+Shosuro no Michio Jocho ->
+    Scorpion suitor, future governor of Ryoko Owari
+    
+    somewhat short, wears a formal half-mask that covers only part of his
+    upper face
+
+Mirumoto no Mirumoto Genki ->
+    Dragon suitor, ambassador to the Dragonfly clan.  Very intellectual and a
+    prolific writer of nonfiction, both about history and theology.
+    
+    always calm, with the top of his head shaved and a ponytail
+
+Shinjo no Shinjo Masaki ->
+    Unicorn suitor, general in charge of the borders of the Shinjo house.
+    
+    unusually short hair, laughs a lot
+
+Shiba no Shiba Himitsu ->
+    Son of the karo to Shiba Ujimitsu, presumably future karo to the Phoenix
+    daimyo, and an accomplished duelist.
+    
+    tall but neither bulky nor skinny
+
+Hida no Akito Ryuden ->
+    Crab suitor, daimyo of the Akito house, brother of Juramashi
+    
+    large and burly
+
+Doji no Doji Jimon ->
+    Crane suitor, son of the Doji minister of commerce
+    
+    baby-faced, dressed less extravagently than any other suitor
+
+
+
+
+Niban runs Nightingale village, and would like to turn the Nightingale into a
+minor clan or at least a vassal family of the Phoenix.  He's at this Winter
+Court because Koan made it to the finals of the last Setsuban festival's 
+shugenja competition, and he's hoping to use this newfound noteriety to add 
+legitimacy to his new group.
+
+Nightingale village is located in an area of Asako lands close to the Dragon
+clan border which is sparsely inhabited due to the land not being very good.  
+Since this land is not particularly desirable, he has a decent chance of 
+gaining Kagetsu's approval.  Kagetsu would likely start off by granting him some
+position of authority such as tax collector over the lands surrounding 
+Nightingale village, and have him him officially report to the magistrate at 
+Yotsubashi, the closest large town.
+
+However, Gidayu is making some small moves to keep this from happening.  
+Although Kagetsu knows that Niban used to be Gidayu's karo, Gidayu doesn't want
+to actively speak out against it, because he doesn't want to appear to be 
+holding any kind of grudge against Niban.  This would raise questions about 
+whether Gidayu was involved in whatever shame caused Niban to become a ronin;
+Gidayu has always claimed that he doesn't know what dark secret led Niban to 
+leave the Crane clan.
+
+Gidayu thus has been emphasizing to Kagetsu that Niban can't necessarily be 
+trusted, that many of his "mercenaries" are almost certainly former bandits, etc.
+Kagetsu is somewhat uncertain of Gidayu's objectivity (though he would never say
+so), and thus is seeking other opinions.
+
+Niban will cautiously approach the PCs to see whether they'd be willing to speak
+positively about him.  If they are, then he'll try to have them present when he
+speaks to the other suitors.
+
+Niban will speak to Shiba Himitsu over tea and try to gain his support.  He will
+flatter Himitsu, appealing to his pride as a warrior.  Assuming the PCs are 
+there, Himitsu will try to fell them out to see their opinions on Niban.  
+Eventually he'll conceed that Niban is clearly intelligent and cultured, but 
+will wonder aloud how skilled he is as a warrior.  This will lead the two to 
+arrange a practice duel in the dojo.  Himitsu schedules this for the following 
+evening, and uses the intervening time to make sure everyone knows about it so
+that many people will be there to see his victory.
+
+Between this and the duel, the PCs will have a meal in which they will be seated
+close to both Doji Jimon and Mirumoto Genki.  Jimon reveals that he doesn't 
+think Niban should be trusted, and echos Gidayu's concerns about how many former
+bandits are probably working for Niban.  The PCs may choose to respond to this 
+or ignore it altogether, although if a discussion breaks out then Genki will 
+speak on the matter as well, tepidly in support of Niban.
+
+Afterwards, Genki will come to the PCs privately and ask about Niban in greater
+detail.  He will say that he believes Jimon is simply sucking up to Gidayu, but
+that when he (Genki) weighs in on the matter, he simply wants to know what kind
+of man Niban is.  He asks the PCs whether they know anything about how Niban 
+became a ronin; this is often considered an impolite subject, but Genki claims 
+that Niban has himself made it an issue by asking to be placed in a position of
+authority.  Genki says he'd like to speak to Doji Kento to hear whether his
+opinion on Niban matched Gidayu's, but he's unwilling to risk offending Gidayu
+and thus possibly sabotaging his courtship of Yorishiku.
+
+If the PCs speak to Kento, he will do his best to help them garner support for
+Niban without actively supporting them, since he knows Gidayu disapproves.
+
+Also between this and the duel, Kuni Mugen will approach the PCs.  He knows
+that Niban has approached them, and he wants their opinion on him.  He will 
+approach them in this manner regardless of whether they have been trying to
+help Niban.  If asked, he'll  say that he's asking around as a favor to Kagetsu.
+He'll press them on why Niban came to them, and what relationship they've had
+with him in the past.  The PCs may decide to come clean about the scrolls being
+lost while under their care or decide to lie to him.
+
+Regardless, before the duel, Mugen will ask the PCs to keep a close eye on the
+fight.  He knows Niban by reputation and believes him to be a better duelist
+than Himitsu, and is wondering whether Niban plans to throw the duel to curry
+favor with Himitsu.  Niban will indeed throw the duel with Himitsu, although
+it would take an investigation roll of at least 50 to realize this.
+
+After the duel, Himitsu does in fact compliment Niban on his performance, 
+saying that Niban has impressed him both with his intelligence and fighting 
+ability, and that he believes Niban deserves a chance to take on a little more
+responsibility.
+
+Shosuro Jocho will then make a disparaging comment about how dueling someone 
+seems like a poor way to decide whether they are trustworthy.  Himitsu openly 
+insults Jocho, saying that perhaps if he'd ever been in a real life or death 
+situation instead of leading a pampered life, that perhaps he'd understand.  
+The two exchange a few insults, Himitsu asks Jocho whether he'd like a turn 
+mock-dueling him, but Jocho blows him off.
+
+The princess witnesses all of this, but is turned off by Himitsu's macho 
+attitude. This will soon become widely known as she begins to give him the cold
+shoulder.
+
+The next day, Mugen will ask the PCs their thoughts on the duel.  They will
+probably be unable to offer anything one way or the other, but while they are
+talking to Mugen, Akodo Idomu approaches all of them to make a formal complaint
+about Shinjo Masaki's gifts.
+
+All of the suitors periodically give gifts to the princess, but Masaki's gifts
+all appear to be of gaijin origin.  He says that they were all made in Unicorn
+lands, although his denials are spoken as if to imply that the gifts are in fact
+as exotic as they appear.  The gifts include a magnifying glass, a statue, a rug,
+a piece of jewelry, and a bottle of an exotic tasting beer.
+
+Idomu claims that as a magistrate, he is offended that someone would so
+blatanty violate Imperial law by flaunting gaijin goods.  He'll also appeal to
+the PCs sicne they are present.  Mugen refuses to commit to anything but says
+he'll look into it.
+
+After Idomu leaves, Mugen sighs and asks for the PCs' advice.  He doesn't want
+to be involved in a squabble between suitors, but Idomu has something of a
+point, and he doesn't want to ignore his duties as a magistrate.  He'll probably
+ask the PCs to talk to Masaki and feel out whether he's going to continue giving
+such gifts, and let him know that he's treading on thin ice, but without being
+confrontational or threatening.  (This is obviously a tall order.)
+
+Musaki will protest that this is unfair, since his goods were all legally
+created in Unicorn lands.  However, he'll probably agree to no
+longer give these kinds of gifts and claim that he had almost run out of exotic
+gifts anyway.  Although this is not true, he will simply continue to give these
+gifts to the princess in secret, which he hopes she'll find romantic.
+
+That afternoon, someone posts a several copies of a haiku around the castle.
+(I'm not terribly happy with my haikus, but I think it's important that they be
+haikus, so I'll go with these unless we can come up with something better.)
+Pathetic Phoenix
+Surrendered his last real duel
+Only wins fixed fights
+
+Himitsu is furious, as the poem is obviously about him.  Because he fears it
+will come out at this Winter court eventually, he admits that he did in fact
+lose his most recent duel.  He says that he initiated the duel because of an
+insult which he will not repeat and was forced to back down when it became clear
+he would lose.  However, he is furious about the implication that he would ever
+participate in a fixed fight.  He's also dishearteded at the rumor that the
+princess laughed at the poem when she read it and learned of its context.
+
+Himitsu will accuse Jocho of being behind this, invoking the Scorpion steriotype
+of shaming people with past events.  Jocho will naturally deny the accusation
+and will himself be incredibly offended.
+
+That evening, Idomu will return to Mugen and demand to know whether he has done
+anything about Masaki's gifts.  Mugen will say that the matter is resolved, and
+when pressed he will say that he directed the PCs to talk to Masaki.  Idomu will
+confront the PCs and demand to know what happened.  He will express unhappiness
+and ask how they know that they can trust Musaki.
+
+Idomu spends some time that night and the following morning telling people that
+Mugen had banned Masaki's illegal gifts.  This was basically his goal, although
+he was genuinely offended by what he percieved to be an open violation of
+Imperial law.
+
+Around mid-day the following day, another haiku will be found posted in several
+places throughout the castle:
+Shameful Unicorn
+Concealing exotic gifts
+Lies to magistrates
+
+This time Idomu seems a logical suspect though he will also deny having anything
+to do with it, and say that even though the poem is probably true, such an
+anonymous accusation is highly dishonorable, and only a coward would post
+something like that.
+
+Himitsu claims that Jocho is probably behind this, since it not only attacks
+Masaki but also makes Idomu look guilty.  The princess herself tells him to stop
+accusing others without any reason.  Himitsu looks angry but politely apologizes
+and leaves.
+
+The next morning before breakfast, an even worse poem is posted:
+A blighted flower
+Weed among chrisanthemums
+A weed knows a weed
+
+Even Himitsu seems shocked by this and at a loss for what to say.  However, at
+breakfast the PCs are seated close to him and overhear him say that even a
+flawed chrysanthemum doesn't deserve to be called a weed.  This could certainly
+be interpreted as an insult, but none of the suitors are around to confront him
+on this yet.
+
+When Ryuden finds out about this, he confronts Himitsu and demands that Himitsu
+apologize.  Himitsu refuses and Ryuden insults him, goading him on.  Himitsu
+ends up challenging Ryuden, who accepts.  It would be nice if the PCs could be
+the ones to tell Ryuden about this, although whether that's feasible depends on
+what kind of relationship they've developed with him by this point.
+
+The two want to duel that same day, but Kagetsu intervenes and demands that they
+wait at least a few days.  He hopes that they'll cool off and that he'll be able
+to get the princess herself to request them to call off their duel.  However,
+the princess seems unwilling to do this.
+
+The next morning, Himitsu is found dead in his room, hacked apart with his own
+sword.  Mugen calls the PCs to help him out.  He says he's in a bad situation;
+one of the castle guards say Ryuden out of his room last night a short distance
+away from Himitsu's room, but he denied having left his room last night.
+
+Mugen can't ignore this, but he doesn't believe Ryuden would murder Himitsu.
+However, he can't afford to appear to be using kid gloves on Ryuden,
+particularly because they're both from the Crab clan.  He asks the PCs to come
+with him to keep the investigation above suspicion, and for them to take the
+lead in interrogating Ryuden.
+
+Ryuden admits that he did talk to Himitsu, but denies doing anything more.  He
+seems embarressed about having lied in a moment of panic, particularly since he
+knew that Nantoko saw him.  (This will obviously clue the PCs in that Nantoko
+was there but didn't say anything.)
+
+Mugen and the PCs will then talk to Nantoko, who will eventually flip out and
+attack them, as she has been Blood-of-Midnight-ed.  To avoid having an NPC in
+this fight, she will probably kill or at least knock out Mugen before the fight
+really starts.
+
+After the adventure, the PCs will recieve the following note:
+
+To ____:
+
+Congratulations on your recent work, both political and magistraterial.
+I had wondered whether the events caused by my notes and other mischief
+would yield and interesting play, and they far exceeded my expectations
+in large part because of your fine work.  You should all be very proud
+and know that I will be following your careers with great interest.
+
+Kindest Personal Regards,
+Jama Butei

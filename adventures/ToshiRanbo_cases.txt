@@ -1,0 +1,143 @@
+
+When the captain involved is not explicitly named, the case is generic enough that it could happen in any district.  
+
+One of the first things that the PCs have to decide is how strongly to respect decisions which have already been handed down by a lower magistrate such as a district captain.  Most of the time, it's considered proper to let a lower ruling stand unless it's egregiously incorrect.  Rulings which are merely questionable are rarely overturned, unless the higher magistrate feels rather strongly or has some existing relationship with one of the parties involved in the case.  However, the PCs have expanded jurisdiction and may choose to interpret themselves as having a mandate to more heavily scrutinize the Tsume.  The Board of Justice will have to collectively decide their attitude on this question over the first few rounds of cases.
+
+
+
+CENSORSHIP CASES
+----------------------------------
+A Tsume noble has written a lewd play, which he claims is about the way in which people visiting large cities face temptation, but on closer inspection lacks much redeeming social content.  Doji Kanroku orders the play shut down, and the playwright appeals to the PCs.  Kanroku is the sixth son of Doji Hoturi, the daimyo of the Crane Clan, and has strong traditional beliefs that the play will "inflame the passions of [his] men, tittlating them into misbehavior".
+
+The price of grains, especially wheat, has been raised several times over the past few months, to the point where it's a hardship on the peasants.  Some community leaders organize a protest against the high price of wheat, which is indeed higher in this district than anywhere else in the city.  Walking for miles to reach other districts just to buy wheat is a hardship, especially for peasants who already work almost from dawn to dusk.  However, the district captain has put a stop to the protests, and declared them illegal.  The peasants appeal to the PCs, asking them to deal with the pricing and/or to allow them to publicly express their dissatisfaction.
+
+A monk has gone on a hunger strike to protest capital punishment.  He is a follower of Baiten, which Baiten's detractors make a point of noting, although Baiten had nothing to do with his hunger strike or even his views on the morality of executions.  To oppose the hunger strike, the captain has ordered his men to force-feed the monk to keep him alive.  The monk's abbot argues for the monk, although he himself doesn't approve of the monk's actions, he believes that it is imperative to respect his own spiritual journey towards enlightenment, and that it is inappropriate for the magistrate to interfere with such things.
+
+Doji Isamu is a bushi sergeant who believes that the city's defenses are not being properly managed.  He believes that too much attention is being paid to the city walls and not enough to the surrounding countryside.  He has begun distributing pamphlets explaining why it would be better to create and maintain fortifications in the surrounding countryside rather than simply retreat into the city without any fighting or slowing the progress of an attacking army.  His superiors consider his criticisms to be an act of insubordination, and so his district captain orders him silenced.  He appeals this order to the PCs.  Because the PCs have appellate authority over such cases, they could theoretically order that he be allowed to dissent in this manner, but such a ruling would be HIGHLY irregular, and the body of case law is strongly against Isamu.  If the PCs do decide against him, he will commit seppuku in protest.
+
+A Scorpion noble has written a play which is considered subversive.  It takes place before the dawn of the Emerald Empire, when barbarian warlords ruled with little regard or law or justice.  The play contains a monologue in which a bandit attempts to justify his thieving ways by railing against the unjust actions of his rulers.  Although this takes place before human beings received the gift of true justice from the Son of Heaven, the captain considers the play to be highly inappropriate, and has ordered it stopped.  The playwright appeals the decision to the PCs after shopping the play around and finding that most playhouses and acting tropes won't want to touch it for fear of having it shut down in their districts as well.
+
+
+
+
+
+DEBT CASES
+---------------------
+Moneylenders in a district (and also to a lesser extent elsewhere in the city) are lending money in copper and requiring repayment in silver.  In addition to being generally sketchy, since it costs money to change copper for silver coins, it appears that they have colluded to make it very hard (by charging extra) for someone to change out copper for silver when their loans come due.  A community leader files suit and petitions the PCs to disallow the practice of requiring payment in a different metal than the loan as given.
+
+Moneylenders are caught charging an illegally high rate of interest.  Their loans have already been adjusted to downsize the amounts they're owed appropriately, but a community leader files suit petitioning the PCs to fine the moneylenders and/or force them to pay restitution to their borrowers.
+
+One or more cases will appear that force the Board of Justice to address the following issues.  The district captains have not heard any of these sorts of cases in order to not deal with the hassle and time and effort needed to deal with them.
+
+1) In cases where someone has taken out a loan and paid back more than the original loan amount but due to interest he's still buried in debt, are the PCs willing to declare the debt repaid?  If so then, what's the threshold?
+
+2) In cases where someone has taken out a loan and paid back some of the amount and fallen on hard times, are the PCs willing to grant them an extension to prevent them from being conscripted into forced labor to pay back the loan?  If so, then under what circumstances are they willing to make this call?
+
+3) In cases where someone has taken out a loan and then tragedy befalls them and/or their family through no fault of their own and thus they are never going to be able to pay back the loan, will the PCs simply waive the debt?  Under what circumstances would this be acceptable?
+
+4) Are the PCs willing to hire a clerk (5 koku per year) to review these sorts of cases and bring them recommendations to rubber-stamp?  If so, then who will they hire to do this?
+
+
+
+
+
+HONOR CASES
+------------------------
+Tsume Tsuyokatsu was out drinking one night and after getting fairly tipsy, accidentally spilled his drink on Tsume Akaharu, who was drinking separately in the same bar.  Akaharu was already extremely drunk and belligerent, and angrily shoved and chastised Tsuyokatsu.  This culminated in a fight, which Tsuyokatsu won by knocking out Akaharu.  He went on to brag to everyone present about how Akaharu wasn't so tough and had been dropped by a chump, whereas he was obviously a great fighter.
+
+The following day, Akaharu challenged Tsuyokatsu to a duel over these verbal insults.  Tsuyokatsu publicly apologized and took back his rash words, citing his alcohol consumption.  He went on to publicly state that he could never defeat Akaharu in a fair fight, and that it was only due to the unusual circumstances (Akaharu's drunkenness) that he had prevailed.  However, Akaharu was not satisfied, and insists that the duel go forward.
+
+As a formidible duelist himself, captain Doji Renshi agrees, and ordered Tsuyokatsu to accept the challenge.  However, Tsuyokatsu's father told him not to, and the matter is appealed to the PCs, who now must decide whether they feel the duel should go forward.
+
+
+
+Tsume Soshitatsu is the third child in his family, and his parents decided when he was born that he was to become a merchant.  At birth he was betrothed to a girl from the House of Isawa, whose family also has a strong history of raising merchants.  However, Soshitatsu's older siblings ended up falling ill and dying when he was very young, leaving him as the only child.  His parents decided that he needed to be raised as a bushi; while they believe it's good to raise merchant children, they only do so when there's already an older child to carry on the family's obligation of military service.
+
+The Isawa inlaws-to-be were not happy about this, since they made the marriage agreement with the understanding that Soshitatsu would be a merchant.  However, they did not break off the engagement at the time due to not wanting to instigate a conflict between their two Houses.  But recently Soshitatsu had to cancel his trip to Isawa lands to pay his respects to his future in-laws on a certain religious holiday to perform some duties in Toshi Ranbo.  His fiancee's parents took offense and cancelled the marriage, immediately betrothing their daughter to an Isawa merchant boy.
+
+Soshitatsu is furious and has challenged the Isawa merchant to a duel, which has been declined.  He is now bringing this matter before the PCs in the hopes that they will compel the challenge to be accepted and/or help shame the Isawa for refusing.
+
+
+
+Doji Chiyokami is a sassy bushi-ko who takes offense easily.  She came to the city only a few months ago and already has fought two duels.  The first was over a sexist comment that a fellow bushi made.  The second was because she discovered that she had been over-charged for a saddle.  In each case she won and killed her opponent.
+
+Her captain has ordered her to stop issuing challenges without prior permission.  She refuses saying that this is out of bounds and that she was justified in her challenges, pointing out that her opponents could have withdrawn from their duels and been spared their fates, had they been willing to live with the shame of having been beaten.
+
+Because the PCs have special appellate authority, this matter is being appealed to them rather than the usual higher-ups in the city.
+
+
+
+Doji Miu murdered a fellow bushi in a fit of rage over an argument they were having which got out of hand.  She is scheduled to be hanged (a punishment usually reserved for common criminals) and wishes to be allowed to commit seppuku, or failed that wishes to be beheaded (as fitting her station).  She asks the PCs to hear her case and allow her a less undignified death.
+
+
+
+
+
+ABUSE OF AUTHORITY CASES
+-------------------------------------------------
+The city of Toshi Ranbo has recently started cracking down on traveling merchants who fail to pay for business licenses.  Toshi Ranbo follows the standard operating procedure for taxing traveling merchants; it's illegal for a merchant to come into the city and sell their wares without first purchasing a business license, though merchants can come into the city and buy things without being licensed.  Merchants who live in the city are required to demand to see a traveling merchant's license before buying from them.
+
+Of course, local merchants might be offered a break on prices in exchange for not ratting out a traveling merchant, so the Ministry of Commerce conducts sting operations.  They'll send someone posing as a foreign merchant around to make this offer to local merchants, and when the locals go along with it, they're arrested and fined.  This fear of sting operations is designed to keep the locals honest.
+
+Recently a sting operation revealed a warehouse that was supposedly full of un-licensed goods to be sold.  However, it turned out to have some unlicensed goods but mostly had valid inventory.  However, because it was a large warehouse, it took the magistrates quite some time to sort through everything.  During this time, a fruit merchant named Tatsutaro appeared with proper documentation and demanded to collect his fruit, which he needed to sell before it went bad.
+
+The sergeant in charge in guarding the warehouse demanded a processing fee of 6 bu, explaining that his men were overworked and it would be too much trouble to take them away from their duties to tend to this man.  Tatsutaro explained that he knew exactly where his boxes were, that they were stamped as his property, and that he could remove them himself, with the magistrates only needing to give it a cursory glance.  The sergeant refused and continued to demand the processing fee, which Tatsutaro reluctantly paid.
+
+Afterwards Tatsutaro complained to captain Doji Renshi, who refused to do anything about it.  So now the matter is being appealed to the Board of Justice, who should decide not only whether to order the "fee" refunded, but also whether to add a penalty or punishment to the sergeant and/or Dijo Renshi.  However, if the PCs decide to rule in the merchant's favor, Renshi will strongly castigate them, fishing for a duel.
+
+
+
+Toshi Ranbo currently has a large garrison of bushi to protect the city from a possible second attempt on the part of the Lion to take back the city.  Because the city lacked sufficient barracks to house these extra troops, the Tsume quartered a lot of their men in the homes of local merchants.  All of the large estates were seized, but many small manors still exist, and they were packed with troops while new barracks were constructed.
+
+At this point sufficient barracks have been constructed to house all of the city's troops, and so most private homes have now been empties of troops.  However, a few lieutenants have men still staying in private homes.  No compensation is being given, and the merchants' servants are expected to do laundry and run errands for the bushi.  The bushi have been politely asked to vacate, but they keep promising that they'll do it really, really soon and then not making any effort to leave.  The merchants have finally mustered the courage to appeal to the PCs to order the troops to withdraw, and possibly to provide compensation for the extra time that their houses have been used.
+
+
+
+A district has recently made a large police action searching for opium, and the homes and warehouses of several suspected merchants were searched.  One tobacco merchant was at home when a rude corporal burst in to search his house.  The merchant was completely innocent, and when the search was complete, he angrily demanded that the corporal leave.  Not liking being ordered around, the corporal wandered into the kitchen where the merchant's wife was cooking dinner, and helped himself to some of the food.  Enraged, the merchant ordered the man out, but the corporal proceeded to fondle the wife's breasts.  The merchant furiously grabbed a kitchen knife and stabbed the corporal to death.
+
+He was subsequently arrested and beaten by the other bushi present, his property was confiscated, and he was sentenced to several years of forced labor; he was spared execution due to the extenuating circimstances.  His family had to become servants for a rival tobacco merchant family.  Now his family is appealing for his release and compensation for their stolen property and unjust sentence.
+
+
+
+Doji Kazuya is a sergeant who has arranged for a group rate for his men at a fancy bathhouse.  However, he has consistently either not paid or underpaid, making vaguely threatening comments about how the bathhouse should be grateful for the presence of so many bushi to protect him from unfortunate things happening.  The owner is fed up and has finally stripped these bushi of their access to the bathhouse until the bill is settled, and is suing the sergeant for the money owed.  The sergeant is claiming that the agreement was for much less money than is being claimed, and points out that this has gone on for literally years, so clearly the merchant really did value having his bushi around to protect it; now that the city is safer and he no longer needs so much protection he's within his rights to cancel their arrangement, but demanding back payments is ridiculous.  Any decent interrogator will discern that the sergeant is lying and just trying to get out of paying, but the PCs will still need to decide whether to acknowledge this.
+
+
+
+
+
+JUSTIFIABLE HOMICIDE CASES
+--------------------------------------------------
+For these cases, it's important to understand the different ways which assaults and murders are handled in Rokugan.  Many magistrates consider personal disputes to be outside their duties, so if one peasant murders another because of a dispute between two families, the magistrate will usually decline to intervene so long as there is indeed a legitimate insult involved.  Other magistrates consider the motives behind a beating or murder to be irrelevant, and will arrest anyone who steps outside the bounds of the law.  The former attitude is extremely prevalent in Lion lands and is how the Lion magistrates in Toshi Ranbo used to rule, whereas the latter attitude is typical of Crane magistrates and is usually how the Crane magistrates rule now.  However, the population is used to the old ways and most do not even realize that the standards have changed.  Since the PCs have appellate authority, they have the power to decide which standard will ultimately be enforced for these and similar cases:
+
+
+
+A day laborer who works at the city docks and has a drinking problem was stumbling home drunk one night when he knocked over a lamp, setting fire to his apartment complex.  Several residents died and the entire building burned down as well as parts of the adjacent buildings.  He was beaten and fined and assigned to two years of forced labor, but his life was spared because he had a wife and children, and because the local abbot intervened in his behalf.  He completely swore of drinking as part of his penance for this tragedy.
+
+However, not long after he was released from his sentence of forced labor, he was seen stumbling home drunk again late one night.  He was confronted by a crowd, which proceeded to beat him to death in anger.  They were not punished or forced to pay any restitution for this, so his widow and children are appealing to the PCs for compensation, since the man of the family is now no longer around to support them.
+
+
+
+A successful stonemason has recently married the sister of several successful carpenters.  However, it quickly turned out that he was abusive, so the woman's brothers confronted the man, and in the fight that resulted, they ended up killing him.  They have been arrested, but are appealing on the grounds that they were following their filial duty to protect their sister.
+
+
+
+A man discovers that his 12-year-old son has obtained and smoked opium for the first time.  He thrashed his son and demanded to know where he obtained the opium, then went to confront the father of the boy who had provided it.  He angrily demanded that the other father beat his boy, and even threatened to involve the magistrates.  A fight broke out, and he ended up killing the other boy's father, which got him arrested.  He's appealing to the PCs on the grounds that he was perfectly justified in protecting his son from criminals and other bad influences.
+
+
+
+A man's aging aunt suffered from dementia, and some of her neighbors worried whether she was possessed or even a witch.  One day while walking through town with her nephew, she temporarily got away from him and tried to walk off with someone else's child, believing it to be hers.  She was confronted and after the child was taken away from her, she was killed by a shopkeeper who was convinced that she was a witch, trying to abduct a child for some dark ritual.  The Witch Hunters later confirmed that she was not a witch after examining her body, but declared that the attack was justified because the populace should be ever vigilant against witchcraft.
+
+Her nephew later confronted the shopkeeper, and a fight broke out between the two of them, and the shopkeeper was killed.  The man was arrested for murder, and is appealing the decision to the council, arguing that this is a personal dispute and he should not be considered guilty of murder.
+
+
+
+Kyoude is a mercenary with a long reputation of honesty and great moral character.  His son has been raised and educated to become a clerk rather than follow in his father's footsteps, and has recently passed his gempuku and married and taken a well-paying job.  However, this job turned out to be at the largest geisha house in the district, where gambling and opium and prostitution are abundant.  When Kyoude learned of this, he ordered his son to quit.
+
+He then went to the geisha house and confronted the owner, explaining that his son was NOT to work there anymore.  He went on to publicly say that if he returned to the city from his next caravan protection job and learned that his son was still employed here, then he would round up a few of his cousins and show up and kill the owner, along with anyone who got in his way.  He then left the city, confident that the matter was settled.
+
+However, the owner could not bear the loss of face of having to capitulate to this kind of demand, so he beefed up his security and kept Kyoude's son, who wanted the high-paying job in order to provide for his wife, who is already pregnant with their first child.  When Kyoude returned to the city and discovered that his son was still working there, he rounded up two of his cousins and the three of them proceeded to storm the geisha house.  They killed all 10 guards to get to the owner, beat up (but didn't kill) a pair of Phoenix bushi who tried to stop them, then beat the owner to death.
+
+When the magistrates arrived shortly thereafter, Kyoude explained what had happened to the lieutenant who arrived on the scene.  The lieutenant recognized Kyoude and decided to confiscate his weapon and tell him not to leave the city and refer the matter to his captain.  Evidently he didn't want to arrest Kyoude and approved of the killings, but he knew that his captain might see things differently and didn't want to declare the actions legal and then be overruled.
+
+Kyoude and his cousins were eventually sentenced to death by the district captain, and the matter has been appealed to the PCs, who must decide whether to let them die, commute them down to a lesser sentence, or simply let them go with a pat on the back.
+

@@ -1,0 +1,53 @@
+This adventure begins with a visit from Hantei Yoruga, the Imperial Magistrate for the NE Juramashi District. He explains to the PCs that he recently recieved an anonymous note that claimed to be written by a doshin. It accuses Daidoji Kuroka of intentionally turning a blind eye towards opium trafficking.
+
+Yoruga does not believe the accusation, because he believes he knows his friend Kuroka well enough to know that he would never do anything like this. However, he takes his duties very seriously and feels obligated to properly investigate the matter. Thus, he has informed Hida no Akito Zenshi (the magistrate for the entire Juramashi District). The two of them have agreed that the matter should be discretely investigated.
+
+So Yoruga and Zenshi have been looking for some capable people to look into this allegation. The PCs impressed Yoruga both with their handling of the trophy theft and with their investigation of Atsuko's jewelry gift. So he wants them to determine the veracity of the note.
+
+However, the PCs must be careful to not accuse Kuroka or give anyone the impression that Kuroka is under suspicion of anything. They also must ensure that Kuroka does not discover their investigation. If either of those things happen, the PCs will be denounced as having overstepped their bounds and will be hung out to dry.
+
+There are any number of ways that the PCs can invesigate this matter. However, obtaining the cooperation of Matsu Oshu is incredibly important. After they talk to a few doshin about this matter, one of them will certainly inform Oshu what is going on, and Oshu will confront the PCs about it. PCs who have a good relationship with Matsu Oshu may even approach him before they try talking to any doshin.
+
+Oshu's helpfulness will depend largely on his relationship with the PCs. However, he will demand to know what this investigation is about. If he likes and/or respects the PCs then he will likely accept that some magistrate(s) are under investigation without needed to know which one(s). He'll probably also accept that the suspicion involves opium trafficking without requiring more specifics.
+
+However, Oshu will demand that the PCs give their words that they'll do anything in their power to prevent any doshin who cooperates from facing criminal charges for anything up to but not including murder and more serious crimes. He'll argue that a doshin committing crimes under orders from a magistrate is not the one primarily responsible for those crimes, and thus should be fired rather than arrested.
+
+Oshu will suggest that the PCs talk to the doshin squad captains from the areas where opium dens are most prevalent. These are Jigoro (from the first adventure), Renku, and Meiyori. Each of them will offer roughly the same picture of the state of opium trafficking in the district. The only real difference is that Jigoro and Meiyori will be able to immediately say that they can direct the PCs to a few suspected opium dens, while Renku merely says that he can't think of one offhand but can probably look it up.
+
+Renku is cagey because he is complicit in the conspiracy of overlooking the opium problem. Several months ago, he was up for promotion to squad captain but unsure whether he would get the job. The night before the promotion was announced, he was woken in the middle of the night by a magistrate named Hida no Akito Yomaru.
+
+Yomaru congratulated him on his forthcoming promotion, and presented him with a gift of 5 koku. Yomaru then explained to him that Kuroka was trying to be governor and wanted to make sure that his record as a magistrate was impressive. Thus, he wanted the opium problem to be underreported to help back up his claim that he was good at his job. If Renku was willing to go along with it, then in addition to being promoted, he'd get plenty of extra money.
+
+Renku agreed, and over the next few months picked out doshin working under him who he believed would also go along with this. Yomaru was pleased, but over time kept asking more and more of him. In addition to underreporting opium-related crimes, he was being told to simply ignore known opium dens. Eventually he was told to turn loose opium dealers who had been arrested.
+
+Yomaru visits Renku frequenty, and when he next does then Renku will inform him that the PCs are investigating.
+
+Meanwhile, the PCs may also wish to try to determine who wrote the letter in the first place. The problem with simply asking a lot of the doshin is that word will quickly get back to Kuroka. However, if the PCs can learn enough to get a good idea of who the likely candidates are, then this might be a good idea, since they will probably be able to determine which doshin wrote it quickly and have a bit of time before Kuroka finds out.
+
+However, Oshu will demand that they get Zenshi to agree to provide immunity from prosecution for any doshin who cooperate. Zenshi will agree to this under the condition that it turns out that a magistrate actually was involved; he is concerned that the doshin themselves might be doing this on their own and isn't willing to give them immunity if this is the case. Oshu will agree to this, though there might be some further negotiation on the details.
+
+At some point, the PCs will be attacked by a bunch of thugs. This will happen in one of the more crime-heavy sections of the district, which should be easy since that's where they are investigating.
+
+Any thug taken alive will reveal that a man they didn't know had paid them for the hit. This man had said that their employer, a mercenary hirer named Riho, had told him that they would probably be interested in the work. Riho will strenuously deny knowing anything about this.
+
+If the thugs not killed manage to get away, the dead ones will eventually be identified as having worked for Riho. She will explain that she didn't know them well and other than a few minor tasks, they'd only been on one real job for her (a caravan guard assignment). She'll try to leave it at that, but if the PCs press her, then she'll say that they can talk to Tsuneki, the mercenary in charge of that caravan job. He's out of the city guarding a tobacco caravan, but he'll be back in a week or two.
+
+Shortly after the attack, Renku will be woken up by Yomaru, who demands to know what Renku knows about the attack. Yomaru is furious and wants to know whether Renku or any of his men had anything to do about it. Yomarus says that it was a stupid move and should never have happened, and he'll forgive whoever was responsible so long as they let him know about it. (In fact, Yomaru arranged the hit himself, but he doesn't want Renku to know that.)
+
+The PCs may either manage to pry the truth out of Renku or manage to track down the doshin who wrote the note. This doshin's name is Zosan, and he is a idealistic young man who recently became a doshin. When he was recently chasing an opium dealer, he lost sight of the man and ran into a few of his fellow doshin who were on patrol. Instead of helping him give chase, they told him that Kuroka wouldn't be happy about his trying to hard to find that guy, and if Zosan knew what was good for him then he'd relax and get with the program.
+
+Zosan wasn't willing to put up with this but was also scared to come forward. He knew that his fellow doshin would know that he ratted them out even if he accused them anonymously. So he wrote a note accusing Kuroka (who they'd told him was behind this) and sent it to Yoruga.
+
+What happens next depends largely on whether the PCs can put all of this together before Kuroka gets involved. The doshin who have been complicit in all of this will try to get him involved as quickly as possible once they think they might be arrested.
+
+However, as soon as Kuroka and/or Zenshi get involved, they will reveal that Hida Yomaru is not a magistrate; his magistrate papers must be forgeries. Kuroka will further reveal that while the promotion decisions were not public knowledge, they were also not a secret and he quickly names several people who knew about them in advance, any of whom could have told many others.
+
+At this point, Zenshi will reveal that because an actual magistrate was not involved, he's under no obligation to refrain from charging the doshin criminally. However, he's willing to be lenient and perhaps let them off without any charges at all. This depends on what Oshu does.
+
+Oshu would like to denounce Kuroka as an incompetent magistrate. Even if Kuroka knew nothing of this conspiracy, he has still failed in his duties by failing to instill a sense of loyalty and trustworthiness in his men. Oshu points out that had someone claimed that Oshu was committing crimes, the doshin would not have believed it for a second.
+
+Zenshi is only willing to let the doshin off with no charges if Oshu is willing to refain from personally calling out Kuroka on this matter. Anyone who make a decent interrogation roll will discover that Zenshi find this distasteful, since he personally doesn't care about who becomes governor and is uncomfortable with doing this. However, he doesn't believe that it's wrong to do this, and the governor told him to do it, so he'll execute his duties to the best of his ability.
+
+The PCs have several options here. Oshu gave his word to his doshin that he would do everything in his power to protect them, so he's honor bound to refrain from calling out Kuroka if that's what it takes. However, the PCs might try to overrule Zenshi by going above his head to an Imperial Magistrate such as Yoruga. And if the sentence is light, then they can perhaps bribe the doshin into accepting it by offering lots of money, thus allowing Oshu to call out Kuroka.
+
+Regardless, what they do will have a huge impact on their relationships with many important NPCs and influence several future adventures.

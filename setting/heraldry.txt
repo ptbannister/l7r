@@ -1,0 +1,75 @@
+The Emperor is Rank 15, all other samurai have a Rank of 1-14.
+
+House Official            Rank
+------------------------------
+County Magistrate            5
+Deputy Provincial Minister   6
+Provincial Minister          7
+Governor                     8
+Deputy Minister              9
+Minister                    10
+Councilor                   11
+Daimyo                      12
+
+add +1 at Deputy Minister and above for the ruling House of a Family
+add +2 at Deputy Minister and above for the ruling House of a Clan
+subtract 1-3 from Deputy Ministers for clerks and similar officials
+subtract 3 from any official as a base Rank for immediate family members
+
+Other notable officials:
+yojimbo to a governor or daimyo
+emmisaries to/from neighboring Houses
+representative on Imperial chancellary and staff
+Family, Clan, and Imperial magistrates and staff
+officers in the Imperial legions
+
+
+
+Recognition
+-----------
+at Provincial Minister and below, Recognition has a base of your Rank
+at Governor and above, Recognition has a base of Rank + 1
+one-per-domain officials (e.g. daimyo, Imperial magistrates) have a base Recognition of their Rank + 2
+people whose Rank is determined by an immediate family member have a base of the family member's Recognition - 3
+for all positions, the standard deviation is 1.0
+
+
+
+PCs spend 1.0 for each point of Rank/Honor
+your Recognition starts off equal to half your Rank an has a normal cost
+so 6/3 would cost 5
+   6/6 would cost 8
+   6/9 would cost 11
+   4/2 would cost 3
+   4/4 would cost 5
+   4/6 would cost 7
+   
+
+
+Heraldry roll difficulties:
+
+Base TN | House information
+---------------------------
+     15   the domain's size and wealth and neighbors
+     25   basic history and political/military alliances
+     35   top officials (Ministers, Councilors, Governors), major lineages
+     45   major officials (Provincial Ministers, County Magistrates), lineage wealth and politics
+     55   noteworthy minor officials, sub-branches within lineages, major merchant houses
+     65   unremarkable minor officials, relationships between specific extended families
+     75   inconspicuous samurai not assigned to any significant post
+
+standard modifiers:
+    GMs should assign between a -20 penalty and a +20 bonus based on the level of familiarity with the area and people
+    GMs should assign a 5-20 bonus if PCs are able to ask specifically about these people or perform other research in advance
+
+
+Example: the PCs are traveling and a situation occurs where they want to know about one of the Ministers for the domain:
+- they've never been there before, and it doesn't border any domain they've ever visited (-20)
+- they knew that it was going to be their destination
+- BUT they didn't know that the Minister of Justice was someone they'd specifically be interacting with (+5)
+- so their overall penalty is -15, but on-site research could yield additional bonuses
+- this makes the base TN for their roll 50, but some on-site research could yield additonal bonuses
+
+failing to meet a TN can still potentially give information at lesser levels,
+e.g. if the PCs ask about a County Magistrate and miss the TN, they might still know about his lineage and province
+

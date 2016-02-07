@@ -1,0 +1,189 @@
+
+This adventure is based on the "Murder at Kyotei Castle" adventure written by Ross Isaacs and published in the Honor's Veil module. We altered it in the following major ways: we toned down the shameful argument between Retsu and Takashi, we made the initial dinner with Retsu much lower in profile, we reduced the importance of the suspects so that they would be easier to investigate and accuse, we included an Emerald Magistrate to grant the PCs official magistrate status, and we expanded on the background of the intrigue in the Kintani Valley. We made other, less significant changes as well, such as omitting the pointless and random rumors that Doji Retsu's death was the handiwork of witches and reducing the number of geisha houses from two to one.
+
+
+INTRODUCTION
+
+The PCs are en route to Toshi Ranbo and pass through the Kintani Valley. They pass through the domain of Doji no Tsume Retsu, a Crane daimyo known for being a hardline militant. The stop at Retsu's Kyotei Castle was planned, because the PCs are sent to talk to Doji Retsu. As it is, caravans simply pass through his lands, since tariffs are on average lower in the neighboring domains.
+
+Now for a bit of history. The Kintani Valley where Retsu's domain lies is a contested hotspot between the Lion, Crane and Phoenix Clans, with the neighboring Dragonfly Clan perpetually ready to grab farmland whenever the Great Clans are occupied with each other. The land is both strategic and fertile, making it extremely desirable. It is also near Otosan Uchi, raising the profile of any troop movements in the area.
+
+The House of Tsume was established by Doji Tsume, who was granted a strategic fiefdom in the Kintani Valley in exchange for meritorious service to his Doji lord and the entire Crane Clan. He founded the House of Tsume, building Kyotei Castle to defend the strategic crossroads. Many generations of Tsume daimyo were content to maintain the status quo, uninterested in the costly warfare it would require to expand their holdings in the Kintani Valley.
+
+Two years ago, the House of Tsume invaded their neighbors to the west, the Akodo House of Damasu, seizing and holding their capital, the city of Toshi Ranbo.  More details may be found in the Toshi Ranbo campaign files.  The House of Damasu was completely wiped out, and the Akodo are furious.
+
+Doji Retsu is infamous for being cruel, relentless and a militant hardliner. He is overbearing and controlling over his family, callous to the suffering of his heimin in times of drought and pestilence, and barely tactful to his neighboring daimyo. His peers in the Crane Clan frown on his behavior, which is contrary to their Clan's strategy of exploiting good relations and wealth to achieve their goals with minimal losses of manpower or political capital. He is a blemish on the refined and civilized face of the Crane, and some in the Crane believe they would be better off without Retsu. Doji Kuwanen, the Crane Clan Daimyo, officially tolerates Retsu only because of his House's history of loyalty. Unofficially he tolerates Retsu because it is impossible to depose a daimyo with such a large army and fortified castle without starting a civil war.
+
+Doji Retsu keeps good military relations with the neighboring Crane daimyo to his south. He has sent troops to their domains to assist in battles in the past, and regularly sends ranking samurai from his army to their castles for Winter Courts, as well as receiving ranking bushi from their armies at his Winter Courts. Because of these strong alliances he is assured that he would receive military aid in the event of war.
+
+Doji Retsu's domain neighbors the domains of Tonbo no Shuri Noriko and Shiba no Ori Kohibu on his northern side.  The domains of Akodo no Ketsuno Hatsumaro and Akodo no Akodo Toturi are to his west and southwest.  The lands of the Imperial Miya family are to his east, and Crane lands to his south, and he has no history of aggression with either his Crane or Imperial neighbors.
+
+Tonbo Noriko is a Dragonfly daimyo with a few thousand bushi. Her job is to act as a buffer between the Dragon Clan and their neighbors to the south. Akodo Hatsumaro is a Lion daimyo who feels particularly angry over the destruction of the House of Damasu. Shiba Kohibu is a Phoenix daimyo to the north who rules the City of Infinite Wisdom, which boasts the third-largest library in Phoenix lands.
+
+Residing at Kyotei Castle are the nobility of the House of Tsume and their vassals. In addition, in the castle-town of Chikuzen surrounding Kyotei Castle, there are residences whence reside the permanent ambassadors to Kyotei Castle from the neighboring daimyo. Shiba Katsuda is the envoy from Shiba Kohibu, Akodo Ojin is the envoy from Akodo Hatsumaro, and Tonbo Sashikomi is the envoy from Tonbo Noriko.
+
+Currently, the Kintani Valley is filled with tension created by troop movements by Tonbo Noriko and Doji Retsu. Retsu is massing troops near his border with Shiba Kohibu, and Noriko has placed troops "performing exercises" along her border with Akodo Hatsumaro. Kohibu fears an attack by Retsu, and Hatsumaro would love to take advantage of Retsu's shifting of strength to the Phoenix border, but is restrained by his fear of the large Dragonfly force on his northern border.
+
+Normally even the militant Doji Retsu would not be planning a military strike so soon after his costly invasion of Damasu lands.  However, he now has a unique opportunity, because Kohibu's lands were just ravaged by a supernatural plague the previous year.  This plague killed thousands of his bushi and tens of thousands of his peasants.  The domain is a wreck, and while the plague appears to be completely gone and his Phoenix neighbors are very supportive, they have not yet lent him many troops, fearing that the plague may return.  Doji Retsu is therefore considering yet another invasion given these unique circumstances.  More information about this plague may be found in the Midnight's Blood adventure module.
+
+This adventure occurs at the end of Winter Court, after the New Year's celebrations and as the snows are thinning out in Kintani Valley. The envoys of the daimyo are staying in Kyotei Castle during the celebrations to improve relations between the daimyo in sensitive times, and there is also a Miya Emerald Magistrate, Miya Goma, who has been staying at Kyotei Castle this Winter Court.
+
+
+MEETING WITH DOJI RETSU
+
+The PCs will be permitted to dine with Doji Retsu, Doji Takashi and Doji Shizuma high in the tower of Kyotei Castle. They are envoys from one of their daimyo, sent out as the intiial "feelers" to see if Retsu is willing to lower his tariffs on caravans wishing to stop and sell goods in his newly-conquered city of Toshi Ranbo. When they propose the deal, Retsu's response will be hostile and unacommodating. He will talk about how difficult it is to both make it safe for caravans journey into his lands AND protect his extremely valuable holding from his numerous neighbors. However, Takashi will then respond favorably, saying how "anybody can see" that their position is strong. Retsu's next response to the PCs will be more angry, and he will sarcastically ask the PCs how many troops he should pull away from his aggressive neighbors to give their caravans discount protection. If the PCs stick to their guns then he will shout that they have come to scrape at his door like beggars and that he has no more patience to hear them.
+
+After the negotiations break down the PCs will be permitted to sleep in the guest chambers attached to Kyotei Castle.
+
+
+WAKING TO SCREAMS
+
+Early the next morning, the PCs awaken to screams and confusion. Shrieks are audible from the tower of Kyotei Castle, and quickly, horses and fully armed samurai are assembling in the courtyard of Kyotei Castle. Guards will prevent the PCs and everybody else in the guest quarters from leaving Kyotei Castle. Half an hour after the commotion began, the PCs will be brought tea and rice by a servant, who will apologize for their inconvenience and if pressed will admit that "somebody has been killed." An hour later an armed guard in green armor with a chrysanthemum mon will come to escort the PCs to Miya Goma, an Emerald Magistrate who has requested an audience with them.
+
+
+AUDIENCE WITH MIYA GOMA
+
+Goma's retainer leads the PCs out of the guest quarters, into Kyotei Castle, up through the tower and to the very doors of Retsu's bedchamber. The corridors of the tower are under unusually heavy guard, and the guards are tight-lipped. An air of shock and horror has settled over the castle. They are allowed into the room, where Miya Goma is sitting in a thick blue haze of smoke by the window, smoking a pipe and looking extremely annoyed. A servant is scrubbing away at a blackish-red splotch across the floorboards that is obviously a fresh bloodstain. In one corner of the room there is a grappling hook attached to a coil of black silk rope. The room is small, twelve feet by twelve feet, and has an empty sword stand, a hanging scroll and a small oaken chest.
+
+Miya Goma is a low-ranking Emerald Magistrate (4.5 Rank). His presence this Winter in Kyotei Castle was as a representative of the Imperial interest in maintaining peace in Kintani Valley - his job was to keep an eye on things. He is now leading an investigation into the murder last night of Doji Retsu. And he is swiftly going to leave that role, because he is jumping on the chance to dump this politically sensitive assignment on the PCs.
+
+
+THE MURDER SCENE
+
+Doji Retsu's corpse was found at 8:00 AM (Hour of the Dragon) by Ojuno, a frail, small old hinin who was his personal servant. He was lying face-down in the bloody mess of his bedding. He had been stabbed through the heart in his sleep. His own katana, smeared with sticky clots of blood, was lying next to him. She screamed and ran for the guards. Shizuma had the castle guard assembled to raise the town's forces to lock down the castle and its surrounding town of Chikuzen.
+
+Doji Retsu's body and the Tsume ancestral katana were removed from the scene as soon as Miya Goma had witnessed them to verify Ojuno's account of their condition. The grappling hook attached to a coil of silk rope blackened with pitch was left there since it was insignificant except as evidence of how the killer probably entered the castle. When the PCs arrive on the scene, eta are busy elsewhere in the castle preparing the corpse to last through the mandatory mourning period, after which it will be cremated. If the PCs ask then they may see it. Investigation will confirm the cause of death and reveal that the wound did not penetrate very deeply past the muscular wall of the heart if a TN of 25 is achieved. If a TN of 35 is achieved then the PC will learn that whoever stabbed Retsu with the katana was not skilled in the use of swords. Concerning the rope, an Investigation roll of 25 will reveal that the whitewashed walls of Kyotei Castle contrast sharply with the pitch-blackened rope. An Underworld roll of 30 will reveal that no professional would have used a black rope to scale a castle with white walls.
+
+The specific room was not guarded, but the floor on which his room was very well guarded by patrols of Tsume bushi. It would have been nearly impossible to get in undetected through the castle itself. A grappling hook with a rope tied to it was found stuck in the windowframe down to the ground, so it is pretty clear how the killer entered the room.
+
+
+GENERAL EVIDENCE
+
+It is initially difficult to narrow down the suspects in the killing of Doji Retsu, because he was a man with many enemies. The first thing that the players encounter is the animosity between Retsu and Takashi. If they inquire further into this matter, they will find that it was a long-running problem, that they were heard arguing very loudly and angrily after the negotiations with the PCs.
+
+It is also well-known that Retsu was disliked by his neighbors in the Lion and Phoenix Clans. The daimyo of both neighboring Clans have permanent envoys in the castle, who could be considered suspects. The Crane Clan also have an envoy to Kyotei Castle - Doji Kimiji, a retainer of Doji Kuwanen sent to express Satsume's displeasure with Retsu's aggressive behavior. Kimiji possibly was on a mission to remove a troublemaker from the Crane Clan. Although PCs will know little of the specifics of the political situation they will know that Retsu was considering an invasion of one of his neighbors.
+
+Therefore PCs can initially identify two different lines of investigation: a political intrigue and a domestic dispute. They should easily narrow these down to three motives: Takashi would have killed his father so that he could marry a geisha, Katsuda would have killed Retsu to avert an invasion of his daimyo's lands, and Kimiji would have killed Retsu to avert the same invasion to prevent embarrassment to the Crane Clan.
+
+
+INTERVIEWING DOJI NO DOJI KIMIJI
+
+Doji no Doji Kimiji is in Kyotei Castle because he was sent there by Doji no Doji Kuwanan, the younger son of Doji Satsume, to reign in Doji Retsu. Kimiji will be annoyed if he is questioned - he is not used to being bothered in such a way.
+
+Kimiji suspects Katsuda, citing Katsuda's fear of invasion by Retsu and his bad reputation.
+
+
+INVESTIGATING DOJI KIMIJI
+
+Doji Kimiji has not been at Kyotei Castle long. He arrived only two weeks before the PCs. If the PCs look into his affairs they will find that he is supposed to remain at Kyotei Castle either until Retsu agrees not to invade Shiba Kohibu or until Retsu begins the invasion.
+
+Doji Kimiji has had extensive contact with all of the nobles and diplomats at Kyotei Castle, especially Doji Retsu, Doji Takashi, and Tonbo Sashikomi.
+
+
+INTERVIEWING DOJI NO TSUME SHIZUMA
+
+Doji no Tsume Shizuma, in the lineage of Doji no Tsume Nasu, is the House of Tsume's military advisor and general. He is well into middle age, having been a young officer under Retsu's father and served as Retsu's general since well before they moved against the Damasu and took Kyotei Castle. Since the morning of Retsu's murder, Shizuma has referred to the troops in Kyotei Castle as "my men", a presumption he would not dared have made while Retsu was his lord.
+
+Shizuma is too loyal and has too little to gain to be suspected as Retsu's killer. Therefore he points no fingers.
+
+If asked about his opinion of Retsu's plans to move on Kohibu, he will say that he disagreed with Retsu's decision and had advised his lord against it. He quotes the Tao of Shinsei saying that "there is a time and a place for everything," and then quotes texts on warfare including Akodo's Leadership and   Sun Tao's The Art of War: "a strong army should appear weak," "the good fighter puts himself beyond the possibility of defeat" and "the general who wins without fighting is the superior strategist." Shizuma believed that the move against Kohibu was a bad idea because although Retsu's forces seemed strong, he lacked the support of the Crane Clan or even his own heimin, and although Kohibu's forces appeared weak and without any reinforcements by his neighbors to the north, it could have been a trap for Retsu. However, Shizuma followed his lord's orders once Retsu decided to go against his advice.
+
+
+INVESTIGATING DOJI SHIZUMA
+
+Doji Shizuma has not left Retsu's domain in thirty years. He only very rarely leaves the town of Chikuzen (perhaps once every season) to inspect Retsu's military outposts, and only leaves the castle a few times a week. On these occasions he visits a small Shinseist temple and an upscale tea house to pray and drink.
+
+As Retsu's general, the people closest to Shizuma are Retsu, Takashi and Retsu's ranking soldiers. His contact with Takashi is the least extensive, and on the occasions when they talk, they usually discuss the Tao rather than military matters. Shizuma is known to have spoken with Doji Kimiji only once, and he has only spoken on a handful of occasions with any of the other diplomats except Tonbo Sashikomi, with whom he has met once weekly for the past six weeks. He spoke with Kimiji about his lord's decision to invade Shiba Kohibu's lands, and he speaks with Tonbo Sashikomi about the Dragonfly troop movements on Akodo Hatsumaro's border.
+
+
+INTERVIEWING DOJI NO TSUME TAKASHI
+
+Doji no Tsume Takashi is now the daimyo of Kyotei Castle. He is upset that his father was murdered, but not TOO upset. He has become very busy with the duties of a daimyo, especially with figuring out the new role of the House of Tsume in Kintani Valley.
+
+Takashi suspects Katsuda as the killer. He knew about his father's bold plans and believed that they would work, and therefore he believes that Katsuda's daimyo had good reason to want Retsu dead. Katsuda also knew that Takashi was not interested in invading Kohibu's lands, and now that Takashi is the daimyo that invasion will not happen. Although the entire Phoenix Clan would have backed Shiba Kohibu in repelling Retsu's forces, it would have been costly, and Kohibu would likely have lost farmland. In addition, Kohibu was terrified that Retsu might somehow have razed the library at the City of Infinite Wisdom. Takashi also points out that the Phoenix will go to almost any lengths to avoid a fight, and reminds the PCs of Katsuda's bad reputation (the stain on his lineage).
+
+Takashi has no idea that his geisha lover Reika killed his father.
+
+
+INVESTIGATING DOJI TAKASHI
+
+Doji Takashi has lived in Kyotei Castle most of his life. When he was younger his father used to drag him around the domain on inspection tours, but Takashi has not suffered this in the past several years. His relationship with his father has become increasingly tense and distant as he has aged, especially in the past few years. Now hardly a day passes when they do not end up shouting at each other and storming away. Although they never do this in front of others, everybody knows about it.
+
+It is an open secret that Takashi has a geisha lover from the Pine House named Reika. She comes to the castle every evening and usually leaves the next morning. This was the biggest tension between Takashi and Retsu in the past two years, and has only worsened. Takashi wants to marry the geisha, and Retsu will not tolerate his son marrying a hinin. Last night, one of the servants heard Retsu say that "not while I still draw breath" would he allow the marriage.
+
+The other major source of tension between Takashi and Retsu is there different philosophy to how a daimyo should rule. Retsu is aggressive and believes that the way of bushido is found in glorious battle and the spoils of war, and considers the niceties of court and politics to be useful only to as a means to the end of military victories. Takashi believes in relying more on politics and trade policies to get ahead while maintaining good diplomatic relations and avoiding open warfare as costly and uncivil. For this reason Takashi thinks his father is wrong and Retsu thinks his son is weak.
+
+
+INTERVIEWING AKODO NO KETSUNO OJIN
+
+Akodo no Ketsuno Ojin is a courtier in the service of Akodo no Ketsuno Hatsumaro, the Akodo daimyo bordering the lands of the House of Tsume to the west. Ojin is the permanent diplomat to Doji Retsu's lands, and was most concerned with finding out whether Retsu's intentions against Kohibu were serious and what motivated Tonbo Noriko to station troops on her southern border with Hatsumaro.
+
+Ojin suspects Doji Takashi as the killer. Not only does Takashi become the daimyo if his father dies, but they also hated each other. He will tell the PCs plenty of dirt about Takashi related to his constant arguments with his father and his geisha lover if he is asked to validate his suspicions.
+
+
+INVESTIGATING AKODO OJIN
+
+Akodo Ojin has been stationed at Kyotei Castle for twenty years. When Doji Retsu destroyed the House of Damasu it was a great shock and upset to Akodo Hatsumaro and his previous ambassador to Doji Retsu's domain. To escape the unpleasantness of that event, Hatsumaro withdrew his previous ambassador who was "retreating to a monastery to pray for the souls of the House of Damasu" and sent Ojin as his new ambassador. Since then Ojin's jobs have been to intensively cultivate a good relationship with Retsu and to keep an eye on Retsu's troop movements.
+
+To keep an eye on Retsu's troop movements Ojin not only talks as often as he can to Retsu and Takashi but also to the merchants who supply Retsu's army, drunken soldiers in sake houses, and at tea houses, spies from the countryside whom he employs to extend his vision further into the outskirts of Retsu's domain. Ojin has very little spare time, but he spends it at gambling houses, bathhouses and in particular the Pine House.
+
+
+INTERVIEWING SHIBA NO ORI KATSUDA
+
+Shiba no Ori Katsuda is a courtier in service to the Phoenix daimyo to the north, Shiba no Ori Kohibu. He is Kohibu's permanent envoy to Doji Retsu, and is currently very much concerned with the troops that Retsu is massing against Kohibu. He plays an extremely dangerous game, since he fears to somehow slight Retsu or appear overly suspicious.
+
+Katsuda is descended from a lineage that, in the past, was suspect of embezzling, and also known for associated with merchants and criminals more than is respectable. No wrongdoing has ever actually been proven, but the haze of suspicion has never lifted. His lineage is also wealthy and influential. Katsuda is highly competent, which is why Kohibu chose him to be a diplomat.
+
+Katsuda suspects Doji Kimiji as Retsu's killer. and explains just why it is that the Crane Clan would have had Retsu killed. Doji Retsu was massing troops along his border with Shiba Kohibu to invade Kohibu's lands and take the City of Infinite Wisdom. Although the Phoenix Clan would surely have backed Kohibu against an unprovoked war of aggressive territorial expansion, the Crane Clan would have also been forced to back Retsu, since Retsu's lands are of extremely great strategic value. They are very close to Otosan Uchi and command a powerful position at a crossroads in the Kintani Valley, and the Crane would never give up such a domain. Therefore they would have had to send forces to fight alongside Doji Retsu. This would have been very costly for the Crane Clan in terms of political capital. It also would have angered the Hantei and the Phoenix Clan. For the Crane, who rely on political power and good relations, it would have been a big setback for everybody except for Retsu and his allies, who stood to benefit greatly. Rather than play into Retsu's hands, the Crane could just murder him.
+
+Katsuda's theory is very solid. It is already known that Doji Kuwanen, the Crane Clan Champion, was displeased with Retsu's hawkish behavior, and Doji Kimiji was a messenger from Doji Kuwanan, Doji Satsume's younger son, sent rather publicly to reign in Retsu.
+
+Katsuda also will answer to suspicions pointed at him by emphasizing his strategic strength: his Clan will back him without hesitation, and at worst he will lose some farmland. Retsu is attacking from the passes of the Kintani Valley, whereas Katsuda and his allies have much more room to maneuver their forces and a much easier time organizing supply lines.
+
+
+INVESTIGATING SHIBA KATSUDA
+
+Shiba Katsuda is a younger man than most of the other diplomats, about thirty years old. He has been stationed at Kyotei Castle for nine years and usually his job is to coordinate tariffs and trade deals with Retsu, since Crane caravans often move into Katsuda's lands through Retsu's lands. He has longterm relationships with several caravan masters, merchants who pass into Phoenix lands thorugh Retsu's lands two or three times a year.
+
+More recently he has been working overtime to talk to Doji Retsu and his own contacts about the troop movements along his border. Like Ojin, he has a network of spies in merchant houses and throughout the countryside, and lately he has beefed up the numbers of his agents to pay special attention to Retsu's activities. He visits a lot of tea houses and sake houses to do this, although most of them are reputable and none of them are houses of ill repute. He used to keep a geisha mistress, but lately he has had little time for her.
+
+
+INTERVIEWING TONBO NO SHURI SASHIKOMI
+
+Sent as a diplomat from the Dragonfly Clan, Tonbo no Shuri Sashikomi is a courtier. She is beyond suspicion since the Dragonfly can gain very little from Retsu's death. There is little reason for the PCs to talk to her until they find out about the Dragonfly troops stationed on Ikoma Hatsumaro's border. They could find out about those troops, and Sashikomi, from any of the diplomats in the castle.
+
+If asked about the troops and what it would have taken for the Dragonfly to relocate them, she will imply that they could have been paid off to remove the troops. They were only there in the first place as a favor to Doji Retsu in exchange for future returns.
+
+
+INVESTIGATING TONBO SASHIKOMI
+
+The Dragonfly are as worried about being invaded as anybody else would normally be, so Tonbo Sashikomi, like her counterparts, talks to merchants and spies to watch Retsu's troop movements. However, lately she has been less concerned because of a deal that the Dragonfly have worked out with Retsu. He paid them to station their troops on their border with  Akodo Hatsumaro, which keeps Hatsumaro too worried about losing farmland to the Dragonfly to be able to invade Doji Retsu even if Retsu commits to invading Kohibu. However, her time is also taken up frequently by Akodo Ojin, who is very interested in discovering what kind of arrangements Sashikomi's daimyo might have made with Retsu.
+
+
+LOOKING INTO THE PINE HOUSE
+
+If the PCs investigate Doji Takashi then they should find that he has a geisha lover from the Pine House whom his father would "not while he still draws breath" allow him to marry. Her name is Reika, and she is known to have great beauty and wit.
+
+If the PCs visit the Pine House during the early part of the day, nobody will answer the locked door, because nobody is awake to answer. If the PCs smash down the door then they will be chastised by Miya Goma and their daimyo will be charged for the damages.
+
+Around noon, the door will be unlocked and there will be a guy named Big Yoji serving as the watchman. He is enormous and carries a large tetsubo. He turns away anybody who wants to come in unless he recognizes them: "I do not know you, so she doesn't know you." If the PCs present the papers signed by Miya Goma granting them authority as magistrates over the daimyo's murder case,  then he will immediately let them in and escort them to talk to Kumiko, who will receive them immediately. Kumiko will be politely unhelpful: she will ask what she can do to help, offer to do anything, and say that she knows nothing so she can tell them nothing. If the PCs ask about Reika she will tell them that Takashi met her while she was serving at a party three years ago, and they were formally introduced and have exchanged gifts. He has called for her company frequently since then. If they ask to see her then Kumiko will say, truthfully, that Reika is taking the day off.
+
+Nobody at the Pine House actually knows that Reika killed Doji Retsu.
+
+If the PCs arrange to talk to Reika when she gets back, then as soon as she hears of it, she will move into Kyotei Castle with Takashi and have her belongings brought there by porters. She was planning on waiting until after the funeral, but will be frightened that magistrates are asking after her. If the PCs ask around the Pine House then they will find that there were no arrangements for her to move in previous to them asking after her. This will look suspicious to anybody who is using their head.
+
+
+INTERVIEWING REIKA
+
+If the PCs want to see Reika then they will have to ask Takashi to see her. Takashi will ask why they want to see her, saying that she feels sick and does not want to see anybody. If they say that she is not a suspect then he will insist that they wait until she feels better. If they say that she is a suspect then he will demand that they back up their accusations before an official proceeding, and refuse to turn her over to them until formal charges are brought against her.
+
+The PCs can try to argue their way past this. Somebody with the Law knack can argue that he has to let them talk to her. Somebody with the Intimidation knack could say that it will make them look guilty if they do not let them talk to her. They could also spread rumors that they are guilty of the murder and he's not letting her talk to anybody to prevent anybody from discovering them.
+
+They could also pass this on to Miya Goma, either to let it go or to ask for his help. If they convince him of her suspicion then he will bring in a high-ranking Emerald Magistrate from the House of Doji to force him to turn her over for questioning. They could also turn the case over to him, to avoid the flak and keep Takashi as an ally.
+
+Doji Kimiji could also help the PCs if they were really good at convincing him - he might not be dissatisfied with the current state of affairs when they approach him. If they can get his help, then they could get him to report to Doji Satsume through Doji Kuwanan that Reika should be investigated for the murder of Doji Retsu, and that Takashi wants to marry a hinin who is possibly the murderer of his father. The propriety issue will not be enough to move him to action, nor will justice. The PCs must convince him that it would be good for him to hurt Takashi politically, which will be difficult. The best case that they could put together would be to point out that Takashi could still invade Kohibu's lands, especially since nobody would expect it, since Retsu's allies would want him to go through with it, and that Takashi could do this with the excuse of blaming Katsuda for his father's murder if the official investigation were not resolved quickly.
+
+Alternatively they can dodge Takashi by trying to see her despite his best efforts. Breaking into her room during the nighttime would not work because she will be sleeping with Takashi. Breaking into her room during the daytime would be a bad idea because she would scream and call for guards, and it would look very weird for the magistrates to be breaking and entering. If they could slip past the guards and knock on her door, then the wosrt case scenario is that the guards ask them to leave, and then they get to talk about how Takashi is going to extremes to prevent people from talking to her. If they manage to talk to her then she might just refuse to talk to them, which would be especially good if they could get a servant to come by and see it. Either way they'd get to talk about how she refused to speak to them and had no reason not to other than that she might have killed the daimyo. At best, they could get her to talk about how much she hated Retsu. However, we cannot conceive of anything that they could say that would even get her to talk to them, so unless they come up with some kind of courtly genius, just have her refuse to talk to them.
+
+
+That's pretty much it. The PCs can take this wherever they want.

@@ -1,0 +1,273 @@
+
+Rokugan is about 1500 miles top-to-bottom and about 1000 miles across, which is
+about 1,500,000 square miles.
+
+It has a total population of about 100,000,000 divided into about 350 domains.
+
+Samurai are about 2% of the total population, which is about 2 million people.
+
+
+The Median Domain:
+
+3,750 square miles of land (a little over 70 miles across if a circle)
+
+250,000 total population, divided up into:
+ - the capitol         pop    12,000   (5% of the domain)
+ - 6 smaller cities    pop 2000 - 4000 (7% of the domain)
+ - 36 large towns      pop  900 - 1500 (18% of the domain)
+ - 216 small villages  pop  200 - 500  (31% of the domain)
+ - 1296 tiny hamlets   pop   50 - 100  (40% of the domain)
+
+These are stats for the median rather than the mean domain, since the mean is
+brought up by several dozen of the largest domains in the empire.
+
+
+SAMURAI
+-------
+5,000 samurai in the median domain
+
+4,000 "useful" samurai (not too young or old):
+ - 1200 samurai in the capitol
+ - 300 samurai in each of the 6 provincial cities
+ - 25 in each of the 36 towns
+
+samurai are typically 80% bushi, 10% courtier, and 10% merchant
+
+
+
+MERCHANT HOUSES
+---------------
+Merchants exist in towns and cities.  We generally divide merchants
+into four categories: very rich, rich, poor, and other.
+- There are about 200 immediate families made up of very rich merchants,
+    which generally make up 4-10 major Merchant Houses.
+- There are about 250 immediate families made up of "rich" merchants,
+    these are the owners of successful businesses whose extended families
+    have great wealth but are not quite on the same level as a "real"
+    merchant house.  These 250 families generally run about 25 - 50
+    different businesses.
+
+A domain has about 
+(63 * 6 ** 3 + 13.5 * 6 ** 4 + 144 * 6 ** 2) => 36,288 families of farmers
+which on average generates 5 koku of tax revenue per family
+and 2.5 koku of rent to the landowners (only ~10% of farmers are freeholders)
+so there's about 81,648 koku of rent going to the landowners
+
+About 6% of samurai are at least Rank 5, which is about 300 total samurai,
+many of whom are from the same immediate family.
+
+So the land is owned as follows:
+- 10% by freeholding farmers
+- 30% by samurai (which is an average of ~5 koku per samurai, though it's not evenly distributed)
+- 40% by large merchant houses (so about three to eight thousand koku per merchant house)
+- 20% by individual rich merchants (so about three to six hundred koku per business)
+
+
+
+ASHIGARU
+--------
+One male from every family of farmers with at least two males in the countryside
+recieves martial training at least once per month.
+
+This is about 10% of farmers, which means about 8% of the countryside have
+martial training.  The ashigaru deemed good enough (at least 50 XP) are allowed
+to carry peasant weapons.  So about 2% of farmers are armed and capable of helping
+deal with criminals.
+
+In a village with its surrounding hamlets (where there are no samurai), there
+are about 80 ashigaru, of which about 15-20 are good enough to be armed.
+
+
+
+MONKS
+-----
+Shrines and monasteries are controlled by the Ministry of Rites, and are organized as follows:
+- an acolyte is a monk without an appointed post who works for a monk with a post
+- each village district has a Country Monk
+- each town has a Preceptor per Order
+- each province has a Provincial Abbot per Order
+- each capitol city has an Abbot per Order
+- each Order has a Grand Abbot per Clan where that Order exists
+
+
+
+BANDITS
+-------
+The average domain has about 200 bandits, most of which have a day job but also
+commit acts of banditry on the side  These acts include:
+ - stealing food or other supplies when no one is around
+ - mugging or otherwise shaking down peasants where they live/work
+ - acting as a highwayman, robbing people on the road
+ - joining with other bandits as a gang to attack caravans
+
+Only bandits who are reasonably strong (over 50 XP) will try anything more bold
+than stealing and hoping no one sees them.  This means that there are about 45
+bandits per domain that will use or threaten violence.  Of these, about 10 will
+be good enough (over 100 XP) to act as highwaymen or lead bandit gangs.
+
+So the average domain has about 1-5 groups of bandits attacking wealthy
+travellers/caravans.  These groups usually consist of 4-8 bandits, although
+they occasionally grow much larger.
+
+About 10 violent bandits are killed each year per domain, both from casualties
+during their attacks and being caught by the authorities.
+
+
+
+MAHO-TSUKAI
+-----------
+A typical coven consists of 3-10 bloodspeakers, usually poor peasants. It's
+rare to find bloodspeakers among samurai or wealthy peasants.
+
+Only a small percentage of covens are violent.  These covens are typically led
+by a powerful bloodspeaker who previously spread his name violently in the
+countryside after reaching Rank 5 and taking on the Jama surname.  Thus, about
+one out of every three domains has an active coven kidnapping and murdering
+well-known merchants and nobles.
+
+There are about 200 Witch Hunters.  Each Witch Hunter covers about three
+domains, with large and important cities/domains getting their own Witch Hunter.
+
+OPEN QUESTION: What are the numbers for wild maho-tsukai out in the countryside?
+How many are still around, and how active are they and how many of them developed
+their powers independently?
+
+
+
+OGRES
+-----
+Every year hundreds of ogres manage to enter Rokugan by making it over the Kaiu
+Wall or through the Burning Sands.  About 1000 ogres live in Crab lands, and
+another 1000 have settled into Unicorn, Scorpion, and Crane lands.
+
+Ogres typically hide in the countryside, stealing food and livestock to survive.
+They are solitary creatures and travel either alone or in mated pairs with at
+most one youngling.  Because they are extremely cunning and fierce fighters,
+they're very difficult to catch.
+
+However, about 1% of ogres are man-eaters; these ogres typically seek out strong
+human victims to consume.  These ogres are much more dangerous but also much
+more easily caught, especially since they prefer to pick targets that look like
+capable fighters, believing that they gain the power of their victims.
+
+
+
+IMPERIALS
+---------
+Each domain has an appointed Imperial samurai (and spouse/children if applicable)
+acting as an Emerald Magistrate.  They have about ten yoriki (bushi assistants)
+from the Imperial Legions with them, who are typically from other clans.  The
+magistrate and yoriki live in the domain's capitol but travel to the domain's
+other cities when necessary.
+
+When fighting breaks out between neighboring daimyo, the yoriki from nearby
+domains may be assembled to assist one side or the other.  Having one or two
+hundred extra troops can change the outcome of a battle, and high-ranking
+Emerald magistrates are not shy about throwing their weight around.
+
+There are also several Imperial legions stationed throughout Rokugan.  We have
+not yet established specific numbers and locations for all of them, but the ones
+which we've established to exist are:
+- Beiden Pass
+- the Kaiu Wall
+- the gateway to the Land of the Burning Sands
+
+
+
+RICE
+----
+Here are some units:
+ - The mu, a unit of area equal to 1/15 hectare
+ - The shi, a unit of volume equal to about a bushel, or 155.168 jin of rice
+ - The jin, a unit of weight equal to 1.33 lbs
+ - The author Patrick read considered 3.33 shi of rice to be enough to feed a
+   person for a year.
+
+Rice yields 284.40 jin/mu, and 4.00 shi/mu, in twentieth century Hunan China
+
+284.4 jin/mu * 15 mu/hectare
+             * 258.998811 hectares/square_mile
+             * 1.33 pounds/jin
+             * 2.5 cups/pound
+             * 0.0625 gallons/cup
+             * 0.025 koku/gallon
+             = 3,616 koku per square mile
+
+4 tons/hectare * 2204.62262 pounds/ton
+               * 0.003314280067510029 koku/pound
+               * 258.998811 hectares/square_mile
+               = 3000 koku per square mile
+
+1 koku = 200 pounds
+
+According to an ancient Chinese scholar, one landowner could only manage about
+10 mu of rice land on his own - for more land than that, he'd need to rent it
+out to tenant farmers.
+
+100 mu was the ideal land size for a household of five. 20-30 mu was more
+typical for such a household in crowded metro areas however. A small household,
+of 1 to 3 people, could work 0.1-5.0 mu of land. A medium household of 4 or 5
+people could work 5.1-19.5 mu A large household of up to 8 or 9 people could
+work 20.0-38.5 mu
+
+~40 million hectares of land were farmed in early Ming China. There was a 
+population of 65 million people at that time.
+
+15% of Rokugan is arable (~560 square miles per domain,
+                          225,000 square miles total)
+4% is suitable for rice farming (~152 square miles per domain,
+                                 60,000 square miles total)
+
+400 farmers per square mile * ~152 square miles
+                            = ~60,800 rice farmers per domain
+                            * 400 domains
+                            = 24,320,000 rice famers in Rokugan
+
+3000 koku per square mile * ~152 square miles per domain
+                          = ~456,000 koku of rice per year per domain
+                          * 400 domains
+                          = 182,400,000 koku of rice
+                          * 1/3 years which have a rice harvest (cycled with soybeans and millet/barley)
+                          = 60,800,000 koku worth of rice per year
+
+
+
+A county has (144 families per town) + (6 * 63 families per village) + (36 * 13.5 families per hamlet) = 1008 farmer families
+A domain has 36 * 1008 = 36288 farming families
+
+A domain has ~250,000 population
+Assume ~2 koku worth of food per individual, so:
+500000 koku per year / 36266 families = 13.7787 koku per family
+We'll round up and say that there's usually a bit of a surplus and say that each family produces ~15 koku per year on average
+
+
+
+Even if each "merchant, other" family owned a parcel of land, then that would be
+(16.8 * 36) + (90 * 6) + 360 = 1505 parcels
+                             / 36288 parcels per domain
+                             = 4.27% of the land in the domain
+
+The total number of "merchant, rich" in a domain is
+(36 * 2.4) + (6 * 18) + 72 = 266 families
+
+The total number of "merchant, very rich" in a domain is
+(6 * 12) + 48 = 120 families
+
+Assuming for the moment that ~5000 parcels are owned by samurai, that leaves
+36288 - 1505 - 5000 = 29783 parcels left for the merchant families
+
+
+
+(so we're not counting the daimyo, governors, or county magistrates)
+2 * 6 * 7 = 84 ministers and deputy ministers for each of the 6 ministries in each of the 7 cities)
+6 chancellors on the House council
+So this is a total of 90 samurai... if each one is from a different immediate family, then that's 9% of the samurai families
+
+
+
+A "parcel" of land is the amount of land worked by a single farming family.
+Of the 15 koku produced by that parcel:
+ -> the magistrate takes 5 koku in taxes
+ -> the merchant takes 2.5 koku in rent
+ -> the farmer keeps 7.5 koku (their family needs ~10 koku per year to survive)
+

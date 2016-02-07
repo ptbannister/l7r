@@ -1,0 +1,72 @@
+SETUP
+-----
+Because Kuni Machiko has concluded that bloodspeakers are not behind the attacks, the policy debate at Kyuden Akito has redoubled.  The remaining possibilities such as covert Scorpion troops and man-eating ogres might be thwarted by extra troops, and negotiations with the Scorpion clan have reached an impasse.  Thus, Hida Ryuden has decided to pull some troops off of the Wall.  (If the PCs have done an especially good job arguing and lobbying for troops to stay on the Wall, then Ryuden might merely be considering it.)  However, Ryuden must decide where to put these troops; on the border, back into the countryside, etc.
+
+Thus, Ryuden is sending the PCs to one of the domains with a border conflict with the Scorpion to assess the situation there.  He wants them to give him advice on where he thinks the troops should go.  The PCs are to go to the border and meet with Hida no Akito Ichita, the Crab general in charge of the forces stationed there.
+
+
+Kaya the Sake Merchant
+----------------------
+While they are in ___ city, the PCs are approached by Hida no Fumio Motoshi, who captains a company of 1000 bushi here on the border.  About a week ago, he was approached by a traveling sake merchant named Kaya who he'd never met but was from his house.  Kaya was passing through to Crane lands but hoped to be able to sell her sake to the troops here on the border.  Motoshi informed her that their sake needs were being met by a local merchant family, so she continued on her journey as planned.  Kaya normally sells sake in Ryoko Owari, but due to increased tariffs she's been forced to try her luck in Crane lands instead.
+
+However, the day that she left, she was attacked on the road.  Although she had over half a dozen men guarding her caravan, everyone was killed and hundreds of koku worth of sake was stolen.  This domain has only one notorious bandit lord, known as Kumoshi, who Motoshi believes must be behind this attack, since he's the only bandit in the area with enough resources to attack such as well-guarded caravan.  He feels that this matter is being largely ignored by the locals and has taken a personal interest in bringing Kumoshi to justice.
+
+Motoshi pursued the matter by sweeping through the countryside having his men looking for injured peasants, under the assumption that some of the bandits were probably injured in the attack.  Unfortunately, he never managed to find anything.  He reported what had happened to the Scorpion, who claimed that they'd also look into the matter, but he believes that they never really did.  Motoshi wants the PCs to speak with Bayushi Karasu to ensure that his men did indeed do their jobs, and to berate him into taking action if they didn't.
+
+Kaya was indeed killed by the bandit lord Kumoshi, who has ties with the local sake merchants, the Kyuugi family.  Many of his men work for Kyuugi, who felt threatened by Kaya moving into his territory and trying to sell first to the local army and then to the Crane.  Thus, when he discovered her agenda, he alerted Kumoshi to her travel plans to have her killed, then bought most of the sake back from Kumoshi to make the attack worth his while.
+
+
+The Kaimei Merchant Family
+--------------------------
+Almost all of the land in the disputed area was/is owned by a local merchant named Kaimei.  The headsman of every village reports to him, and thus all of the ashigaru in the area also work for him indirectly.  Unfortunately, the Scorpion dismissed each of them from their positions and brought in their own foremen to survey the land and help collect taxes.  They also effectively pillaged their money as well as the money and weapons of the ashigaru, under the reasoning that these men were loyal to the Crab and thus should not be allowed to have weapons or other resources.
+
+To make matters worse, Scorpion troops have allegedly continued to pillage and steal from the peasants in the area.  Kaimei feels obligated to help these men and their families which have been loyal to his family for generations.  At one point he had a few of the foremen travel to ___ city so he could give them enough money and supplies to help them through this difficult time.  However, some of them were stopped by Scorpion troops on their way home and robbed before they could even return and hide their wages.
+
+Kaimei would like the PCs first to discipline Karasu by threatening to have the Emerald Magistrate Seppun Nozomi start arresting his troops.  Second, he asks the PCs to deliver a large amount of money to some of these old village headsmen so that they can distribute it to the others as well as to the former ashigaru.  In doing so, Kaimei feels he will not only help out those who are in need, but also prove his loyalty to them and thus make them even more fiercely loyal to his family for generations to come.  Kaimei is willing to pay the PCs hansomly for their service, and he knows that as high-ranking samurai the Scorpion troops wouldn't rob them.
+
+
+Preemptive Taxation
+-------------------
+Two days ago, some men dressed as Scorpion bushi entered one of the villages in the Scorpion-controlled territory and demanded taxes.  The peasants gave them what they had, but immediately complained to both the Crab and Scorpion about this.  However, the Scorpion deny that they taxed the village and say that it must have been bandits.  The Crab say that this is exactly what the Scorpion did last year, and they're simply up to their old tricks.
+
+Karasu will give his word that he ordered no such thing and that he's thoroughly looked into the matter and does not believe that his men are responsible.  However, Seppun Nozomi has traveled to ___ city and is preparing to look into the matter personally, and the PCs are asked to come along.
+
+In fact, Kumoshi is also responsible for this.  He's been emboldened by his success at killing Kaya and has decided that the presence of so many troops is no reason not to go back to trying to make a profit where possible.
+
+
+CHARACTERS
+----------
+Hida no Akito Ichita ->
+    As the Crab general who will lead his men into battle if war breaks out, Ichita really wants reinforcements.  Although he already outnumbers the Scorpion, more troops would make their victory much less costly and much more glorious.  Ichita will feel out the PCs but will assume that they cannot be bribed unless they give him a strong reason to believe otherwise.  However, he will try his best to convince them that more troops should be called for.
+
+Hida no Fumio Motoshi ->
+    A high-ranking and hotheaded bushi, Motoshi is infuriated by Kaya's murder and the subsequent inaction on the part of the locals.  At this point, he feels it's his personal duty to avenge this killing, both since Kaya was from his House and because she seemed like a nice lady.
+
+Seppun Nozomi ->
+    As a high-ranking Emerald Magistrate who has been called in for the duration of this conflict, Seppun Nozomi wants to remain neutral.  Perceptive and skillful PCs may discern that he dislikes what the Scorpion have done, but he is much too professional to say this outright.  However, he will come down very hard on the Scorpion if he believes they taxed the village.  He wants the PCs involved so that they can press Karasu harshly, thus sparing him from needing to do that personally.
+
+Kaimei ->
+    A pious and law-abiding merchant, Kaimei feels that helping his men is both the virtuous and self-interested thing to do.
+
+Teppei ->
+    The village headsman to whom the PCs are asked to deliver the money.  Teppei also wants the PCs to look into abuses and robbery by Scorpion troops, and will direct them to a nearby hamlet where some of the worst robbery has supposedly occurred.  In fact Teppei has merely been told of this by one of his ashigaru who works for Kumoshi, but he genuinely believes what he says.
+
+Kyuugi ->
+    An incredibly dishonorable merchant, Kyuugi will deny everything and immediately involve the governor, who doesn't believe or know about Kyuugi's crimes.  Kyuugi will act insulted by the mere suggestion that he would have anything to do with the PCs and will refuse to speak to them if they make any kind of accusation.  The governor will back him up on this, since there's no evidence beyond the word of a bandit.
+
+
+EVENTS
+------
+After the PCs arrive at the city, they'll be approached by Ichita, Kaimei, and Motoshi.  Regardless of whether they agree to help Kaimei, they'll need to travel to the disputed territory to speak with Karasu.  If they don't agree to help Kaimei, then they may also be asked by Ichita to look into the abuse of peasants just so he'll have something to make the Scorpion look bad.
+
+Close investigation of the "taxed" village will show that it probably was not Scorpion troops.  While they wore Scorpion colors and several of them carried daisho, several of them did not have any samurai weapons, and their clothes and mon are unconvincing.  None of them rode horses or carried the kind of locked chest in which tax monies are typically kept.
+
+If they end up talking to Teppei, then he'll direct them to the peasants of a nearby hamlet, where a man named Hokuto was recently robbed by Scorpion troops.  When the PCs arrive there, Hokuto will invite them into his home and offer them some sake and tea and food.  He'll cataloge the abuses suffered at the hands of the Scorpion and will eventually make up a story about his fields being salted when he complained.  He'll offer to show the PCs so that they'll have evidence against the Scorpion, but as they leave his home they are attacked by him and the bandits who have been given time to gather during their meal.
+
+When it's clear that hokuto is going to lose the fight, he'll surrender.  He'll act unafraid and brag that he long ago shed any fear of death.  He'll confess to being the bandit lord, to killing Kaya, and to taxing the village.  He'll also tell them all about how Kyuugi put him up to attacking Kaya, and he'll lie by saying that they also put him up to taxing that village to make the Scorpion look bad and further precipitate a war.  In doing so, he'll hope to cut a deal in exchange for his testimony, thus allowing him to live.
+
+This will likely not work, since he has nothing to back up his words.  However, if the PCs push hard enough, they may manage to take down Kyuugi; the governor will be willing to remove Kyuugi from power and fine his family very harshly.  The governor will make this punishment sound a lot harsher than it actually is, but given the lack of evidence, the PCs probably can't expect much more.
+
+However, in order to make this happen, the PCs will need the support of Ichita, who will intervene in exchange for the PCs asking Ryuden for more troops.  If they are unwilling to do this, he will not help them.
+
+In this case, Motoshi will walk into Kyuugi's house and kill him.  He'll then go to Ichita and explain what he did and why and accept whatever punishment is coming to him.  This will kick off a huge argument between the governor and the general over how he should be punished; the general wants to send him back to his daimyo for punishment, but the governor realizes that this will result in a mere slap on the wrist, if that.  The PCs may choose to involve themselves in this, which may affect things in the next adventure.

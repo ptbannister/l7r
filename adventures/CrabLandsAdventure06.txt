@@ -1,0 +1,43 @@
+SETUP
+--------
+The Crab have two border disputes with the Scorpion, one of which the PCs have already visited in eastern Crab lands.  The other is in the far northwest corner of Crab lands.  The domain directly to the south of where that conflict is occurring is the Sakamoto domain.  One of the unsolved village burnings occurred in this domain several months ago.
+
+A traveling merchant from the Shosuro domain named Yuudai visited this domain on business several months ago.  Yuudai sells luxury kimono and sake, but he also smuggles liquid void (an opium based drink) with his wares.  He was in town for only a few days.  During the few days during which he was visiting the capitol for business, a nearby hamlet was attacked/burned.
+
+He has returned to Crab lands on another smuggling trip, and this time his wares were searched while he was entering the city.  He and his men were arrested and interrogated.  When it was discovered that their previous visit coincided with the attack, they were accused of being responsible.  Yuudai confessed in exchange for his life.
+
+His story for his involvement in the attack a few months ago sound believable: he and his 4 trusted men were staying at a nice inn in the middle of town, while his other 16 men were staying an a shabby inn elsewhere in the capitol. This is how he always travels and this is typical of traveling merchants. On his last visit, several of his men got into a bar fight and were noticeably bruised the night of the attack.  This occurred during early nighttime, before midnight, but after the city would have been easily exitable.
+
+The magistrates responded, rounded up the men and threw them in a holding area
+for the night.  The next morning, the Minister of Justice for the city (Hida Shouhei) tracked down Yuudai and slapped him with a hefty fine for the trouble his men had caused.
+
+The innkeeper of the shabby inn where these men were staying knows that these men didn't sleep in their beds that night and that they got back in the late morning after the city gates were open and that several of them were wounded.  He later learned that a hamlet had been burned that very night, but by that time the men had left. At this point, he reported the matter to a magistrate who said they'd look into it, and he never heard anything else about the matter.  He believes that these men were responsible for the attack and is not lying about anything.
+
+Shouhei knows that Yuudai's men were not involved in the attack.  However, he believes that the Scorpion ARE behind these attacks, and he wants them to get investigated seriously by Imperial magistrates.  He therefore considers his lie to be justifiable if it will uncover the truth about the Scorpion.  So when he catches Yuudai smuggling, he and Yuudai cook up a story, which Yuudai will swear to in exchange for a lenient sentence on his opium smuggling.
+
+Here's the story, which is 100% false: Yuudai was approached months ago in Ryoko Owari by a Scorpion courtier named Bayushi no Kawamune Daisuke, whose house is involved in the nearby border dispute.  This man offered to supply him with 16 men to guard his next caravan into Crab lands.  He said he needed these men to go into Crab lands to take care of some business, and he was willing to pay Yuudai 1000 koku to take them along.  Yuudai knew that the man must be doing something incredibly illegal but was too tempted by the offer of 1000 koku, so he accepted.  He had no idea the job in question would be burning down a Crab hamlet.  By the time he figured out what was going on, he was in too deep and just kept his mouth shut.
+
+The PCs are asked by Hida Ryuden to travel to this domain and investigate the claims of this merchant and recommend an outcome.  Hantei Itsuro will be with them and will be writing a letter to the Emerald Champion recommending whether and how fervently the matter be investigated.  The PCs are to assess the situation and share their thoughts with Itsuro.
+
+The PCs will have difficulty cracking this case.  There are some ways which this could be done:
+
+ - Yuudai himself might crack, though this would be difficult; as a longtime smuggler, he's quite an accomplished liar and knows that his life hangs in the balance.  He knows that changing his story will probably only make things worse, unless the PCs can convince him otherwise.
+
+ - As always, Yuudai has come with 4 trusted men and 16 hired hands.  The hired hands don't know anything, but one (or more at the GM's discretion) of the trusted men knows what's really happening.  If made to believe that they will not share a lenient sentence, then they might flip on Yuudai.
+
+ - Shouhei himself is a decent liar but not as good as a hardened criminal (8k3).  If grilled by the PCs, they might figure out he's lying to them.
+
+ - If the PCs look into altercations which occurred the night of the attack, they might learn of the barfight which Yuudai's men were involved in.  It'll be difficult to establish for sure that these men were involved, but the PCs might discover that a bunch of men were arrested and put 2 and 2 together.  Of course, if Shouhei is "helping" them investigate, then he can steer them away from the incident.
+
+Hida no Sakamoto Jun knows nothing of Shouhei's duplicity.  However, he will not hesitate to bribe the PCs with anything and everything he can offer to get them to speak in his favor.  Money, luxuries, or high positions in the Crab military should a war occur are all options.  However, he will not have anyone attempt to bribe them unless he's confident that this will not end badly; the behavior of the PCs in the earlier adventures of this campaign will affect his perception of them.
+
+
+THE OPIUM
+--------------
+Yuudai brought with him about two dozen high-quality kimono (costing 3-5 koku each), plus another 200 decent kimono (costing perhaps half a koku each).  He also had about two dozen casks of sake (worth 4 koku each), and 4 casks of liquid void.  The liquid void cost his family roughly 50 koku to manufacture, and he was selling it for 300 koku.  The projected street value was about 400 koku.
+
+Yuudai claims that his family knows nothing of his opium smuggling, and also that the local merchant family (the Tsubasa family) with which he does business also has no idea of his illegal activities.  Instead, he'll have revealed that his contact here in the city was a clerk at a local geisha house owned by the Tsubasa family named Nanako, who has already been arrested and is awaiting sentencing.
+
+Although Nanako is indeed his contact, she has basically taken the fall for the Tsubasa, who are helping her own family push for a lenient sentence in the ways that sketchy merchant families often do (I will writing a detailed list of such lobbying at some point).  However, rigorous investigation will reveal that Nanako doesn't have the means to oversee distribution of so much opium.  She has a story prepared about men who periodically come to the gesiha house where she works to buy the rest off of her which is fairly believable, and she admits to selling some of it to patrons of the geisha house, whch is also true.  In fact, every geisha house run by the Tsubasa has opium available, and they distribute it through other channels elsewhere in this domain, though it would be very difficult to discover any of that.
+
+This merchant family is the employer of the ninja whose village was actually attacked in this domain a few months ago.  The PCs will have great difficult connecting them to anything, but since they are a large and sketchy family, if run through the wringer, the PCs might be able to find an employee who has witnessed questionable activities and is willing to speak out against them.

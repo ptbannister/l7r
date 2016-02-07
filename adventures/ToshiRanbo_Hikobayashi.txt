@@ -1,0 +1,64 @@
+
+The largest of the counties surrounding Toshi Ranbo is the county of Hikobayashi.  Whenever something happens in the countryside, the GM should place the events in Hikobayashi unless there's a good reason not to.
+
+In the years before the Tsume invasion, the county magistrate of Hikobayashi was Akodo no Damasu Atsumaru.  During the 22 years that he served as county magistrate, he earned a reputation among the peasants for fairness and generosity.  He was especially adept at mediating disputes between peasants, and his subjects never hesitated to bring their conflicts to him for arbitration.
+
+A few years before the invasion, he retired to the life of a monk in the monastery just outside the town, leaving his daughter to succeed him.  When the Tsume attacked, they quickly took control of the town and its surrounding villages, searching the monastery and seizing those within.  The samurai in town all died fighting, but the monastery was seized and secured before Atsumaru even knew what was happening.
+
+When Atsumaru's status as a former Damasu bushi was discovered, the Tsume came close to having him executed or exiled, but the abbot intervened on his behalf.  Not wanting to make an enemy of the abbot, the Tsume allowed Atsumaru to stay, after extracting his word that he would remain a peaceful and obedient subject of the new government.  Atsumaru explained that he wished to spend the remainder of his old age seeking spiritual enlightenment, though he said he would reluctantly pick up his daisho again and duel any Tsume bushi who took it upon himself to issue a challenge.
+
+The position of county magistrate was eventually given to Doji no Tsume Horobinu.  He is adequate as an administrator, but is resented by the peasants for the troubles resulting from the invasion.  He's especially unpopular amongst the (admittedly small minority of) peasants who actually owned the land they farmed before their property was declared to be now owned by the House of Tsume.
+
+However, because Atsumaru still lives as a monk in Hikobayashi, the peasants tend to bring their problems to him rather than the county magistrate.  Although his decisions don't technically carry the weight of law, he is respected enough that they are followed, even by peasants whom he's ruled against.
+
+Here are a series of cases/hooks that can occur in Hikobayashi:
+
+
+
+IRRIGATION IRRITATION
+------------------------------
+A stream runs between two of the county's villages and is used to irrigate many of the fields in both villages.  As per usual, the water usage is heavily regulated, and is periodically reviewed and updated by the county magistrate according to the needs of each village.  However, recent deaths and movement have outdated the standing agreement.
+
+Each village's farmland is entirely owned by a single peasant merchant family.  The two villages in question are owned by different families, and the one whose water rights are now disproportionately low directed the village headsman to take action to remedy this.
+
+Typically in this situation, the headsman would have brought the matter before the county magistrate, but instead he and the other headsman approached Atsumaru for a ruling.  After careful consideration and surveying of the affected farmland, Atsumaru mapped out a new set of rights and restrictions, and both headsmen left satisfied with the decision.
+
+However, the merchant family whose land lost more water was taken aback by the handling of this dispute.  Although they understood that they would have lost some of their water rights in any case, they took offense at having lost those rights by the ruling of a monk with no official authority.  They immediately took the matter to Horobinu, who instantly reversed the decision, carving out a new set of standards which took away less water from the losing merchant family.
+
+The village headsmen and each of the farmers affected proceeded to completely ignore Horobinu's ruling and abide instead by Atsumaru's decision.  Officially, they accepted the official result, assuring Horobinu that the new irrigation he had okayed would be started right away... just as soon as the farmers could find the time to begin... although that might be awhile since they are already so busy with the harvest... but definitely later this year, or next year at the latest... unless the weather made things too difficult.  But they thanked Horobinu profusely for his fair and just ruling, which would certainly be obeyed to the letter!
+
+Horobinu was furious at this insubordination, and immediately ordered Atsumaru to stop mediating such disputes.  Rather than dithering or giving false assurances, Atsumaru blatantly refused.  He pointed out that offering guidance to peasants is part of the duties of a monk, whether they're struggling with spiritual questions or difficulties of the material world.  He further went on to state publicly that Horobinu lacked the authority to order such a thing (a dubious claim, but not entirely without precedent).
+
+This was more than Horobinu could let stand, but he was unsure how to proceed.  He strongly considered exiling Atsumaru from the county, but had several concerns.  For one, he worried about the reaction of the peasants; if a large public demonstration was staged, no matter how harshly he responded, it might make him appear to be a weak ruler, which might cause the governor to have him replaced.
+
+Plus, Atsumaru has reminded everyone that Horobinu does have the simple recourse of challenging him to a duel.  Although he is no longer a bushi, he has previously stated that he would be willing to pick up his daisho if the Tsume decided to challenge his presence in the county.  Horobinu knows that he would be unlikely to prevail in a duel, and he worries about losing face if he exiles Atsumaru while appearing afraid to face him in combat.
+
+So instead he has decided to bring the matter before the Board of Justice.  Since Atsumaru was a bushi from another clan, he can make a strong argument that this should be an Imperial matter.  And by having the PCs exile or muzzle Atsumaru, he can hopefully avoid looking weak or taking as much heat for the decision.  The PCs will have to decide whether to exile Atsumaru, compel his silence, or possibly whether to admonish Horobinu for poor leadership.
+
+
+
+BANDIT HUNTING
+----------------------
+Assuming that Atsumaru is not exiled, Horobinu will eventually discover that he is joining the bandit hunting patrols conducted by the ashigaru.  What's more, he apparently helps them train to better use their weapons.  Evidently this is something that Atsumaru has been doing as a monk since before the Tsume invaded, and this is not uncommon behavior for retired bushi or even for peasant monks who know how to fight.
+
+Horobinu forbids Atsumaru from training or leading ashigaru, but once again Atsumaru refuses.  He explains that he's not leading anyone, merely joining an existing search, and points out that his monastery's peasant monks have a long tradition of assisting with the martial training of the ashigaru.  Once again, Atsumaru publicly states that Horobinu is overstepping his authority as county magistrate.
+
+So Hobobinu returns to the Board of Justice, explaining that this is a much more egregious act of insubordination from this rebellious and troublemaking monk.  It's clear that the peasants look to Atsumaru as a military leader, whether or not he's officially in charge of their training or patrols.  Horobinu asks that the council order him to leave and join a monastery in Lion lands to avoid these and also possible future troubles from his presence here.  
+
+Once again, the PCs will have to decide how to rule.  Depending on their relationship with the city government, they can probably arrange to have Horobinu replaced, if they decide to side against him and don't approve of his leadership.  If this happens, they may also choose to recommend one of their district captains as his replacement - at least one of them will definitely lobby for the position, which is technically a demotion but is such a lucrative job that many bushi would still prefer it.
+
+
+
+NIGHTINGALE BUSHI
+---------------------------------
+After the invasion, a number of peasants took weapons from the bodies of fallen Lion soldiers and left the domain, trying to pass as ex-Damasu bushi ronin.  Most of them ended up in the Nightingale Clan, a newly formed minor clan who have been accepting ronin and even elevating wave men to the samurai caste.  Niban saw through their story, but accepted them anyway, coaching them on how to pass as samurai, helping them memorize a long lineage to recite on command, as any true Lion bushi would, and educating them to improve their reading and understanding of the tenants of bushido.
+
+Most of these bushi still send money back to their families, although they cannot bring them to Nightingale lands, as that would invalidate their stories of being ex-Damasu samurai.  However, they do visit their families on occasion, especially to fulfill their filial duties.  One such occasion is the Bon Festival, which is the Festival of the Dead.  The Nightingale return home to pay respects to their ancestors and visit their families; they bring their daisho but hide them in the homes of their families, since they obviously cannot carry them openly in Tsume lands.
+
+During the Bon Festival, the PCs will receive an invitation from the county magistrate to a hunting trip and feast being held in one of the villages of Hikobayashi.  The exact circumstances will depend on their relationship with the current county magistrate, but the letter should make the offer very enticing so that the PCs will accept.  However, when they arrive at the village, they will be attacked by the bandits who actually sent the letter.
+
+The county magistrate will follow standard operating procedure and search the houses from the surrounding countryside, looking for evidence of a larger bandit gang, especially looking for treasure and weapons.  The daisho of the Nightingale bushi will be found during this search, and the peasants will be arrested.  Although they seem to have no affiliation with the bandits who attacked the PCs, they still appear to be bandits by virtue of having weapons which it is illegal for peasants to possess.  The peasants claim that they looted these weapons after the invasion and have been planning on selling them, which is still illegal but much less severe than being bandits.
+
+Since the Nightingale were out honoring their ancestors at the festival while this happened, they escaped arrest.  While the PCs are in Hikobayashi waiting for the real feast which the magistrate throws for them by way of apology, the Nightingale will approach them.  They'll explain that they are ex-Damasu who have returned temporarily to honor their ancestors and family who died defending the city, who are currently buried in the mass graves outside the city, which are indeed located in Hikobayashi.  They say that they paid the peasants to put them up, since they knew that as former Damasu they would not be allowed by the Tsume to make this pilgrimage, and swore the peasants to secrecy.
+
+They will ask that the peasants be released and that their weapons be returned.  If pressed, they actually seem more concerned about the peasants than about their weapons, although they will explain their concern as a matter of hospitality.  If the PCs cannot be convinced, the Nightingale will attack them and attempt to take them hostage, although the PCs will have weapons and the Nightingale will only have improvised clubs and such.  Their fighting style will certainly reveal that they are not truly bushi, which would go poorly for them regardless of whether they win.

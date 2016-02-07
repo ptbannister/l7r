@@ -1,0 +1,313 @@
+
+katana:     4k2
+
+wakizashi:  3k2
+
+spear:      3k2, -4k0 vs armor
+axe:        3k2, -2k0 vs armor, possibly short reach
+sickle:     3k2, -6k0 vs armor, short reach
+
+lead stick: 2k2, -5k0 vs armor
+pointy stick
+forged knife
+sledge hammer
+shovel
+
+knife:      1k2, -5k0 vs armor, short reach
+stick:      1k2, -6k0 vs armor
+hand tools
+
+weaponless: 0k2, -6k0 vs armor, short reach
+
+
+
+
+non-short reach vs short reach => free raise to attack, +5 TN to hit you
+
+
+
+watchmen
+moneylenders
+caravan guards
+
+landlords?
+
+
+
+every town and provincial city has an area of 4000 population on market day
+
+    town => (6 - 2 - 1/3) * (350 + 6 * 75) * 3/10 = 880 coming into town
+         => 3/5 * 1200 = 720 who live there
+         => so 880 + 720 = 1600 folks potentially interested in entertainment
+
+    provincial city => (6 * 2) * (350 + 6 * 75) * 3/10 = 2880 coming into the city
+                    => 3/5 * 3000 = 1800 who live there
+                    => so 2880 + 1800 = 4680 folks potentially interested in entertainment
+
+    capital city => (6 * 2) * (350 + 6 * 75) * 3/10 = 2880 coming into the city
+                 => 3/5 * 12000 = 7200 folks potentially interested in entertainment
+
+~5% of the entertainment-going population on market day is needed for entertainment security
+ -> no bar can have only 1 bouncer
+
+
+
+
+1 country monk per village (800 population, counting the surrounding hamlets)
+ - how many births / deaths per year among those 160 families?
+    * assume an average peasant lifespan of 40 years(?), ignore infant mortality
+    * assume a population which is mostly stable but probably growing somewhat
+    * however, assume a greater birth rate than death rate to feed the towns and cities
+    * so if we had 1000 births and 800 deaths every 40 years, that would be 25 births and 20 deaths per year
+ - so in terms of tracking births and deaths, single abbot can easily service an entire village area
+ - presumably, the same is true movement and marriages, which will be even less frequent
+ - how frequently are worship services held? (not weekly, though abbots may go into market to preach/interact with peasants)
+ - how much conflict mediation does an abbot perform?
+ - how much teaching is the abbot responsible for, such as spreading literacy?
+
+1 preceptor per town
+ - a town's population is only 50% greater than that of a village w/ hamlets
+    * there's added hygiene in a town; more baths, fewer things covered in manure
+    * this is offset by the increased population density, which aids the spread of illness
+    * so we'll say that a town's birth and death rates are stable; 30 of each per year
+
+ ? monks per city
+ - a city's population is 3000, which if stable would be 75 births and deaths per year
+    * because of more unmarried laborers and shorter lifespan, let's say 50 births and 100 deaths per year
+    * the surrounding 6 counties can potentially feed it 180 per year, so this leaves 130 for the capital
+
+? monks per capital
+ - the capital's population is 12000
+    * so a stable rate would be 300 births and deaths each year
+    * we'll say 200 for births and 500 for deaths
+    * so the city needs 300 peasants every year to be stable
+    * there are (180 - 50) * 6 = 780 extra peasants
+    * this leaves 480 peasants left over even after all of this
+
+
+
+
+
+THINGS FARMERS NEED
+-------------------
+food
+ * grains, flour
+ * pickles (i.e. vegetables)
+ * salt
+ * meat (not much), nuts (for the fat/protein)... so foraged foods
+ * oil and vinegar
+
+torch / lantern
+
+seed for planting (had to be bought each year, they weren't allowed to save it!!!!!)
+fertilizer
+
+tea + sake
+
+medical care
+ * surgery
+ * medicines
+
+clothes
+ * finished clothes
+ * cloth for homemade clothes, plus needles and thread
+ * shoes/sandals, at least for going to market
+
+clay jars for storing food
+
+firewood or charcoal for cooking and warmth
+flint and steel for starting fires
+lumber for home repair
+nails and other building materials (straw for the roof)
+
+tools
+ * plough / hoe / digging sticks / shovels / etc
+ * baskets
+ * carts
+ * threshing flail
+ * sickle / scythe
+ * rake
+ * hammers
+ * possibly axes, possibly knives
+
+cooking supplies
+ * pot for cooking
+ * large spoon for stirring / serving
+ * plates and/or bowls
+ * eating utensils, possibly
+
+baths
+haircuts
+
+tatami mats, blankets, bedding
+
+draft animal for ploughing
+
+
+
+
+
+THINGS LABORERS NEED
+--------------------
+food
+ * grains, flour
+ * pickles (i.e. vegetables)
+ * salt
+ * meat (not much), nuts (for the fat/protein)... so foraged foods
+ * oil and vinegar
+
+tea + sake
+
+medical care
+ * surgery
+ * medicines
+
+clothes
+ * finished clothes
+ * cloth for homemade clothes, plus needles and thread
+ * shoes/sandals, at least for going to market
+
+clay jars for storing food
+firewood or charcoal for cooking and warmth
+flint and steel for starting fires
+
+cooking supplies
+ * pot for cooking
+ * large spoon for stirring / serving
+ * plates and/or bowls
+ * eating utensils, possibly
+
+baths
+haircuts
+
+tatami mats, blankets, bedding
+
+
+
+THINGS MERCHANTS NEED THAT OTHER HEIMEN/HININ DON'T
+---------------------------------------------------
+lots of ink and paper
+
+cash monies
+
+relationships
+laborers, servants, tenants, clerks
+
+jewelry
+tobacco
+spices
+furniture: tables, chests, wardrobes
+
+games: go sets, shogi pieces, etc
+
+flowers
+incense
+perfumes
+makeup
+
+fine dishes
+weapons
+
+transportation (horse, carriage, rickshaw, boat)
+transport of goods: wagons, guards, maps
+
+houses, apartments, storefronts, stalls
+
+books
+
+
+
+THINGS ONLY SAMURAI NEED
+------------------------
+forged weapons and armor
+things to maintain their weapons and armor: polish, powder, sharpening stones, special paper, oil
+special clothing, especially mon
+
+extra hygiene: daily baths, lots of shaving and haircuttery
+
+horse care
+
+
+
+
+
+
+
+1 koku = 40 gallons = 1095 meals
+       -> 0.036529680365296802 koku / meal
+       -> 0.58447488584474883 cups / meal
+
+1 meal (~400 calories) = 1 "bowl" of rice = 0.6 cups = 1 sen (wholesale price is ~0.91 sen)
+1 month worth of meals = 1 "jar" of rice = 50 cups = 9 zeni  (wholesale price ~8.4 zeni)
+
+
+someone working all day every day could make ~50 shirts per week
+if we assume that someone makes 2 sen for each 5 shirts,
+then that's 1 koku per year
+
+~500 yards of thread per day w/ a drop spindle
+and it takes ~1000 yards for a shirt
+so you can get the yarn for a shirt w/ 2 days of work
+we'll again assume 1 koku per year
+
+we'll assume 1 - 2 koku for weaving, which is more skilled and requires a loom
+a good loom costs 0.5 - 2 koku
+
+* one common job for a laborer would be going around to collect the cloth
+    and distribute the money
+* one common job for an ashigaru would be to go to town and guard the wagon
+    that carries the money (~2 zeni per peasant)
+
+
+textiles
+
+clay things such as jars
+baskets
+shoes and sandals
+charcoal
+tatami mats
+carved wooden things (spoons, bowls, pegs, etc)
+rope
+
+grinding flour
+processing soybeans
+preparing dried tuna
+pickling vegetables
+
+
+
+
+
+2 bu per tenant for staying in REALLY low-quality housing
+
+
+
+
+Jobs that ashigaru will do when they move into the city
+
+service jobs (porters, carpenters, waiters, etc)
+menial labor jobs (dying, flour milling, noodle making, etc)
+
+foreman, clerk
+
+bouncers/security (bars, teahouses, geisha houses, gambling dens, etc)
+guards (homes, warehouses)
+
+caravan guards
+
+
+
+an entry level laborer makes ~3 koku per year
+3000 sen / 365 days
+         = ~8 sen per day
+         / 2 shifts (of 6 hours each)
+         = ~4 sen per shift
+
+
+strongarm jobs: starting at ~4 koku per year
+
+intermediate: 6 koku (~1 year to get to this point)
+
+trusted: 9 koku
+
+inner circle: 15 - 20 koku

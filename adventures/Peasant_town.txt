@@ -1,0 +1,11 @@
+TOWN HOOKS
+----------
+These hooks take place in the town at the center of the county while the PCs are there for market day and working their weekly jobs:
+
+A drunk monk starts a brawl in a bar while the PCs are working as bouncers. He is at fault and normally the PCs would just beat him up and leave him in the alley outside. But since he's a monk, the situation is more delicate.
+
+The PCs are working security at a large outdoor play, and the acting troupe asks them to help skim money off the top to cut out the merchant house.
+
+There is a run of wheat seed while the PCs are on duty working at a large teahouse. In order to buy the wheat seed they were planning on buying after they were finished with their shifts, they would have to walk away from their shift, which would not only forfeit their wages for the day, but would potentially affect their reputations. On the other hand, waiting another week to plant their wheat will affect their harvest negatively by much more than a single shift's wages.
+
+While the PCs are working security at a large restaurant, a servant gets the order wrong for a merchant who is wining and dining a local bushi. The merchant begins beating the servant mercilessly, while the samurai looks on disapprovingly. The PCs must decide whether to intervene and how to handle the aftermath.

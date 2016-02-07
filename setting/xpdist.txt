@@ -1,0 +1,22 @@
+Percent of the population with this amount of XP.
+Remember that 150XP is the default starting amount.
+
+1.0  <= 149 XP
+.80     150 XP or greater
+.60     160 XP or greater
+.50     170 XP or greater
+.40     180 XP or greater
+.30     190 XP or greater
+
+.20     200 XP or greater
+.18     210 XP or greater
+.16     220 XP or greater
+.14     230 XP or greater
+.12     240 XP or greater
+
+.1      250 XP or greater
+.01     300 XP or greater
+.001    350 XP or greater
+.0001   400 XP or greater
+.00001  450 XP or greater
+.000001 500 XP or greater

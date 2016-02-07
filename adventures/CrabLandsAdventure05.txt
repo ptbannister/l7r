@@ -1,0 +1,50 @@
+
+SETUP
+--------
+Hida Ryuden has dispatched 1000 men to the Fumio domain to deal with its current ogre problem.  They arrive a week or two after the PCs to sweep through the domain find the ogres.  Soon after arriving they will successfully find and kill two of the ogres involved, but not the ones who can speak the human language.
+
+FUNGUS
+-----------
+This province has recently endured a fungal blight on its crops, and as such many of the peasants are unable to pay their entire rent to their landlords.  This was actually the rent dispute which the previous magistrate was dealing with when he was attacked and killed by ogres.  In these situations there are several different things a magistrate in this situation might do:
+
+ - The magistrate might simply let the merchant family handle it.  Peasant tenant farmers don't pay taxes directly; their landlords are responsible for paying taxes on the land they owe, so as long as the merchant family pays the taxes they owe, the magistrate might simply let them handle collecting money from the peasants.  This often consists of the merchant family sending thugs into the peasants homes to confiscate anything of value to make up for their unpaid rent.
+
+ - The magistrate might decree that all peasants get a break on their rent this year and/or that they can defer payment until later, possibly with no interest.  Depending on his generosity and his feelings towards merchants, the magistrate might also give the merchant family a break on their taxes this year as well.
+
+ - The magistrate might try to handle things on a case by case basis.  Unfortunately, a county magistrate only has a staff of a few dozen bushi, all of whom have other duties, and there are well over 1000 farming families in the average county.  Surveying all of that land to determine exactly which farms were hit and how badly by the fungal blight is very expensive and time consuming.
+
+However, because of the large number of troops arriving, surveying the land is actually feasible.  Of course, these bushi are SUPPOSED to be looking for ogres.
+
+Hida Kosara is currently the acting magistrate and intends to give the peasants a break on their rent and give the merchant family a break on their taxes.  He figures that the peasants can pay 1/3 of their rent, and merchant families can pay 2/3 of their taxes.  This leaves him needing to make up the extra 1/3 of the tax share he'll owe to the governor, making everyone contributing an equal share.  Kosara is not greedy, and has chosen this because it seem to be the most fair thing to do.  Of course, some peasants will be much more than affected than others, so this is too much for some and not enough for others.
+
+Hida Shiromasa is the commander in charge of the extra 100 troops stationed in Kosara's county to deal with the ogres.  He outranks Kosara, but Kosara has the final say in matters relating the governance of his county.  Shiromasa wants to be made the magistrate for this county, and his wealthy family has been giving gifts to the governor and his retainers to sweeten the deal.  Shiromasa also wants to demonstrate his superior governing skills by persuading the general to use some of the men to survey the land while hunting ogres - he'll claim that since they're already in the countryside this won't really take up much extra time and the ogres will be just as likely to be caught.
+
+Kosara is against this, since he thinks the men should be hunting ogres.  General Akiho is willing to have his men used in this manner if he's compensated fairly.  Shiromasa is willing to put forward some money towards this, and the local wealthy merchant family is backing him, since they own most of the land here, and they're willing to contribute the rest.
+
+The PCs will be asked by Shiromasa and the merchant house to speak to the incoming general about using his troops in this manner.  As Hida Ryuden's representatives, they will be in a position to sway him and assure him that this is perfectly acceptable.  They will also be offered compensation for their help.  Shiromasa will also be looking for their backing him to become the next county magistrate, arguing that he's showing superior leadership by addressing this problem properly instead of trying to make one single solution work for everyone.
+
+Neither man really has the authority to solve this problem currently, and both will ask the PCs to recommend that they be named county magistrate immediately so as to be able to adjust rent and taxes this year across the board (in Kosara's case) or deal with organizing the adjustments on a case by case basis given the reports of the incoming bushi army (in Shiromasa's case).
+
+
+MISSING REPO MAN
+-------------------------
+Kimie is a member of the local merchant family which is backing Shimura.  She is the cousin of Kaya from the border, as they are members of the same sake merchant family (see adventure #3).  She will be extremely grateful to the PCs for what they've done and give them lots of very fine sake as a gift.
+
+She will also ask them to look into a matter important to her family.  Her family act as the local moneylenders as well as owning lots of land and selling sake, etc.  They've had trouble with the local abbot.  Last year when a peasant couldn't pay back their debt in full, the abbot helped them pay some of it back and declared the debt to be repaid (he claimed that the collector had agreed to this, and there's some dispute over whether this actually happened).  When the debt collector was sent back to forcibly collect the money, the abbot declared that he was committing robbery, and the local ashigaru beat the man so severely he almost died from his wounds.
+
+Recently, Kimie sent a man maned Fudo to discreetly collect some money she was owed, and he disappeared.  She believes the ashigaru may have gone too far and killed him, but Kosara doesn't want to investigate.  Evidently Fudo was working for Kimie to work off some gambling debts she'd paid for him, and Kosara believes he simply skipped town to get out of repayment.  Fimie argues that she hired him a few months ago and he probably would have skipped town before now if he was planning on doing so, and that his mother still lived in the nearby city, and he probably wouldn't abandon her.  Kosara argues that he has a brother who can look after his mother and he's clearly not an especially upright guy if he's gambling his money away.
+
+If the PCs look into this, they'll need to speak to the village headsman and/or the abbot.  These men will truthfully say that they haven't heard anything about this man, but secretly they both believe that Kimie might be right and some of the ashigaru might have killed him.  They'll argue that if that did actually happen, the ashigaru probably thought he as a bandit since he was sneaking around, was armed, and was scoping out peasants trying to take their money.  In exchange for their cooperation, they'll ask that the PCs find the ashigaru innocent of having committed any crime if it turns out this is what happened - they'll probably try to get the PCs to give their words that they'll do this.
+
+If the PCs can convince the abbot/headsman and/or bully them into cooperating, they'll be directed to the ashigaru.  On the way they'll be attacked by the man-eating ogres who actually killed Fudo.  He made a tempting target as a strong, armed man and so do the PCs.  After one ogre is killed the other will curse them using human language, confirming that these ogres were the ones behind the village attacks.
+
+
+MISBEHAVING BUSHI
+---------------------------
+A local ashigaru from another village spent the day at the local farmers market in town to sell his crop of indigo (a crop not hit by the fungal blight).  He was successful, but on his way home he was waylaid by some patrolling bushi who mistook him for a bandit, since he was carrying a weapon and a considerable amount of money.  They took his weapon and money and arrested him until his story about being an ashigaru could be confirmed.
+
+After his story was confirmed they gave him his weapon and some of his money back, keeping the rest for themselves.  They claimed that they gave him back everything they had taken.  He claims that they stole the rest and he wants it back.
+
+The general will want this problem to just go away, but he'll back his men unless the PCs can turn up proof that they're lying.  The PCs can do this if they interview the indigo merchant and ask him who he sold to, and confirm with all of those buyers how much money changed hands.  They can also just interrogate the peasant and bushi and make good interrogation rolls to determine to their own satisfaction that the bushi are lying.
+
+The general may just want the problem to go away and offer to personally replace the money the ashigaru claimed to make the matter drop, but say that the ashigaru can't be trusted and that his claims can't be proven.  Kosara will want the men prosecuted, Shiromasa will not, unless it's painfully obvious that they're guilty.

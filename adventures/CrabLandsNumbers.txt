@@ -1,0 +1,21 @@
+
+Here's a timeline of the attacks as of the start of the campaign:
+84 days ago: first attack
+70 days ago: second attack
+53 days ago: third attack
+45 days ago: ogre attack
+41 days ago: fourth fitting-the-profile attack
+20 days ago: fifth fitting-the-profile attack
+16 days ago: ogre attack (presumed to be the same ogres)
+10 days ago: bloodspeaker attack
+
+The demographics.txt file in the L7R subversion repository summarizes the number of useful samurai (who aren't too young or old to be put to work) in the average domain: 1200 in the capitol, 300 in each of the 6 cities, and 25 in each of the 36 towns.
+
+Each Crab domain that's not on the Kaiu Wall or one of their borders typically send about 15% of their useful samurai to those places as part of their tax obligation to the clan.  So at any given time, the average Crab domain is short about 600 useful samurai.  Because of the recent border disputes with the Scorpion, combined with the higher level of troop on the Wall, another 5% of the useful samurai in each of these domains (about 200) is away.
+
+Much of this 20% (about 800 troops) has been taken from the towns in the countryside of these domains.  So instead of about 25 useful samurai, most Crab 
+towns not on the border or Wall have only about 10 useful samurai at the moment.  This is a large part of why the bandit corridor exists in the middle of Crab lands, and merchants are saying it's why there are so many more attacks now that even more troops are gone.
+
+At any given time, the Crab have between 15 - 30 thousand troops stationed on the Wall from its various domains.  Right now that number is about as high as it ever is, at about 30,000.  Each of the disputed border areas currently has about 9,000 extra troops.
+
+So the issue is how many of the 30,000 troops on the Wall can be spared to be re-stationed in the countryside, patrol the roads, or reinforce the border.  While the Crab already outnumber the Scorpion at each disputed area, an extra 15,000 troops split between those places would be a huge tactical advantage.  And an extra 15,000 troops all looking for ogres and bandits would be able to accomplish a lot.

@@ -1,0 +1,42 @@
+
+Each of you will play a young member of a different family from a farming village on the far edge of the county.  You've each recently been licensed to carry weapons as ashigaru, which has several benefits.  You get a small stipend from the country magistrate for going on regular bandit hunting patrols.  You also get money from the merchant families who own most of the land in the county for doing extra patrols and odd jobs for them.  Other peasants will even sometimes come to you for help sorting out feuds and domestic disputes.
+
+More than that, being a local ashigaru is often a stepping stone to bigger and better things.  After proving yourselves, you can eventually move into the big city in the center of the province, perhaps even eventually the capital of the domain.  Living in a city offers better jobs and lots of opportunities for financial and social advancement.
+
+
+A big theme in the campaign is making decisions about how you want to advance.  For example, there are three different groups that you can build relationships with, and you'd have to decide which groups to throw in with from time to time, based on the situations you find yourselves in:
+
+ - Monks are the real moral leaders of their communities, however much the local authorities or rich businessmen may disagree.  Devout peasants (and often samurai) will often do whatever an abbot tells them, and so being in the good graces of the local temple means you'll always have friends in the community when you need them.
+
+ - Merchants can provide financial security like nothing else; many an up-and-coming peasant has grown rich simply by forging a relationship with a large merchant family.  Whether you're an honest worker whose integrity is highly valued, or a shady criminal with extremely useful skills, there are merchants who will pay uoi a lot of money for your services and stand behind you when trouble comes.
+
+ - Magistrates are the most capricious and arbitrary of these groups.  Many peasants fear to approach magistrates even when they haven't done anything wrong, because many samurai may be just as likely to punish those who report wrongdoings as those who commit them.  However, anyone who has the friendship of a magistrate can dodge all kinds of problems, whether it's other samurai who are abusing their authority, or even getting out of trouble for your own misdeeds.
+
+
+Another thing you'll have to decide is whether and when you want to break the law.  For example:
+
+ - You can try to stay on the right side of the law.  This might mean passing up a lot of lucrative jobs, but it also probably means keeping out of a lot of trouble.
+
+ - You can go to the opposite extreme and take jobs helping smugglers, gamblers, drug dealers, murderers, etc.  This work can be incredibly profitable, but also carries a lot of danger of imprisonment and execution.
+
+ - There are plenty of opportunities for illegal activities that don't actually revolve around crime-for-profit.  For example, acting as a collections agent for a moneylender, assaulting criminals who try to shake down merchants, or conducting vigilante justice to defend the honor of family and friends.
+
+
+Perhaps even more fundamental is the decision of what profession to take.  As peasants, you won't get a school, but will instead use the Profession rules, which you can find at http://courtwright.org/svn/l7r/rules/ along with all the other rules.  Every time you take a profession ability, you can take it from any profession (except Ninja).
+
+ - Wave man abilities help in combat and are extremely useful in advancing a career as a mercenary.  Since you're likely to get into at least a few combats in the campaign, I strongly advise taking at least a couple of these (in particular the one that gives you a bonus if you miss).
+
+ - Worker and Merchant abilities come with a Money Bonus.  This is still less lucrative than being a fighter-for-hire, but you're a lot less likely to get killed in the process.  If you really wanted financial security without a lot of risk, you could take mostly abilities with high money bonuses and save and live frugally.
+
+ - Taking a mix of these abilities may offer a good balance between being able to stand up for yourself in a fight and still having a bit of financial stability.  On the other hand, this approach won't turn you into Mighty Kyoude.
+
+
+Other than what I've already listed, this campaign will be atypical in several ways:
+
+ - You'll gain experience very rapidly.  The campaign will take place over a period of years; we may jump forward months at a time, with a few brief descriptions and choices involving your activities over that time.  This chronicles your rise to riches and prominence and power within your communities, and this will be accompanied by cooresponding increases in experience.  Over the course of this one campaign, you should expect to go from ~50XP to somewhere in the 300 - 400 XP range, which means that you'll probably advance by 30 - 50 XP per adventure (though it's assumed that you're busy gaining XP between the adventures we actually play out).
+
+ - Because you're a peasant with limited education, many skills which are basic knacks for samurai will be advanced knacks for you.  Specifically, the etiquette, culture, history, law, precepts are considered advanced for your characters.  Heraldry is still a basic knack, but for you it will more give info on folks within your province, the local farmer and merchant and samurai families and the relationships they have with one another.
+
+ - One major theme in the campaign will be the surprising amount of freedom and influence that you can have even as a peasant farmer who's a newcomer to the big city.  But another major theme in this campaign will be how powerless you are; any kind of trouble you get into, whether deserved or not, can lead to you getting fined, imprisoned, or executed.  At many points during this campaign I will make a random roll and there will be some chance that you'll be sent off to forced labor for something you've done or failed to do.  Depending on what you did and how well you can explain yourselves and what things you've done in the past, these penalties will be larger or smaller, but if you step too far out of line then there will be a small chance of being randomly and capriciously executed, even if there isn't a lot of proof against you.  This campaign is thus a LOT more potentially lethal the typical L7R campaign; if too many PCs die then I'll have to scale it back a bit, since I don't want everyone to lose their character and certainly don't want anyone to go through several characters over the course of the campaign, but I do want to impress upon everyone that the danger of being smacked down by the authorities for stepping even a little out of line is very real.
+
+ - I'll be experimenting with a different style of adventure.  Instead of a long chain of events and encounters kicked off by some kind of adventure hook, there will be lots of encounters that start with the GM saying, "So while you're out on a caravan guard assignment and are resting in a provincial city..."  We may have lots of sessions where the entire time is taken up by lots of small adventure fragments rather than full adventures.  Similarly, a large part of the adventure we do have will be driven by random chance, like if you take a shady job then there will be a roll to see whether the magistates find out, etc.
