@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from dice.main import main
+from dice.simulation import main
 
 main()
 

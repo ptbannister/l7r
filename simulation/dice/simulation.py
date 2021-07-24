@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 
 #
-# main.py
+# simulation.py
 # Author: Patrick Bannister
 # Driver for a Monte Carlo simulation to calculate the probability
 # of rolling ascending Target Numbers using the L7R homebrew rules.
 #
 
 import argparse as ap
+from io import TextIOWrapper
 import multiprocessing as mp
+import os
 import random
 
 
 from dice.dice import Dice
 from dice.mutator import MerchantMutator, ShosuroMutator, VALID_MUTATOR_NAMES, default_mutator_class
+from dice.output import TextOutput
 
 
 USAGE_STR = '''python dice.py [--mutator MUTATOR_NAME] [--trials N_TRIALS]
@@ -74,7 +77,17 @@ def main():
   nprocesses = mp.cpu_count()
   step = 5
   bins = 15
+
+  # validate number of trials
   trials = args.trials
+  if (trials < 1):
+    print('[!] invalid number of trials: require that 1 <= trials <= 1,000,000')
+    sys.exit(1)
+  if (trials > 1000000):
+    print('[!] invalid number of trials: require that 1 <= trials <= 1,000,000')
+    sys.exit(1)
+
+  # validate mutator class
   mutator_name = args.mutator
   if (mutator_name == 'merchant'):
     mutator_class = MerchantMutator
@@ -95,18 +108,20 @@ def main():
     simulations = [result.get(None) for result in async_results]
 
   # output results
-  simulations.sort()
-  header = '\t' + '\t'.join([str(i*step) for i in range(1, bins)]) + '\tMutator Value'
-  print(header)
-  prev_rolled = 0
-  for simulation in simulations:
-    if (simulation.rolled != prev_rolled):
-      print()
-      prev_rolled = simulation.rolled
-    probabilities = []
-    for i in range(1, bins):
-      probabilities.append(sum(simulation.results[i:bins]) / trials)
-    probabilities_str = '\t'.join(['{:.2f}'.format(p) for p in probabilities])
-    mutator_value = '{:.2f}'.format(simulation.mutator_value / trials)
-    print('{}k{}\t{}\t{}'.format(simulation.rolled, simulation.kept, probabilities_str, mutator_value))
+  output = TextOutput(os.sys.stdout, step, bins)
+  output.write(simulations)
+  #simulations.sort()
+  #header = '\t' + '\t'.join([str(i*step) for i in range(1, bins)]) + '\tMutator Value'
+  #print(header)
+  #prev_rolled = 0
+  #for simulation in simulations:
+  #  if (simulation.rolled != prev_rolled):
+  #    print()
+  #    prev_rolled = simulation.rolled
+  #  probabilities = []
+  #  for i in range(1, bins):
+  #    probabilities.append(sum(simulation.results[i:bins]) / trials)
+  #  probabilities_str = '\t'.join(['{:.2f}'.format(p) for p in probabilities])
+  #  mutator_value = '{:.2f}'.format(simulation.mutator_value / trials)
+  #  print('{}k{}\t{}\t{}'.format(simulation.rolled, simulation.kept, probabilities_str, mutator_value))
 
