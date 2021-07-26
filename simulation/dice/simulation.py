@@ -14,7 +14,7 @@ import os
 import random
 
 
-from dice.dice import Dice
+from dice.roll import Roll
 from dice.mutator import MerchantMutator, ShosuroMutator, VALID_MUTATOR_NAMES, default_mutator_class
 from dice.output import TextOutput
 
@@ -35,7 +35,7 @@ class Simulation:
     self.step = step
     self.bins = bins
     self.trials = trials
-    self.dice = Dice(rolled, kept, mutator_class)
+    self.roller = Roll(rolled, kept, mutator_class)
     self.bins = bins
     self.results = [0 for i in range(bins)]
     self.mutator_value = 0
@@ -43,7 +43,7 @@ class Simulation:
    
   def run(self):
     for n in range(self.trials):
-      (roll, bonus) = self.dice.roll()
+      (roll, bonus) = self.roller.roll()
       self.results[min(int(roll / self.step), self.bins-1)] += 1
       self.mutator_value += bonus
       self.mutator_value_squares += bonus*bonus
@@ -110,18 +110,4 @@ def main():
   # output results
   output = TextOutput(os.sys.stdout, step, bins)
   output.write(simulations)
-  #simulations.sort()
-  #header = '\t' + '\t'.join([str(i*step) for i in range(1, bins)]) + '\tMutator Value'
-  #print(header)
-  #prev_rolled = 0
-  #for simulation in simulations:
-  #  if (simulation.rolled != prev_rolled):
-  #    print()
-  #    prev_rolled = simulation.rolled
-  #  probabilities = []
-  #  for i in range(1, bins):
-  #    probabilities.append(sum(simulation.results[i:bins]) / trials)
-  #  probabilities_str = '\t'.join(['{:.2f}'.format(p) for p in probabilities])
-  #  mutator_value = '{:.2f}'.format(simulation.mutator_value / trials)
-  #  print('{}k{}\t{}\t{}'.format(simulation.rolled, simulation.kept, probabilities_str, mutator_value))
 
