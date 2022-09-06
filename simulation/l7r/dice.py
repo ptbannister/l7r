@@ -1,24 +1,31 @@
-from __future__ import division
-from common import *
+import sys
+from pprint import pprint
+from random import randrange
+from collections import defaultdict
 
 try:
-    from probabilities import prob
+    with open('/tmp/probabilities.py') as f:
+        exec(f.read())
+except Exception:
+    pass
+else:
     for reroll in [True, False]:
         d = defaultdict(int)
         d.update(prob[reroll])
         prob[reroll] = d
-except:
-    pass
+
 
 def avg(reroll, roll, keep):
     return prob[reroll][roll, keep] or (41 + roll + keep)
 
+
 def d10(reroll=True):
     total = die = randrange(1, 11)
-    while reroll and die==10:
+    while reroll and die == 10:
         die = randrange(1, 11)
         total += die
     return total
+
 
 def actual_xky(roll, keep):
     bonus = 0
@@ -28,35 +35,37 @@ def actual_xky(roll, keep):
     if keep > 10:
         bonus = keep - 10
         keep = 10
-    
+
     return roll, keep, bonus
+
 
 def xky(roll, keep, reroll=True):
     roll, keep, bonus = actual_xky(roll, keep)
     return bonus + sum(sorted(d10(reroll) for i in range(roll))[-keep:])
 
+
 if __name__ == "__main__":
-    [fname] = sys.argv[1:2] or ["probabilities.py"]
+    [fname] = sys.argv[1:2] or ['/tmp/probabilities.py']
     ROLLS = 1000
     prob = {True: defaultdict(int), False: defaultdict(int)}
     for i in range(ROLLS):
         for rolled in range(1, 11):
-            for kept in range(1, rolled+1):
+            for kept in range(1, rolled + 1):
                 for reroll in [True, False]:
                     result = xky(rolled, kept, reroll)
-                    prob[reroll][rolled,kept] += result
+                    prob[reroll][rolled, kept] += result
                     for tn in range(result):
-                        prob[reroll][rolled,kept,tn] += 1
-                    
+                        prob[reroll][rolled, kept, tn] += 1
+
                     if rolled == 10:
-                        for j in range(kept-1, 1, -1):
+                        for j in range(kept - 1, 1, -1):
                             prob[reroll][rolled + j, kept - j] += result
                             for tn in range(result):
                                 prob[reroll][rolled + j, kept - j, tn] += 1
-    
+
     for reroll in [True, False]:
-        prob[reroll]  = dict((key, val/ROLLS) for key,val in prob[reroll].items())
-    
-    with open(fname, "w") as f:
-        f.write("prob = ")
+        prob[reroll] = {key: val / ROLLS for key, val in prob[reroll].items()}
+
+    with open(fname, 'w') as f:
+        f.write('prob = ')
         pprint(prob, stream=f)
