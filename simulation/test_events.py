@@ -60,5 +60,5 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     fifth_event = engine.get_history().pop(0)
     self.assertTrue(isinstance(fifth_event, LightWoundsDamageEvent))
     self.assertEqual(target, fifth_event.target)
-    self.assertEqual(15, fifth_event.amount)
+    self.assertEqual(15, fifth_event.damage)
 

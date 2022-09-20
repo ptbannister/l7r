@@ -1,8 +1,9 @@
 
 from abc import ABC, abstractmethod
 
-from simulation.actions import AttackAction
-from simulation.events import AttackDeclaredEvent, LightWoundsDamageEvent, NewPhaseEvent, TakeAttackActionEvent, TakeSeriousWoundEvent, WoundCheckDeclaredEvent, WoundCheckRolledEvent, WoundCheckSucceededEvent
+from simulation.actions import AttackAction, ParryAction
+from simulation.events import AttackDeclaredEvent, AttackRolledEvent, LightWoundsDamageEvent, NewPhaseEvent, TakeAttackActionEvent, TakeParryActionEvent, TakeSeriousWoundEvent, WoundCheckDeclaredEvent, WoundCheckRolledEvent, WoundCheckSucceededEvent
+from simulation.log import logger
 
 class Strategy(ABC):
   '''
@@ -46,7 +47,7 @@ class AlwaysAttackActionStrategy(Strategy):
     # try to attack if action available
     # TODO:
     if character.has_action():
-      if context.phase() == min(character.actions()):
+      if context.phase() >= min(character.actions()):
         return character.attack_strategy().recommend(character, event, context)
     # TODO: evaluate whether to interrupt
     return None
@@ -57,7 +58,7 @@ class AttackStrategy(Strategy):
     if isinstance(event, NewPhaseEvent):
       if character.has_action():
         # TODO: implement intelligence around interrupts
-        if context.phase() == min(character.actions()):
+        if context.phase() >= min(character.actions()):
           target = self.find_target(character, context)
           if target is not None: 
             attack = AttackAction(character, target)
@@ -77,9 +78,34 @@ class AttackStrategy(Strategy):
 
 class ParryStrategy(Strategy):
   def recommend(self, character, event, context):
-    # TODO: handle AttackDeclared and determine whether to parry
-    # TODO: handle AttackPredeclared and determine whether to parry
-    return None
+    if isinstance(event, AttackRolledEvent):
+      # is this character in my group?
+      if event.action.target().group() == character.group():
+        # did it hit?
+        if event.action.is_hit() and not event.action.parried():
+          # TODO: calculate whether I might lose from this attack
+          too_perilous = False
+          # was it a big hit?
+          extra_dice = event.action.calculate_extra_damage_dice()
+          if extra_dice > 4 or event.action.skill() == 'double attack' or too_perilous:
+            # do I have an action?
+            # TODO: handle ability to interrupt
+            if context.phase() >= min(character.actions()):
+              parry = ParryAction(character, event.action.subject(), event.action)
+              return TakeParryActionEvent(parry)
+            else:
+              logger.debug('{} cannot parry, no action in current phase.'.format(character.name()))
+          else:
+            logger.debug('{} will not parry a small attack.'.format(character.name()))
+        else:
+          logger.debug('{} will not parry because attack missed or is already parried.'.format(character.name()))
+      else:
+        logger.debug('{} will not parry because target is not an ally.'.format(character.name()))
+
+
+class NeverParryStrategy(Strategy):
+  def recommend(self, character, event, context):
+    logger.debug('{} never parries'.format(character.name()))
 
 
 class KeepLightWoundsStrategy(Strategy):
@@ -91,8 +117,26 @@ class KeepLightWoundsStrategy(Strategy):
       if event.subject == character:
         if event.damage > event.roll:
           raise RuntimeError('KeepLightWoundsStrategy should not be consulted for a failed wound check')
-        # TODO: attempt to keep LW if likely to pass future wound checks
-        return TakeSeriousWoundEvent(character, 1)
+        # keep LW to avoid unconsciousness
+        if character.sw_remaining() == 1:
+          logger.debug('{} keeping light wounds to avoid defeat.'.format(character.name()))
+          return
+        # how much damage do we expect to take in the future?
+        expected_damage = 0
+        if len(character.lw_history()) == 0:
+          expected_damage = context.mean_roll(7, 2)
+        else:
+          expected_damage = int(sum(character.lw_history()) / len(character.lw_history()))
+        # what is the probability of making the next wound check?
+        (rolled, kept, bonus) = character.get_wound_check_roll_parameters()
+        future_damage = character.lw() + expected_damage
+        p_fail_by_ten = 1.0 - context.p(future_damage - bonus - 10, rolled, kept)
+        if p_fail_by_ten > 0.5:
+          # take the wound if the next wound check probably will be bad
+          logger.debug('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
+          return TakeSeriousWoundEvent(character, 1)
+        else:
+          logger.debug('{} keeping light wounds because the next wound check should be ok.'.format(character.name()))
 
 
 class WoundCheckStrategy(Strategy):
@@ -102,6 +146,13 @@ class WoundCheckStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, LightWoundsDamageEvent):
       if event.target == character:
-        # TODO: calculate expected outcome and spend VP appropriately
-        return WoundCheckDeclaredEvent(character, event.amount, 0)
+        (rolled, kept, bonus) = character.get_wound_check_roll_parameters()
+        spend_vp = 0
+        # What is the probability of making the roll?
+        p_success = context.p(event.damage - bonus, rolled, kept)
+        if p_success < 0.5:
+          # What is the probability of failing by 10 or more?
+          p_fail_bad = context.p(event.damage - bonus - 10, rolled, kept)
+         
+        return WoundCheckDeclaredEvent(character, event.damage, 0)
 

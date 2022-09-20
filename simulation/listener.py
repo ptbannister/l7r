@@ -53,7 +53,7 @@ class LightWoundsDamageListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, LightWoundsDamageEvent):
       if event.target == character:
-        character.take_lw(event.amount)
+        character.take_lw(event.damage)
         return character.wound_check_strategy().recommend(character, event, context)
 
 
@@ -61,7 +61,7 @@ class SeriousWoundsDamageListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, SeriousWoundsDamageEvent):
       if event.target == character:
-        character.take_sw(event.amount)
+        character.take_sw(event.damage)
         if not character.is_alive():
           return DeathEvent(character)
         elif not character.is_conscious():
@@ -75,7 +75,7 @@ class TakeSeriousWoundListener(Listener):
     if isinstance(event, TakeSeriousWoundEvent):
       if event.target == character:
         character.reset_lw()
-        return SeriousWoundsDamageEvent(character, event.amount)
+        return SeriousWoundsDamageEvent(character, event.damage)
 
 
 class WoundCheckDeclaredListener(Listener):

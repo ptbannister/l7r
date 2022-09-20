@@ -21,6 +21,7 @@ class TestCombatEngine(unittest.TestCase):
     akodo = Character('Akodo')
     bayushi = Character('Bayushi')
     context = EngineContext([[akodo,], [bayushi,]])
+    context.load_probability_data()
     engine = CombatEngine(context)
     engine.run()
 

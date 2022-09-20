@@ -40,8 +40,8 @@ class TestTestRollProvider(unittest.TestCase):
     roll_provider = TestRollProvider()
     roll_provider.put_wound_check_roll(5)
     roll_provider.put_wound_check_roll(50)
-    self.assertEqual(5, roll_provider.get_wound_check_roll())
-    self.assertEqual(50, roll_provider.get_wound_check_roll())
+    self.assertEqual(5, roll_provider.get_wound_check_roll(1))
+    self.assertEqual(50, roll_provider.get_wound_check_roll(2))
 
   def test_no_roll_queued(self):
     roll_provider = TestRollProvider()

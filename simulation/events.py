@@ -1,5 +1,45 @@
+#!/usr/bin/env python3
+
+#
+# events.py
+# Author: Patrick Bannister
+# Events for the L7R combat simulator.
+#
+
 
 class Event(object):
+  '''
+  Events capture a moment in L7R combat mechanics when a character
+  is affected, or a decision must be made.
+  Examples:
+   * new phase: characters with actions should decide what to do
+   * attack rolled: characters should decide whether to parry
+   * light wounds: character might decide to spend VP on wound check
+
+  Events are basically messages. They should be treated as immutable.
+  Other classes should never modify an event!
+
+  Since we have the convention that events are immutable, we can also
+  have the convention that other classes are expected to access members
+  of events directly.
+
+  Some events have a **play** method. This is a generator method that
+  yields more events. This should only be done in exceptional
+  circumstances.
+
+  Every event can have different fields depending on the event,
+  but there was some effort to have a kind of consistent vocabulary.
+  **Subject**: if an event involves a character who is actively doing
+               something, the **subject** of the event is the active
+               character.
+  **Target**:  if an event involves a character who is the direct
+               object of something - such as being attacked, or taking
+               damage - then the **target** of the event is that
+               character.
+  **Damage**:  events about damage, whether they're for receiving light
+               wound, receiving serious wounds, or making a wound check,
+               have a **damage** member for the amount of damage.
+  '''
   def __init__(self, name):
     self.name = name
 
@@ -41,10 +81,9 @@ class TakeAttackActionEvent(TakeActionEvent):
   def __init__(self, action):
     super().__init__('take_attack', action)
 
-  def run(self):
+  def play(self):
     yield self._declare_attack()
     yield self._roll_attack()
-    # TODO: maybe need to run a parry engine here
     if self.action.parried():
       return self._failed()
     if self.action.is_hit():
@@ -69,6 +108,32 @@ class TakeAttackActionEvent(TakeActionEvent):
 
   def _succeeded(self):
     return AttackSucceededEvent(self.action)
+
+
+class TakeParryActionEvent(TakeActionEvent):
+  def __init__(self, action):
+    super().__init__('take_parry', action)
+
+  def play(self):
+    yield self._declare_parry()
+    yield self._roll_parry()
+    if self.action.is_success():
+      yield self._succeeded()
+    else:
+      yield self._failed()
+    
+  def _declare_parry(self):
+    return ParryDeclaredEvent(self.action)
+
+  def _failed(self):
+    return ParryFailedEvent(self.action)
+
+  def _roll_parry(self):
+    parry_roll = self.action.roll_parry()
+    return ParryRolledEvent(self.action, parry_roll)
+
+  def _succeeded(self):
+    return ParrySucceededEvent(self.action)
 
 
 class AttackDeclaredEvent(ActionEvent):
@@ -107,22 +172,22 @@ class ParryFailedEvent(ActionEvent):
 
 
 class DamageEvent(Event):
-  def __init__(self, name, target, amount):
+  def __init__(self, name, target, damage):
     super().__init__(name)
     self.target = target
-    self.amount = amount
+    self.damage = damage
 
 class LightWoundsDamageEvent(DamageEvent):
-  def __init__(self, target, amount):
-    super().__init__('lw_damage', target, amount)
+  def __init__(self, target, damage):
+    super().__init__('lw_damage', target, damage)
 
 class SeriousWoundsDamageEvent(DamageEvent):
-  def __init__(self, target, amount):
-    super().__init__('sw_damage', target, amount)
+  def __init__(self, target, damage):
+    super().__init__('sw_damage', target, damage)
 
 class TakeSeriousWoundEvent(DamageEvent):
-  def __init__(self, target, amount):
-    super().__init__('take_sw', target, amount)
+  def __init__(self, target, damage):
+    super().__init__('take_sw', target, damage)
 
 
 class StatusEvent(Event):

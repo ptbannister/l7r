@@ -26,10 +26,9 @@ class Engine(object):
     if isinstance(event, TakeActionEvent):
       logger.debug('Reevaluating initiative priority')
       self._context.reevaluate_initiative()
-    if hasattr(event, 'run'):
-      # runnable events run their own engine
-      # TODO: implement this
-      for next_event in event.run():
+    if hasattr(event, 'play'):
+      # event play method is a generator for more events
+      for next_event in event.play():
         self.event(next_event)
     else:
       # play event on each character in initiative order

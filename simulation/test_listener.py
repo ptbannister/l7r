@@ -44,6 +44,7 @@ class TestLightWoundsDamageListener(unittest.TestCase):
   def test_light_wounds(self):
     character = Character()
     context = EngineContext([[character,], [Character(),]])
+    context.load_probability_data()
     damage = 20
     event = LightWoundsDamageEvent(character, damage)
     listener = LightWoundsDamageListener()
@@ -56,6 +57,7 @@ class TestLightWoundsDamageListener(unittest.TestCase):
     character = Character()
     character.take_lw(5)
     context = EngineContext([[character,], [Character(),]])
+    context.load_probability_data()
     damage = 20
     event = LightWoundsDamageEvent(character, damage)
     listener = LightWoundsDamageListener()
@@ -107,7 +109,7 @@ class TestTakeSeriousWoundListener(unittest.TestCase):
     listener = TakeSeriousWoundListener()
     result = listener.handle(character, event, context)
     self.assertTrue(isinstance(result, SeriousWoundsDamageEvent))
-    self.assertEqual(result.amount, 1)
+    self.assertEqual(result.damage, 1)
     # the character's lw should be reset, but the sw is not taken until the serious wound event is handled
     self.assertEqual(0, character.lw())
     self.assertEqual(0, character.sw())
@@ -169,7 +171,7 @@ class TestWoundCheckFailedListener(unittest.TestCase):
     result = listener.handle(character, event, context)
     # missing a wound check by 19 means 2 SW
     self.assertTrue(isinstance(result, SeriousWoundsDamageEvent))
-    self.assertEqual(2, result.amount)
+    self.assertEqual(2, result.damage)
     # character's lw should be reset
     self.assertEqual(0, character.lw())
 

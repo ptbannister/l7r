@@ -50,4 +50,11 @@ class TestEngineContext(unittest.TestCase):
     with self.assertRaises(CombatEnded):
       context.update_status(event)
 
-
+  def test_load_probability(self):
+    context = EngineContext([[Character(),], [Character(),]])
+    context.load_probability_data()
+    # P(1) on 1k1 should be 1.0
+    self.assertEqual(1.00, context.p(1, 1, 1))
+    # P(10) on 10k10 should be 1.0
+    self.assertEqual(1.00, context.p(10, 10, 10))
+     
