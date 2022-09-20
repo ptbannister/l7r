@@ -85,7 +85,8 @@ class TakeAttackActionEvent(TakeActionEvent):
     yield self._declare_attack()
     yield self._roll_attack()
     if self.action.parried():
-      return self._failed()
+      yield self._failed()
+      return
     if self.action.is_hit():
       yield self._succeeded()
       yield self._roll_damage()
@@ -123,16 +124,20 @@ class TakeParryActionEvent(TakeActionEvent):
       yield self._failed()
     
   def _declare_parry(self):
-    return ParryDeclaredEvent(self.action)
+    declaration = ParryDeclaredEvent(self.action)
+    self.action.set_attack_parry_declared(declaration)
+    return declaration
 
   def _failed(self):
     return ParryFailedEvent(self.action)
 
   def _roll_parry(self):
     parry_roll = self.action.roll_parry()
+    self.action.set_attack_parry_attempted()
     return ParryRolledEvent(self.action, parry_roll)
 
   def _succeeded(self):
+    self.action.set_attack_parried()
     return ParrySucceededEvent(self.action)
 
 
@@ -161,6 +166,11 @@ class ParryDeclaredEvent(ActionEvent):
 class ParryPredeclaredEvent(ActionEvent):
   def __init__(self, action):
     super().__init__('parry_predeclared', action)
+
+class ParryRolledEvent(ActionEvent):
+  def __init__(self, action, roll):
+    super().__init__('parry_succeeded', action)
+    self.roll = roll
 
 class ParrySucceededEvent(ActionEvent):
   def __init__(self, action):

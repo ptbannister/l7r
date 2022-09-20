@@ -9,10 +9,9 @@
 import math
 import uuid
 
-from simulation.listener import LightWoundsDamageListener, NewPhaseListener, NewRoundListener, SeriousWoundsDamageListener, TakeSeriousWoundListener, WoundCheckDeclaredListener, WoundCheckFailedListener, WoundCheckRolledListener, WoundCheckSucceededListener
+from simulation import listener, strategy
 from simulation.log import logger
 from simulation.roll import InitiativeRoll, Roll
-from simulation.strategy import AlwaysAttackActionStrategy, AttackStrategy, KeepLightWoundsStrategy, WoundCheckStrategy
 
 RING_NAMES = ['air', 'earth', 'fire', 'water', 'void']
 
@@ -34,25 +33,27 @@ class Character(object):
     self._extra_rolled = {}
     self._group = None
     self._listeners = {
-      'lw_damage': LightWoundsDamageListener(),
-      'new_phase': NewPhaseListener(),
-      'new_round': NewRoundListener(),
-      'sw_damage': SeriousWoundsDamageListener(),
-      'take_sw': TakeSeriousWoundListener(),
-      'wound_check_declared': WoundCheckDeclaredListener(),
-      'wound_check_failed': WoundCheckFailedListener(),
-      'wound_check_rolled': WoundCheckRolledListener(),
-      'wound_check_succeeded': WoundCheckSucceededListener()
+      'attack_rolled': listener.AttackRolledListener(),
+      'lw_damage': listener.LightWoundsDamageListener(),
+      'new_phase': listener.NewPhaseListener(),
+      'new_round': listener.NewRoundListener(),
+      'sw_damage': listener.SeriousWoundsDamageListener(),
+      'take_sw': listener.TakeSeriousWoundListener(),
+      'wound_check_declared': listener.WoundCheckDeclaredListener(),
+      'wound_check_failed': listener.WoundCheckFailedListener(),
+      'wound_check_rolled': listener.WoundCheckRolledListener(),
+      'wound_check_succeeded': listener.WoundCheckSucceededListener()
     }
     self._lw = 0
     self._lw_history = []
     self._roll_provider = self
     self._skills = { 'attack': 1, 'parry': 1 }
     self._strategies = {
-      'action': AlwaysAttackActionStrategy(),
-      'attack': AttackStrategy(),
-      'light_wounds': KeepLightWoundsStrategy(),
-      'wound_check': WoundCheckStrategy()
+      'action': strategy.AlwaysAttackActionStrategy(),
+      'attack': strategy.AttackStrategy(),
+      'light_wounds': strategy.KeepLightWoundsStrategy(),
+      'parry': strategy.ParryStrategy(),
+      'wound_check': strategy.WoundCheckStrategy()
     }
     self._sw = 0
     self._tvp = 0
@@ -220,6 +221,9 @@ class Character(object):
   def name(self):
     return self._name
 
+  def parry_strategy(self):
+    return self._strategies['parry']
+
   def reset_lw(self):
     '''
     reset_lw()
@@ -282,6 +286,15 @@ class Character(object):
     roll = self._roll_provider.get_wound_check_roll(damage, vp)
     logger.debug('{} rolled wound check: {}'.format(self._name, roll))
     return roll + (5 * ap)
+
+  def set_action_strategy(self, strategy):
+    self._strategies['action'] = strategy
+
+  def set_attack_strategy(self, strategy):
+    self._strategies['attack'] = strategy
+
+  def set_parry_strategy(self, strategy):
+    self._strategies['parry'] = strategy
 
   def set_group(self, group):
     self._group = group

@@ -87,7 +87,7 @@ class ParryStrategy(Strategy):
           too_perilous = False
           # was it a big hit?
           extra_dice = event.action.calculate_extra_damage_dice()
-          if extra_dice > 4 or event.action.skill() == 'double attack' or too_perilous:
+          if extra_dice >= 4 or event.action.skill() == 'double attack' or too_perilous:
             # do I have an action?
             # TODO: handle ability to interrupt
             if context.phase() >= min(character.actions()):

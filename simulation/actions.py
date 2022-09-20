@@ -72,6 +72,9 @@ class AttackAction(Action):
   def set_parry_attempted(self):
     self._parry_attempted = True
 
+  def set_parried(self):
+    self._parried = True
+
   def tn(self):
     return self._target.base_to_hit_tn() 
 
@@ -85,10 +88,19 @@ class ParryAction(Action):
     self._predeclared = predeclared
     self._vp = 0
 
+  def is_success(self):
+    return self._parry_roll >= self._attack._attack_roll
+
   def roll_parry(self):
     self._parry_roll = self._subject.roll_skill(self.ring(), self.skill(), self._vp, self._ap)
     return self._parry_roll
 
-  def is_success(self):
-    return self._parry_roll >= self._action._attack_roll
+  def set_attack_parry_declared(self, event):
+    self._attack.add_parry_declared(event)
+
+  def set_attack_parried(self):
+    self._attack.set_parried()
+
+  def set_attack_parry_attempted(self):
+    self._attack.set_parry_attempted()
 
