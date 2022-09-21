@@ -42,10 +42,12 @@ class NewPhaseListener(Listener):
 class AttackDeclaredListener(Listener):
   def handle(self, character, event, context):
     return character.attack_declared_strategy().recommend(character, event, context)
-    
+ 
 
 class AttackRolledListener(Listener):
   def handle(self, character, event, context):
+    if event.action.subject() != character:
+      character.knowledge().observe_attack_roll(event.action.subject(), event.roll)
     return character.parry_strategy().recommend(character, event, context)
 
 
@@ -54,6 +56,7 @@ class LightWoundsDamageListener(Listener):
     if isinstance(event, LightWoundsDamageEvent):
       if event.target == character:
         character.take_lw(event.damage)
+        character.knowledge().observe_damage_roll(event.target, event.damage)
         return character.wound_check_strategy().recommend(character, event, context)
 
 
@@ -68,7 +71,14 @@ class SeriousWoundsDamageListener(Listener):
           return UnconsciousEvent(character)
         elif not character.is_fighting():
           return SurrenderEvent(character)
+      else:
+        character.knowledge().observe_wounds(event.target, event.damage)
 
+class TakeActionListener(Listener):
+  def handle(self, character, event, context):
+    if isinstance(event, TakeActionEvent):
+      if character != event.subject:
+        character.knowledge().observe_action(event.subject)
 
 class TakeSeriousWoundListener(Listener):
   def handle(self, character, event, context):
@@ -76,7 +86,8 @@ class TakeSeriousWoundListener(Listener):
       if event.target == character:
         character.reset_lw()
         return SeriousWoundsDamageEvent(character, event.damage)
-
+      else:
+        character.knowledge().observe_wounds(event.target, event.damage)
 
 class WoundCheckDeclaredListener(Listener):
   def handle(self, character, event, context):

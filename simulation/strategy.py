@@ -46,9 +46,8 @@ class AlwaysAttackActionStrategy(Strategy):
       return None
     # try to attack if action available
     # TODO:
-    if character.has_action():
-      if context.phase() >= min(character.actions()):
-        return character.attack_strategy().recommend(character, event, context)
+    if character.has_action(context):
+      return character.attack_strategy().recommend(character, event, context)
     # TODO: evaluate whether to interrupt
     return None
 
@@ -56,22 +55,26 @@ class AlwaysAttackActionStrategy(Strategy):
 class AttackStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, NewPhaseEvent):
-      if character.has_action():
+      if character.has_action(context):
         # TODO: implement intelligence around interrupts
-        if context.phase() >= min(character.actions()):
-          target = self.find_target(character, context)
-          if target is not None: 
-            attack = AttackAction(character, target)
-            # TODO: figure out how to decide to spend VP
-            return TakeAttackActionEvent(attack)
+        target = self.find_target(character, context)
+        if target is not None: 
+          attack = AttackAction(character, target)
+          # TODO: figure out how to decide to spend VP
+          return TakeAttackActionEvent(attack)
     # do nothing
     return None
 
   def find_target(self, character, context):
     # TODO: implement better targeting algorithm
     for other_character in context.characters():
-      if other_character != character:
+      # don't try to fight yourself or your buddies
+      if other_character != character and other_character.group() != character.group():
+        # don't stab the corpses
         if other_character.is_fighting():
+          # TODO: calculate probability of hitting
+          # TODO: prefer targets you can hit
+          # TODO: spend VP or AP if there's a chance of keeping extra damage dice
           return other_character
     return None
 

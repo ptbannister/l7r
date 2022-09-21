@@ -10,8 +10,10 @@ import math
 import uuid
 
 from simulation import listener, strategy
+from simulation.knowledge import Knowledge
 from simulation.log import logger
 from simulation.roll import InitiativeRoll, Roll
+
 
 RING_NAMES = ['air', 'earth', 'fire', 'water', 'void']
 
@@ -27,17 +29,21 @@ class Character(object):
       'water': 2 }
     self._actions = []
     self._advantages = []
-    self._adventure_points = {}
+    self._adventure_points = 0
     self._bonuses = {}
     self._disadvantages = []
     self._extra_rolled = {}
     self._group = None
+    self._knowledge = Knowledge()
+    action_taken_listener = listener.TakeActionListener()
     self._listeners = {
       'attack_rolled': listener.AttackRolledListener(),
       'lw_damage': listener.LightWoundsDamageListener(),
       'new_phase': listener.NewPhaseListener(),
       'new_round': listener.NewRoundListener(),
       'sw_damage': listener.SeriousWoundsDamageListener(),
+      'take_attack': action_taken_listener,
+      'take_parry': action_taken_listener,
       'take_sw': listener.TakeSeriousWoundListener(),
       'wound_check_declared': listener.WoundCheckDeclaredListener(),
       'wound_check_failed': listener.WoundCheckFailedListener(),
@@ -60,6 +66,11 @@ class Character(object):
     self._vp_spent = 0
 
   def actions(self):
+    '''
+    actions() -> list of int
+
+    Returns the actions this character has remaining for the round.
+    '''
     return self._actions
 
   def action_strategy(self):
@@ -82,8 +93,29 @@ class Character(object):
   def group(self):
     return self.group
 
-  def has_action(self):
-    return len(self.actions()) > 0
+  def has_action(self, context):
+    '''
+    has_action(context) -> bool
+      context (EngineContext): context to provide timing
+
+    Return whether this character has an available action in the current phase.
+    Does not consider interrupt actions.
+    '''
+    if len(self.actions()) == 0:
+      return False
+    else:
+      return min(self.actions()) <= context.phase()
+
+  def has_interrupt_action(self, skill, context):
+    '''
+    has_interrupt_action(skill, context) -> bool
+      skill (str): name of the skill that would be used
+      context (EngineContext): context to provide timing
+
+    Return whether this character could do an interrupt action in the current phase.
+    '''
+    # TODO: implement this
+    return False
 
   def initiative_priority(self, max_actions):
     '''
@@ -179,9 +211,18 @@ class Character(object):
       kept = 10
     return (rolled, kept, bonus)
 
+  def knowledge(self):
+    '''
+    knowledge() -> Knowledge
+
+    Returns this character's Knowledge instance.
+    '''
+    return self._knowledge
+
   def light_wounds_strategy(self):
     '''
     light_wounds_strategy(self) -> KeepLightWoundsStrategy
+
     Return the KeepLightWoundsStrategy that recommends whether this character should keep light wounds or take a serious wound.
     '''
     return self._strategies['light_wounds']
@@ -217,6 +258,15 @@ class Character(object):
     else:
       bonus = 0
     return (self._rings['earth'] * 2) + bonus
+
+  def max_vp(self):
+    '''
+    max_vp() -> int
+
+    Return the maximum number of Void Points this character may spend,
+    not including Temporary Void Points.
+    '''
+    return min(self._rings.values()) + self._skills.get('worldliness', 0)
 
   def name(self):
     return self._name
@@ -344,11 +394,37 @@ class Character(object):
     self._strategies[name] = strategy
 
   def spend_ap(self, skill, n):
+    '''
+    spend_ap(skill, n)
+      skill (str): name of the skill for which points are being spent
+      n (int): number of points being spent
+
+    Spend Adventure Points (Third Dan Free Raises) if allowed.
+    '''
     if n > 0:
-      self._adventure_points[skill] -= n
+      if self._adventure_points < n:
+        raise ValueError('Not enough Adventure Points')
+      self._adventure_points -= n
 
   def spend_vp(self, n):
-    self._vp_spent += n
+    '''
+    spend_vp(n)
+      n (int): number of Void Points to spend
+
+    Spend Void Points.
+    '''
+    if self.vp() < n:
+      raise ValueError('Not enough Void Points')
+    still_unspent = n
+    while still_unspent > 0:
+      if self._tvp > 0:
+        self._tvp -= 1
+        still_unspent -= 1
+      elif self.vp() > 0:
+        self._vp_spent += 1
+        still_unspent -= 1
+      else:
+        raise ValueError('Not enough Void Points')
 
   def sw(self):
     '''
@@ -382,6 +458,14 @@ class Character(object):
   def take_sw(self, amount):
     logger.debug('{} takes {} Serious Wounds'.format(self._name, amount))
     self._sw += amount
+
+  def vp(self):
+    '''
+    vp() -> int
+
+    Return the number of Void Points this character has available to spend.
+    '''
+    return self.max_vp() - self._vp_spent + self._tvp
 
   def wound_check(self, roll, lw=None):
     '''

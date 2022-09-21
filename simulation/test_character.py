@@ -56,6 +56,43 @@ class TestCharacter(unittest.TestCase):
     # wound check misses by 20: 3 SW
     self.assertEqual(3, akodo.wound_check(10, 30))
 
+  def test_vp(self):
+    character = Character()
+    # character with all 2s has 2 VP to spend
+    self.assertEqual(2, character.max_vp())
+    self.assertEqual(2, character.vp())
+    # raise some rings but leave a ring at 2
+    character.set_ring('air', 2)
+    character.set_ring('earth', 3)
+    character.set_ring('fire', 4)
+    character.set_ring('water', 3)
+    character.set_ring('void', 3)
+    # character with high rings but one ring at 2 still has 2 VP to spend
+    self.assertEqual(2, character.max_vp())
+    self.assertEqual(2, character.vp())
+    # raise lowest ring to 3
+    character.set_ring('air', 3)
+    # character should have 3 VP
+    self.assertEqual(3, character.max_vp())
+    self.assertEqual(3, character.vp())
+    # give the character 3 worldliness
+    character.set_skill('worldliness', 3)
+    # character should have 6 VP
+    self.assertEqual(6, character.max_vp())
+    self.assertEqual(6, character.vp())
+    # spend some vp
+    character.spend_vp(2)
+    # character's max should be unchanged, but available should be lower
+    self.assertEqual(6, character.max_vp())
+    self.assertEqual(4, character.vp())
+    # spend down to zero
+    character.spend_vp(4)
+    self.assertEqual(6, character.max_vp())
+    self.assertEqual(0, character.vp())
+    # try to spend more, it should crash
+    with self.assertRaises(ValueError):
+      character.spend_vp(1)
+
   def test_wound_check(self):
     akodo = Character('Akodo')
     akodo.take_lw(30)
