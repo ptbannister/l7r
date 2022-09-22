@@ -10,6 +10,30 @@
 import random
 
 
+def normalize_roll_params(rolled, kept, bonus=0):
+  '''
+  normalize_roll_params(rolled, kept, bonus=0) -> tuple of ints
+    rolled (int): number of rolled dice
+    kept (int): number of kept dice
+    bonus (int): flat bonus to roll
+
+  Returns normalized roll parameters, which is the tuple of
+  (rolled, kept, bonus) for a roll.
+  The algorithm is that excess rolled dice above ten become
+  extra kept dice, excess kept dice above ten become a bonus,
+  and the bonus is added to the roll.
+  '''
+  if rolled > 10:
+    excess_rolled = rolled - 10
+    rolled = 10
+    kept += excess_rolled
+  if kept > 10:
+    excess_kept = kept - 10
+    kept = 10
+    bonus += excess_kept
+  return (rolled, kept, bonus)
+
+
 class TestDice(object):
   '''
   Die source that provides rigged dice for testing.
@@ -43,21 +67,8 @@ class TestDice(object):
 
 class BaseRoll(object):
   def __init__(self, rolled, kept, faces=10, explode=True, die_source=None):
-    # set rolled dice
-    if (rolled > 10):
-      self._rolled = 10
-      excess_rolled = rolled - 10
-      kept += excess_rolled
-    else:
-      self._rolled = rolled 
-    # set kept dice
-    if (kept > 10):
-      self._kept = 10
-      # excess kept dice become a bonus
-      self._bonus = kept - 10
-    else:
-      self._kept = kept
-      self._bonus = 0
+    # normalize roll parameters
+    (self._rolled, self._kept, self._bonus) = normalize_roll_params(rolled, kept)
     # set die faces
     self._faces = faces
     # set exploding behavior

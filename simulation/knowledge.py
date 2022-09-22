@@ -69,6 +69,15 @@ class Knowledge(object):
       # Most characters will roll at least 7k2 for damage, which averages 18
       return 18
 
+  def clear(self):
+    self._actions_per_round = {}
+    self._actions_this_round = {}
+    self._attack_rolls = {}
+    self._damage_rolls = {}
+    self._parry_rolls = {}
+    self._tn_to_hit = {}
+    self._wounds = {}
+
   def end_of_round(self):
     '''
     end_of_round()

@@ -15,9 +15,10 @@ from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.engine import CombatEngine
 from simulation import events
+from simulation.groups import Group
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
-from simulation.strategy import NeverParryStrategy, ParryStrategy
+from simulation.strategy import NeverParryStrategy, ReluctantParryStrategy
 
 
 # set up logging
@@ -28,6 +29,7 @@ logger.setLevel(logging.DEBUG)
 
 class TestTakeAttackActionEvent(unittest.TestCase):
   def test_run_hit(self):
+    # set up characters
     attacker = Character('attacker')
     attacker.set_ring('fire', 5)
     attacker.set_skill('attack', 4)
@@ -37,6 +39,9 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
     target._actions = [1]
+    # set up groups
+    attacker_group = Group([attacker])
+    target_group = Group([target])
     # rig the attack roll to hit by 1
     attacker_roll_provider = TestRollProvider()
     attacker_roll_provider.put_skill_roll('attack', 31)
@@ -49,7 +54,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     # set up attack
     attack = AttackAction(attacker, target)
     # set up engine
-    context = EngineContext([[attacker,], [target]])
+    context = EngineContext([attacker_group, target_group])
     context.load_probability_data()
     engine = CombatEngine(context)
     # run the event
@@ -93,10 +98,13 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attacker_roll_provider = TestRollProvider()
     attacker_roll_provider.put_skill_roll('attack', 29)
     attacker.set_roll_provider(attacker_roll_provider)
+    # set up groups
+    attacker_group = Group([attacker])
+    target_group = Group([target])
     # set up attack
     attack = AttackAction(attacker, target)
     # set up engine
-    context = EngineContext([[attacker,], [target]], round=1, phase=1)
+    context = EngineContext([attacker_group, target_group], round=1, phase=1)
     context.load_probability_data()
     engine = CombatEngine(context)
     # run the event
@@ -130,6 +138,9 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
     target._actions = [1]
+    # set up groups
+    attacker_group = Group([attacker])
+    target_group = Group([target])
     # rig the attack roll to hit by 20 and the damage roll to be small
     attacker_roll_provider = TestRollProvider()
     attacker_roll_provider.put_skill_roll('attack', 50)
@@ -141,7 +152,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     target_roll_provider.put_wound_check_roll(25)
     target.set_roll_provider(target_roll_provider)
     # set up engine and context
-    context = EngineContext([[attacker,], [target]], round=1, phase=1)
+    context = EngineContext([attacker_group, target_group], round=1, phase=1)
     context.load_probability_data()
     engine = CombatEngine(context)
     # set up an attack action
@@ -205,8 +216,11 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     target_roll_provider = TestRollProvider()
     target_roll_provider.put_skill_roll('parry', 51)
     target.set_roll_provider(target_roll_provider)
+    # set up groups
+    attacker_group = Group([attacker])
+    target_group = Group([target])
     # set up engine and context
-    context = EngineContext([[attacker,], [target]], round=1, phase=1)
+    context = EngineContext([attacker_group, target_group], round=1, phase=1)
     context.load_probability_data()
     engine = CombatEngine(context)
     # set up an attack action
@@ -257,8 +271,11 @@ class TestTakeParryActionEvent(unittest.TestCase):
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
     target._actions = [1]
+    # set up groups
+    attacker_group = Group([attacker])
+    target_group = Group([target])
     # set up engine and context
-    context = EngineContext([[attacker,], [target]], round=1, phase=1)
+    context = EngineContext([attacker_group, target_group], round=1, phase=1)
     context.load_probability_data()
     engine = CombatEngine(context)
     # set up an attack that hit by 20
@@ -303,8 +320,11 @@ class TestTakeParryActionEvent(unittest.TestCase):
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
     target._actions = [1]
+    # set up groups
+    attacker_group = Group([attacker])
+    target_group = Group([target])
     # set up engine and context
-    context = EngineContext([[attacker,], [target]], round=1, phase=1)
+    context = EngineContext([attacker_group, target_group], round=1, phase=1)
     context.load_probability_data()
     engine = CombatEngine(context)
     # set up an attack that hit by 20

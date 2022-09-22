@@ -29,14 +29,14 @@ class TestRollProvider(object):
       raise IndexError('No roll queued for initiative')
     return self._queues['initiative'].pop(0)
 
-  def get_skill_roll(self, ring, skill, vp=0):
+  def get_skill_roll(self, ring, skill, ap=0, vp=0):
     if skill not in self._queues.keys():
       raise KeyError('No roll queued for ' + skill)
     elif len(self._queues[skill]) == 0:
       raise IndexError('No roll queued for ' + skill)
     return self._queues[skill].pop(0)
 
-  def get_wound_check_roll(self, damage, vp=0):
+  def get_wound_check_roll(self, damage, ap=0, vp=0):
     if len(self._queues['wound_check']) == 0:
       raise IndexError('No roll queued for wound_check')
     return self._queues['wound_check'].pop(0)

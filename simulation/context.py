@@ -2,7 +2,8 @@
 import os
 
 from simulation.exceptions import CombatEnded
-
+from simulation.features import TrialFeatures
+from simulation.roll import normalize_roll_params
 
 script_path = os.path.realpath(__file__)
 script_dirpath = os.path.split(script_path)[0]
@@ -25,10 +26,11 @@ class EngineContext(object):
       if len(group) < 1:
         raise ValueError('A group must contain at least one character')
       for character in group:
-        character.set_group(group)
         self._characters.append(character)
     if len(self._characters) < 2:
       raise ValueError("Must have at least two characters")
+    # features for analysis
+    self._features = TrialFeatures()
     # initialize timing
     self._round = round
     self._phase = phase
@@ -38,6 +40,12 @@ class EngineContext(object):
 
   def characters(self):
     return self._characters
+
+  def groups(self):
+    return self._groups
+
+  def features(self):
+    return self._features
 
   def load_probability_data(self):
     '''
@@ -84,8 +92,9 @@ class EngineContext(object):
 
     Returns the mean result of a roll with the given parameters.
     '''
+    rolled, kept, bonus = normalize_roll_params(rolled, kept)
     roll_str = '{}k{}'.format(rolled, kept)
-    return self._mean_roll[explode][roll_str]
+    return self._mean_rolls[explode][roll_str] + bonus
 
   def next_phase(self):
     if (self._phase == 10):
@@ -120,6 +129,13 @@ class EngineContext(object):
     max_actions = max([len(character.actions()) for character in self._characters if character.is_fighting()])
     self._characters.sort(key=lambda character: character.initiative_priority(max_actions))
 
+  def reset(self):
+    self._features.clear()
+    self._phase = 0
+    self._round = 0
+    for character in self._characters:
+      character.reset()
+
   def round(self):
     return self._round
 
@@ -128,12 +144,16 @@ class EngineContext(object):
 
   def update_status(self, event):
     # TODO: support more than two groups
-    for group in self._groups:
+    for i, group in enumerate(self._groups):
       fighting = False
       for character in group:
         if character.is_fighting():
           fighting = True
           break
       if not fighting:
+        if i == 0:
+          self.features().observe_winner(-1)
+        else:
+          self.features().observe_winner(1)
         raise CombatEnded('Combat is over')
 

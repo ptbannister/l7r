@@ -7,6 +7,7 @@ from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.engine import CombatEngine
 from simulation.exceptions import CombatEnded
+from simulation.groups import Group
 from simulation.log import logger
 
 
@@ -20,7 +21,7 @@ class TestCombatEngine(unittest.TestCase):
   def test_combat(self):
     akodo = Character('Akodo')
     bayushi = Character('Bayushi')
-    context = EngineContext([[akodo,], [bayushi,]])
+    context = EngineContext([Group([akodo]), Group([bayushi])])
     context.load_probability_data()
     engine = CombatEngine(context)
     engine.run()

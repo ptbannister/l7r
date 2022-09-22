@@ -27,6 +27,7 @@ class AttackAction(Action):
     self._attack_roll = None
     self._damage_roll = None
     self._parries_declared = []
+    self._parries_declined = []
     self._parries_predeclared = []
     self._parried = False
     self._parry_attempted = False
@@ -40,6 +41,9 @@ class AttackAction(Action):
   def add_parry_predeclared(self, event):
     self._parries_predeclared.append(event)
     self.add_parry_declared(event)
+
+  def add_parry_declined(self, character):
+    self._parries_declined.append(character)
 
   def calculate_extra_damage_dice(self):
     if self.parry_attempted():
@@ -60,8 +64,11 @@ class AttackAction(Action):
   def parries_declared(self):
     return self._parries_declared
 
+  def parries_declined(self):
+    return self._parries_declined
+
   def roll_attack(self):
-    self._attack_roll = self._subject.roll_skill(self.ring(), self.skill(), self._vp, self._ap)
+    self._attack_roll = self._subject.roll_skill(self.ring(), self.skill(), self._ap, self._vp)
     return self._attack_roll
 
   def roll_damage(self):
@@ -92,7 +99,7 @@ class ParryAction(Action):
     return self._parry_roll >= self._attack._attack_roll
 
   def roll_parry(self):
-    self._parry_roll = self._subject.roll_skill(self.ring(), self.skill(), self._vp, self._ap)
+    self._parry_roll = self._subject.roll_skill(self.ring(), self.skill(), self._ap, self._vp)
     return self._parry_roll
 
   def set_attack_parry_declared(self, event):

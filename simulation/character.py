@@ -12,7 +12,7 @@ import uuid
 from simulation import listener, strategy
 from simulation.knowledge import Knowledge
 from simulation.log import logger
-from simulation.roll import InitiativeRoll, Roll
+from simulation.roll import InitiativeRoll, Roll, normalize_roll_params
 
 
 RING_NAMES = ['air', 'earth', 'fire', 'water', 'void']
@@ -29,11 +29,14 @@ class Character(object):
       'water': 2 }
     self._actions = []
     self._advantages = []
-    self._adventure_points = 0
+    self._ap = 0
+    self._ap_spent = 0
     self._bonuses = {}
     self._disadvantages = []
     self._extra_rolled = {}
     self._group = None
+    self._interrupt_skills = []
+    self._interrupt_costs = {}
     self._knowledge = Knowledge()
     action_taken_listener = listener.TakeActionListener()
     self._listeners = {
@@ -58,7 +61,7 @@ class Character(object):
       'action': strategy.AlwaysAttackActionStrategy(),
       'attack': strategy.AttackStrategy(),
       'light_wounds': strategy.KeepLightWoundsStrategy(),
-      'parry': strategy.ParryStrategy(),
+      'parry': strategy.ReluctantParryStrategy(),
       'wound_check': strategy.WoundCheckStrategy()
     }
     self._sw = 0
@@ -90,8 +93,11 @@ class Character(object):
       logger.debug('{} ignoring {}'.format(self._name, event.name))
       return None
 
+  def friends(self):
+    return self.group()
+
   def group(self):
-    return self.group
+    return self._group
 
   def has_action(self, context):
     '''
@@ -114,7 +120,9 @@ class Character(object):
 
     Return whether this character could do an interrupt action in the current phase.
     '''
-    # TODO: implement this
+    if skill in self._interrupt_skills:
+      if self._interrupt_costs.get(skill, 2) <= len(self.actions()):
+        return True
     return False
 
   def initiative_priority(self, max_actions):
@@ -169,16 +177,30 @@ class Character(object):
     kept = self._rings['void']
     return InitiativeRoll(rolled, kept).roll()
 
-  def get_skill_roll(self, ring, skill, vp=0):
-    rolled = self._skills.get(skill, 0) + self._extra_rolled.get(skill, 0) + self._rings[ring] + vp
-    kept = self._rings[ring] + vp
-    bonus = self._bonuses.get(skill, 0)
+  def get_skill_roll(self, ring, skill, ap=0, vp=0):
+    (rolled, kept, bonus) = self.get_skill_roll_params(ring, skill, ap, vp)
     return Roll(rolled, kept).roll() + bonus
 
-  def get_wound_check_roll(self, damage, vp=0):
+  def get_skill_roll_params(self, ring, skill, ap=0, vp=0):
     '''
-    get_wound_check_roll(damage, vp=0) -> int
+    get_skill_roll_params(ring, skill, ap=0, vp=0) -> tuple of ints
+      ap (int): number of Adventure Points to spend on this roll
+      vp (int): number of Void Points to spend on this roll
+
+    Returns the parameters for this chracter's skill roll using the
+    specified ring and skill as a tuple of three ints
+    (rolled, kept, bonus).
+    '''
+    rolled = self._rings[ring] + 1 + self._extra_rolled.get(skill, 0) + vp
+    kept = self._rings[ring] + vp
+    bonus = self._bonuses.get(skill, 0) + (ap * 5)
+    return normalize_roll_params(rolled, kept, bonus)
+
+  def get_wound_check_roll(self, damage, ap=0, vp=0):
+    '''
+    get_wound_check_roll(damage, ap=0, vp=0) -> int
       damage (int): damage for this Wound Check
+      ap (int): number of Adventure Points to spend on this roll
       vp (int): number of Void Points to spend on this roll
     
     Return a Wound Check roll for this character.
@@ -188,28 +210,30 @@ class Character(object):
     This function is public API for the Roll Provider interface,
     but it is not really public for the Character interface.
     '''
-    rolled = self._rings['water'] + 1 + self._extra_rolled.get('wound_check', 0)
-    kept = self._rings['water']
-    bonus = self._bonuses.get('wound_check', 0)
+    (rolled, kept, bonus) = self.get_wound_check_roll_params(ap, vp)
     return Roll(rolled, kept).roll() + bonus
 
-  def get_wound_check_roll_parameters(self):
+  def get_wound_check_roll_params(self, ap=0, vp=0):
     '''
-    get_wound_check_roll_parameters() -> tuple of ints
+    get_wound_check_roll_params(ap=0, vp=0) -> tuple of ints
+      ap (int): number of Adventure Points to spend on this roll
+      vp (int): number of Void Points to spend on this roll
 
-    Returns the string that describes this character's wound check roll
+    Returns the parameters for this chracter's wound check roll
     as a tuple of three ints (rolled, kept, bonus).
     '''
-    rolled = self._rings['water'] + 1 + self._extra_rolled.get('wound_check', 0)
-    kept = self._rings['water']
-    bonus = self._bonuses.get('wound_check', 0)
-    if rolled > 10:
-      kept = kept + (rolled - 10)
-      rolled = 10
-    if kept > 10:
-      bonus = kept - 10
-      kept = 10
-    return (rolled, kept, bonus)
+    rolled = self._rings['water'] + 1 + self._extra_rolled.get('wound_check', 0) + vp
+    kept = self._rings['water'] + vp
+    bonus = self._bonuses.get('wound_check', 0) + (ap * 5)
+    return normalize_roll_params(rolled, kept, bonus)
+
+  def is_friend(self, character):
+    '''
+    is_friend(character) -> bool
+
+    Returns whether a character is a friend (in the same group).
+    '''
+    return character in self._group
 
   def knowledge(self):
     '''
@@ -274,6 +298,16 @@ class Character(object):
   def parry_strategy(self):
     return self._strategies['parry']
 
+  def reset(self):
+    self._actions = []
+    self._ap_spent = 0
+    self._knowledge.clear()
+    self._lw = 0
+    self._lw_history.clear()
+    self._sw = 0
+    self._tvp = 0
+    self._vp_spent = 0
+
   def reset_lw(self):
     '''
     reset_lw()
@@ -305,37 +339,37 @@ class Character(object):
     logger.debug('{} rolled initiative: {}'.format(self._name, self._actions))
     return self._actions
 
-  def roll_skill(self, ring, skill, vp=0, ap=0):
+  def roll_skill(self, ring, skill, ap=0, vp=0):
     '''
     roll_skill(damage, vp=0, ap=0) -> int
       damage (int): light wound total for the wound check
-      vp (int): number of Void Points to spend on the roll
       ap (int): number of Third` Dan Free Raises ("Adventure Points")
                 to spend on the roll
+      vp (int): number of Void Points to spend on the roll
 
     Roll a skill for this character.
     '''
-    self.spend_vp(vp)
     self.spend_ap(skill, ap)
-    roll = self._roll_provider.get_skill_roll(ring, skill, vp)
+    self.spend_vp(vp)
+    roll = self._roll_provider.get_skill_roll(ring, skill, ap, vp)
     logger.debug('{} rolled {}: {}'.format(self._name, skill, roll))
-    return roll + (5 * ap)
+    return roll
 
-  def roll_wound_check(self, damage, vp=0, ap=0):
+  def roll_wound_check(self, damage, ap=0, vp=0):
     '''
     roll_wound_check(damage, vp=0, ap=0) -> int
       damage (int): light wound total for the wound check
-      vp (int): number of Void Points to spend on the roll
       ap (int): number of Third` Dan Free Raises ("Adventure Points")
                 to spend on the roll
+      vp (int): number of Void Points to spend on the roll
 
     Roll a Wound Check for this character.
     '''
-    self.spend_vp(vp)
     self.spend_ap('wound_check', ap)
+    self.spend_vp(vp)
     roll = self._roll_provider.get_wound_check_roll(damage, vp)
     logger.debug('{} rolled wound check: {}'.format(self._name, roll))
-    return roll + (5 * ap)
+    return roll
 
   def set_action_strategy(self, strategy):
     self._strategies['action'] = strategy
@@ -402,9 +436,9 @@ class Character(object):
     Spend Adventure Points (Third Dan Free Raises) if allowed.
     '''
     if n > 0:
-      if self._adventure_points < n:
+      if self._ap - self._ap_spent < n:
         raise ValueError('Not enough Adventure Points')
-      self._adventure_points -= n
+      self._ap_spent += n
 
   def spend_vp(self, n):
     '''
@@ -482,6 +516,18 @@ class Character(object):
       return 1 + ((lw - roll) // 10)
     else:
       return 0
+
+  def wound_check_params(self, vp=0):
+    '''
+    wound_check_params(vp=0) -> tuple of ints
+      vp (int): number of Void Points to spend on this wound check roll
+
+    Returns the tuple of (rolled, kept, bonus) for this character's wound checks.
+    '''
+    rolled = self._rings['water'] + 1 + self._extra_rolled.get('wound_check', 0) + vp
+    kept = self._rings['water'] + vp
+    bonus = self._bonuses.get('wound_check', 0)
+    return (rolled, kept, bonus)
 
   def wound_check_strategy(self):
     '''
