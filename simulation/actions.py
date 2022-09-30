@@ -1,14 +1,21 @@
+#!/usr/bin/env python3
+
+#
+# actions.py
+# Author: Patrick Bannister (ptbannister@gmail.com)
+#
+# Classes for combat actions in the L7R combat simulator.
+#
+
+from simulation.events import SeriousWoundsDamageEvent
 
 
 class Action(object):
-  def __init__(self, subject, target, ring, skill):
+  def __init__(self, subject, target, skill, vp=0):
     self._subject = subject
     self._target = target
-    self._ring = ring
     self._skill = skill
-
-  def ring(self):
-    return self._ring
+    self._vp = vp
 
   def skill(self):
     return self._skill
@@ -19,11 +26,13 @@ class Action(object):
   def target(self):
     return self._target
 
+  def vp(self):
+    return self._vp
+
 
 class AttackAction(Action):
-  def __init__(self, subject, target, skill='attack', vp=0, ap=0, weapon_rolled=4, weapon_kept=2):
-    super().__init__(subject, target, 'fire', skill)
-    self._ap = ap
+  def __init__(self, subject, target, skill='attack', vp=0):
+    super().__init__(subject, target, skill, vp)
     self._attack_roll = None
     self._damage_roll = None
     self._parries_declared = []
@@ -31,9 +40,6 @@ class AttackAction(Action):
     self._parries_predeclared = []
     self._parried = False
     self._parry_attempted = False
-    self._vp = 0
-    self._weapon_rolled = weapon_rolled
-    self._weapon_kept = weapon_kept
 
   def add_parry_declared(self, event):
     self._parries_declared.append(event)
@@ -45,15 +51,21 @@ class AttackAction(Action):
   def add_parry_declined(self, character):
     self._parries_declined.append(character)
 
-  def calculate_extra_damage_dice(self):
+  def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
+    if skill_roll is None:
+      skill_roll = self._attack_roll
+    if tn is None:
+      tn = self.tn()
     if self.parry_attempted():
       return 0
     else:
-      return (self._attack_roll - self.tn()) // 5
+      return (skill_roll - self.tn()) // 5
+
+  def direct_damage(self):
+    return None
 
   def is_hit(self):
-    tn = self._target.base_to_hit_tn()
-    return self._attack_roll >= tn and not self.parried()
+    return self._attack_roll >= self.tn() and not self.parried()
 
   def parried(self):
     return self._parried
@@ -68,12 +80,13 @@ class AttackAction(Action):
     return self._parries_declined
 
   def roll_attack(self):
-    self._attack_roll = self._subject.roll_skill(self.ring(), self.skill(), self._ap, self._vp)
+    self._attack_roll = self.subject().roll_skill(self.target(), self.skill(), self.vp())
+    self.subject().spend_vp(self.vp())
     return self._attack_roll
 
   def roll_damage(self):
     extra_rolled = self.calculate_extra_damage_dice()
-    self._damage_roll = self._subject.roll_damage(self.skill(), extra_rolled, self._weapon_rolled, self._weapon_kept)
+    self._damage_roll = self.subject().roll_damage(self.target(), self.skill(), extra_rolled, self.vp())
     return self._damage_roll
 
   def set_parry_attempted(self):
@@ -83,23 +96,72 @@ class AttackAction(Action):
     self._parried = True
 
   def tn(self):
-    return self._target.base_to_hit_tn() 
+    return self.target().tn_to_hit()
+
+
+class DoubleAttackAction(AttackAction):
+  def __init__(self, subject, target, vp=0):
+    super().__init__(subject, target, 'double attack', vp)
+    self._attack_roll = None
+    self._damage_roll = None
+    self._parries_declared = []
+    self._parries_declined = []
+    self._parries_predeclared = []
+    self._parried = False
+    self._parry_attempted = False
+
+  def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
+    if skill_roll is None:
+      skill_roll = self._attack_roll
+    if tn is None:
+      tn = self.tn() - 20
+    penalty = 0
+    if self.parry_attempted():
+      for parry_event in self.parries_declared():
+        if parry_event.action.subject() == self.target():
+          # if the target attempts to parry,
+          # double attack does 4 fewer dice of damage
+          penalty = 4
+          break
+        else:
+          # if a third character parries on behalf of the target,
+          # double attack does 2 fewer dice of damage
+          penalty = 2
+    return ((skill_roll - self.tn()) // 5) - penalty
+
+  def direct_damage(self):
+    return SeriousWoundsDamageEvent(self.target(), 1)
+
+  def tn(self):
+    return self.target().tn_to_hit() + 20
+
+
+class LungeAction(AttackAction):
+  def __init__(self, subject, target, vp=0):
+    super().__init__(subject, target, 'lunge', vp)
+
+  def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
+    return super().calculate_extra_damage_dice(skill_roll, tn) + 1
 
 
 class ParryAction(Action):
-  def __init__(self, subject, target, attack, predeclared=False, vp=0, ap=0):
-    super().__init__(subject, target, 'air', 'parry')
-    self._ap = 0
+  def __init__(self, subject, target, attack, predeclared=False, vp=0):
+    super().__init__(subject, target, 'parry', vp)
     self._attack = attack
     self._parry_roll = 0
     self._predeclared = predeclared
-    self._vp = 0
 
   def is_success(self):
     return self._parry_roll >= self._attack._attack_roll
 
   def roll_parry(self):
-    self._parry_roll = self._subject.roll_skill(self.ring(), self.skill(), self._ap, self._vp)
+    penalty = 0
+    if self._attack.target() != self.subject():
+      # parry on behalf of others has a penalty
+      penalty = 10
+    # roll parry
+    self._parry_roll = self.subject().roll_skill(self.target(), self.skill(), self.vp()) - penalty
+    self.subject().spend_vp(self.vp())
     return self._parry_roll
 
   def set_attack_parry_declared(self, event):

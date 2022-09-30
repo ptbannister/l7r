@@ -10,14 +10,14 @@ import logging
 import sys
 import unittest
 
-from simulation.actions import AttackAction
+from simulation.actions import AttackAction, DoubleAttackAction
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.events import AttackDeclaredEvent, AttackRolledEvent, LightWoundsDamageEvent, NewPhaseEvent, TakeAttackActionEvent, TakeParryActionEvent, TakeSeriousWoundEvent, WoundCheckDeclaredEvent, WoundCheckRolledEvent, WoundCheckSucceededEvent
 from simulation.groups import Group
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
-from simulation.strategy import AttackStrategy, KeepLightWoundsStrategy, NeverParryStrategy, ReluctantParryStrategy, WoundCheckStrategy
+from simulation.strategy import PlainAttackStrategy, KeepLightWoundsStrategy, NeverParryStrategy, ReluctantParryStrategy, WoundCheckStrategy
 
 
 # set up logging
@@ -33,6 +33,93 @@ def get_simple_groups():
 
 
 class TestAttackStrategy(unittest.TestCase):
+  def test_get_expected_kept_damage_dice(self):
+    # set up characters
+    attacker = Character('attacker')
+    attacker._actions = [1,]
+    attacker.set_ring('fire', 3)
+    attacker.set_skill('attack', 3)
+    attacker.set_extra_rolled('attack', 1)
+    target = Character('target')
+    target._actions = [2,]
+    target.set_skill('parry', 4)
+    # give attacker knowledge of target's TN to be hit
+    attacker.knowledge().observe_tn_to_hit(target, 25)
+    # set up groups
+    groups = [Group([attacker]), Group([target])]
+    # set up context
+    context = EngineContext(groups, round=1, phase=1) 
+    context.load_probability_data()
+    # use attack strategy to calculate expected damage
+    strategy =PlainAttackStrategy()
+    # base skill roll params are 7k3, expected attack roll is 26, expected damage roll is 7k2
+    self.assertEqual(2, strategy._get_expected_kept_damage_dice(attacker, context, target, 'attack', 0, 0))
+    # spend 1 vp
+    # skill roll params are 8k4, expected attack roll is 34, expected damage roll is 8k2
+    self.assertEqual(2, strategy._get_expected_kept_damage_dice(attacker, context, target, 'attack', 0, 1))
+    # spend 2 vp
+    # skill roll params are 9k5, expected attack roll is 41, expected damage roll is 10k2
+    self.assertEqual(2, strategy._get_expected_kept_damage_dice(attacker, context, target, 'attack', 0, 2))
+    # spend 2 vp, 1 ap
+    # skill roll params are 9k5+5, expected attack roll is 46, expected damage roll is 10k3
+    self.assertEqual(3, strategy._get_expected_kept_damage_dice(attacker, context, target, 'attack', 1, 2))
+    # spend 2 vp, 2 ap
+    # skill roll params are 9k5+10, expected attack roll is 51, expected damage roll is 10k4
+    self.assertEqual(4, strategy._get_expected_kept_damage_dice(attacker, context, target, 'attack', 2, 2))
+    # try a high-fire character
+    akodo = Character('Akodo')
+    akodo._actions = [0,1,2,3,4]
+    akodo.set_ring('fire', 5)
+    akodo.set_skill('attack', 4)
+    akodo.set_extra_rolled('attack', 1)
+    akodo.knowledge().observe_tn_to_hit(target, 25)
+    # base skill roll params are 10k5, expected attack roll is 44, expected damage roll is 10k4
+    self.assertEqual(4, strategy._get_expected_kept_damage_dice(akodo, context, target, 'attack', 0, 0))
+    # spend 1 vp, 0 ap
+    # skill roll params are 10k7, expected attack roll is 53, expected damage roll is 10k6
+    self.assertEqual(6, strategy._get_expected_kept_damage_dice(akodo, context, target, 'attack', 0, 1))
+    # spend 1 ap, 0 vp
+    # skill roll params are 10k5+5, expected attack roll is 49, expected damage roll is 10k5
+    self.assertEqual(5, strategy._get_expected_kept_damage_dice(akodo, context, target, 'attack', 1, 0))
+
+  def test_optimize_attack(self):
+    # set up characters
+    weak_attacker = Character('weak attacker')
+    weak_attacker._actions = [1,]
+    weak_attacker.set_ring('fire', 3)
+    weak_attacker.set_skill('attack', 3)
+    weak_attacker.set_extra_rolled('attack', 1)
+    strong_attacker = Character('strong attacker')
+    strong_attacker._actions = [1,]
+    strong_attacker.set_ring('fire', 5)
+    strong_attacker.set_skill('attack', 4)
+    strong_attacker.set_extra_rolled('attack', 1)
+    target = Character('target')
+    target._actions = [2,]
+    target.set_skill('parry', 4)
+    # give attackers knowledge of target's TN to be hit
+    weak_attacker.knowledge().observe_tn_to_hit(target, 25)
+    strong_attacker.knowledge().observe_tn_to_hit(target, 25)
+    # set up groups
+    groups = [Group([weak_attacker, strong_attacker]), Group([target])]
+    # set up context
+    context = EngineContext(groups, round=1, phase=1) 
+    context.load_probability_data()
+    # use attack strategy to optimize attack
+    strategy =PlainAttackStrategy()
+    attack = strategy._optimize_attack(weak_attacker, context, target)
+    # weak attacker should not spend ap or vp
+    self.assertFalse(attack is None)
+    self.assertEqual(target, attack.target())
+    self.assertEqual(0, attack.ap())
+    self.assertEqual(0, attack.vp())
+    # strong attacker should spend 1 vp
+    attack = strategy._optimize_attack(strong_attacker, context, target)
+    self.assertFalse(attack is None)
+    self.assertEqual(target, attack.target())
+    self.assertEqual(0, attack.ap())
+    self.assertEqual(1, attack.vp())
+
   def test_recommend(self):
     # set up characters and context
     akodo = Character('Akodo')
@@ -42,7 +129,7 @@ class TestAttackStrategy(unittest.TestCase):
     context = EngineContext([Group([akodo]), Group([bayushi])], round=1, phase=1)
     context.load_probability_data()
     # construct strategy
-    strategy = AttackStrategy()
+    strategy =PlainAttackStrategy()
     # play event on strategy in phase 1
     self.assertEqual(1, context.phase())
     recommendation = strategy.recommend(akodo, NewPhaseEvent(context.phase()), context)
@@ -60,7 +147,7 @@ class TestAttackStrategy(unittest.TestCase):
     bayushi._actions = [2, 4, 6]
     context = EngineContext([Group([akodo]), Group([bayushi])])
     # construct strategy
-    strategy = AttackStrategy()
+    strategy =PlainAttackStrategy()
     # play event on strategy in phase 0
     self.assertEqual(0, context.phase())
     recommendation = strategy.recommend(akodo, NewPhaseEvent(context.phase()), context)
@@ -233,7 +320,7 @@ class TestReluctantParryStrategy(unittest.TestCase):
     context = EngineContext(groups, round=1, phase=1)
     context.load_probability_data()
     # set up attack
-    attack = AttackAction(attacker, target, skill='double attack')
+    attack = DoubleAttackAction(attacker, target)
     attack._attack_roll = 25
     event = AttackRolledEvent(attack, 25)
     # use the strategy
@@ -282,7 +369,7 @@ class TestNeverParryStrategy(unittest.TestCase):
     # set up context
     context = EngineContext(groups, round=1, phase=1)
     # set up attack
-    attack = AttackAction(attacker, target, skill='double attack')
+    attack = DoubleAttackAction(attacker, target)
     attack._attack_roll = 30
     event = AttackRolledEvent(attack, 30)
     # use the strategy

@@ -41,7 +41,9 @@ class NewPhaseListener(Listener):
 
 class AttackDeclaredListener(Listener):
   def handle(self, character, event, context):
-    return character.attack_declared_strategy().recommend(character, event, context)
+    if character != event.subject():
+      # respond to another character's attack
+      return character.attack_declared_strategy().recommend(character, event, context)
  
 
 class AttackRolledListener(Listener):
@@ -51,6 +53,26 @@ class AttackRolledListener(Listener):
     return character.parry_strategy().recommend(character, event, context)
 
 
+class FeintSucceededListener(Listener):
+  def handle(self, character, event, context):
+    if event.action.subject() == character:
+      if event.action.skill() == 'feint':
+        character.gain_tvp(1)
+        if len(character.actions()) > 0:
+          max_action = max(character.actions())
+          character.actions().remove(max_action)
+          character.actions().insert(context.phase())
+          return InitiativeChangedEvent()
+
+
+class LungeDeclaredListener(Listener):
+  def handle(self, character, event, context):
+    if event.action.subject() != character:
+      if event.action.skill() == 'lunge':
+        # TODO: how to deal with the lunge bonus?
+        pass
+
+
 class LightWoundsDamageListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, LightWoundsDamageEvent):
@@ -58,6 +80,8 @@ class LightWoundsDamageListener(Listener):
         character.take_lw(event.damage)
         character.knowledge().observe_damage_roll(event.target, event.damage)
         return character.wound_check_strategy().recommend(character, event, context)
+
+# TODO: write an AkodoLightWoundsDamageListener and strategy that considers the post-roll bonuses
 
 
 class SeriousWoundsDamageListener(Listener):
@@ -77,7 +101,13 @@ class SeriousWoundsDamageListener(Listener):
 class TakeActionListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, TakeActionEvent):
-      if character != event.subject:
+      if character == event.subject:
+        # spend resources if necessary
+        if event.action.ap() > 0:
+          character.spend_ap(event.action.skill(), event.action.ap())
+        if event.action.vp() > 0:
+          character.spend_vp(event.action.vp())
+      else:
         character.knowledge().observe_action(event.subject)
 
 class TakeSeriousWoundListener(Listener):

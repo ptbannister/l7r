@@ -3,6 +3,7 @@ import os
 
 from simulation.exceptions import CombatEnded
 from simulation.features import TrialFeatures
+from simulation.log import logger
 from simulation.roll import normalize_roll_params
 
 script_path = os.path.realpath(__file__)
@@ -94,7 +95,10 @@ class EngineContext(object):
     '''
     rolled, kept, bonus = normalize_roll_params(rolled, kept)
     roll_str = '{}k{}'.format(rolled, kept)
-    return self._mean_rolls[explode][roll_str] + bonus
+    #return self._mean_rolls[explode][roll_str] + bonus
+    expected = self._mean_rolls[explode][roll_str] + bonus
+    logger.debug('Expected roll for {}: {}'.format(roll_str, expected))
+    return expected
 
   def next_phase(self):
     if (self._phase == 10):

@@ -35,6 +35,7 @@ def load_characters():
   akodo.set_ring('water', 6)
   akodo.set_ring('void', 5)
   akodo.set_skill('attack', 4)
+  akodo.set_skill('double attack', 5)
   akodo.set_skill('parry', 5)
   bayushi = Character('Bayushi')
   bayushi.set_ring('air', 3)
@@ -43,6 +44,7 @@ def load_characters():
   bayushi.set_ring('water', 5)
   bayushi.set_ring('void', 5)
   bayushi.set_skill('attack', 4)
+  bayushi.set_skill('double attack', 5)
   bayushi.set_skill('parry', 5)
   return [Group([akodo]), Group([bayushi])]
 

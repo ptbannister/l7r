@@ -1,7 +1,7 @@
 
 from abc import abstractmethod
 
-from simulation.events import ActionEvent, EndOfPhaseEvent, EndOfRoundEvent, NewPhaseEvent, NewRoundEvent, StatusEvent, TakeActionEvent
+from simulation.events import ActionEvent, EndOfPhaseEvent, EndOfRoundEvent, InitiativeChangedEvent, NewPhaseEvent, NewRoundEvent, StatusEvent, TakeActionEvent
 from simulation.exceptions import CombatEnded
 from simulation.log import logger
 
@@ -26,7 +26,7 @@ class Engine(object):
       logger.debug('Evaluating status event')
       self._context.update_status(event)
     # take action events require reevaluating initiative priority
-    if isinstance(event, TakeActionEvent):
+    if isinstance(event, InitiativeChangedEvent) or isinstance(event, TakeActionEvent):
       logger.debug('Reevaluating initiative priority')
       self._context.reevaluate_initiative()
     if hasattr(event, 'play'):

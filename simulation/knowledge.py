@@ -11,6 +11,7 @@ class Knowledge(object):
     self._attack_rolls = {}
     self._damage_rolls = {}
     self._parry_rolls = {}
+    self._debuffs = {}
     self._tn_to_hit = {}
     self._wounds = {}
 
@@ -78,6 +79,19 @@ class Knowledge(object):
     self._tn_to_hit = {}
     self._wounds = {}
 
+  def debuff(self, character, skill):
+    '''
+    debuff(character, skill) -> int
+
+    Returns the debuff penalty applied to some character for
+    a skill or other thing (such as 'tn to be hit').
+    '''
+    name = character.name()
+    if name in self._debuffs.keys():
+      return self._debuffs[name].get(skill, 0)
+    else:
+      return 0
+
   def end_of_round(self):
     '''
     end_of_round()
@@ -137,6 +151,33 @@ class Knowledge(object):
     else:
       self._damage_rolls[name] = [damage]
 
+  def observe_debuff(self, character, skill, penalty):
+    '''
+    observe_debuff(character, skill,  penalty)
+      character (Character): character of interest
+      skill (str): skill or other thing being penalized
+      penalty (int): amount of the penalty
+
+    Observe a character taking a debuff to something.
+    '''
+    name = character.name()
+    if name not in self._debuffs.keys():
+      self._debuffs[name] = {}
+    if skill not in self._debuffs[name].keys():
+      self._debuffs[name][skill] = penalty
+    else:
+      self._debuffs[name][skill] += penalty
+
+  def observe_debuff_removed(self, character, skill):
+    '''
+    observe_debuff_removed(character, skill)
+      character (Character): character of interest
+      skill (str): skill or other thing losing a penalty
+
+    Observe a debuff being removed from a character.
+    '''
+    self._debuffs[character.name()].remove(skill)
+
   def observe_tn_to_hit(self, character, tn):
     '''
     observe_tn_to_hit(character, tn)
@@ -163,14 +204,18 @@ class Knowledge(object):
     else:
       self._wounds[name] = damage
 
-  def tn_to_hit(self, character):
+  def tn_to_hit(self, target):
     '''
-    tn_to_hit(character) -> int
-      character (Character): character of interest
+    tn_to_hit(target) -> int
+      target (Character): character of interest
     
     Return the best known TN to hit a character.
     '''
-    return self._tn_to_hit.get(character.name(), 20)
+    penalty = self.debuff(target, 'tn_to_hit')
+    return self._tn_to_hit.get(target.name(), 20) - penalty
+
+  def weapon(self, character):
+    return character.weapon()
 
   def wounds(self, character):
     '''
@@ -180,4 +225,24 @@ class Knowledge(object):
     Return the number of Serious Wounds a character has taken (according to observations).
     '''
     return self._wounds.get(character.name(), 0)
+
+
+class TheoreticalCharacter(object):
+  '''
+  A partial implementation of the Character API that uses knowledge of a character.
+  Used when speculating about the character as a target of attacks, parries, etc, in strategy classes.
+  '''
+  def __init__(self, knowledge, character):
+    self._knowledge = knowledge
+    self._character = character
+
+  def ring(self, ring):
+    # TODO: figure out how to estimate rings
+    return 3
+
+  def tn_to_hit(self):
+    return self._knowledge.tn_to_hit(self._character)
+
+  def weapon(self):
+    return self_knowledge.weapon(self._character)
 

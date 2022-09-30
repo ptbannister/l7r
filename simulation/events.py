@@ -68,6 +68,11 @@ class EndOfRoundEvent(TimingEvent):
     self.round = round
 
 
+class InitiativeChangedEvent(Event):
+  def __init__(self):
+    super().__init__('initiative_changed')
+
+
 class ActionEvent(Event):
   def __init__(self, name, action):
     super().__init__(name)
@@ -76,6 +81,7 @@ class ActionEvent(Event):
 class TakeActionEvent(ActionEvent):
   def __init__(self, name, action):
     super().__init__(name, action)
+
 
 class TakeAttackActionEvent(TakeActionEvent):
   def __init__(self, action):
@@ -89,13 +95,20 @@ class TakeAttackActionEvent(TakeActionEvent):
       return
     if self.action.is_hit():
       yield self._succeeded()
-      yield self._roll_damage()
+      direct_damage = self._direct_damage()
+      if direct_damage is not None:
+        yield direct_damage
+      if self.action.target().is_fighting():
+        yield self._roll_damage()
     else:
       yield self._failed()
 
   def _declare_attack(self):
     return AttackDeclaredEvent(self.action)
   
+  def _direct_damage(self):
+    return self.action.direct_damage()
+
   def _failed(self):
     return AttackFailedEvent(self.action)
 
@@ -139,6 +152,22 @@ class TakeParryActionEvent(TakeActionEvent):
   def _succeeded(self):
     self.action.set_attack_parried()
     return ParrySucceededEvent(self.action)
+
+
+class ShibaTakeParryEvent(TakeParryActionEvent):
+  def play(self):
+    yield self._declare_parry()
+    yield self._roll_parry()
+    if self.action.is_success():
+      yield self._succeeded()
+    else:
+      yield self._failed()
+    yield self._roll_damage()
+
+  def _roll_damage(self):
+    rolled = self._action.subject().skill('attack') * 2
+    damage_roll = self._action.subject().roll_damage(rolled, 1)
+    return LightWoundsDamageEvent(self._action.target(), damage_roll)
 
 
 class AttackDeclaredEvent(ActionEvent):

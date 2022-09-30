@@ -1,9 +1,19 @@
 
+import logging
+import sys
 import unittest
+
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.events import AttackDeclaredEvent, AttackRolledEvent, AttackSucceededEvent, DeathEvent, LightWoundsDamageEvent, UnconsciousEvent
 from simulation.exceptions import CombatEnded
+from simulation.log import logger
+
+
+# set up logging
+stream_handler = logging.StreamHandler(sys.stdout)
+logger.addHandler(stream_handler)
+logger.setLevel(logging.DEBUG)
 
 
 class TestEngineContext(unittest.TestCase):
@@ -57,4 +67,10 @@ class TestEngineContext(unittest.TestCase):
     self.assertEqual(1.00, context.p(1, 1, 1))
     # P(10) on 10k10 should be 1.0
     self.assertEqual(1.00, context.p(10, 10, 10))
-     
+    
+  def test_mean_rolls(self):
+    context = EngineContext([[Character(),], [Character(),]])
+    context.load_probability_data()
+    for kept in range(1, 11):
+      for rolled in range(kept, 11):
+        context.mean_roll(rolled, kept)

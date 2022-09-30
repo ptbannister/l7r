@@ -13,7 +13,6 @@ from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.events import AttackDeclaredEvent, NewPhaseEvent
 from simulation.roll_provider import TestRollProvider
-from simulation.strategy import AttackStrategy
 
 
 class TestCharacter(unittest.TestCase):
@@ -21,8 +20,8 @@ class TestCharacter(unittest.TestCase):
     akagi = Character('Akagi')
     shiba = Character('Shiba')
     shiba.set_skill('parry', 5)
-    self.assertEqual(10, akagi.base_to_hit_tn())
-    self.assertEqual(30, shiba.base_to_hit_tn())
+    self.assertEqual(10, akagi.tn_to_hit())
+    self.assertEqual(30, shiba.tn_to_hit())
 
   def test_roll_skill(self):
     roll_provider = TestRollProvider()
@@ -35,10 +34,11 @@ class TestCharacter(unittest.TestCase):
     akodo.set_skill('parry', 5)
     akodo.set_skill('double attack', 5)
     akodo.set_roll_provider(roll_provider)
-    self.assertEqual(1, akodo.roll_skill('fire', 'attack'))
-    self.assertEqual(3, akodo.roll_skill('air', 'parry'))
-    self.assertEqual(4, akodo.roll_skill('fire', 'double attack'))
-    self.assertEqual(2, akodo.roll_skill('fire', 'attack'))
+    target = Character('target')
+    self.assertEqual(1, akodo.roll_skill(target, 'attack'))
+    self.assertEqual(3, akodo.roll_skill(target, 'parry'))
+    self.assertEqual(4, akodo.roll_skill(target, 'double attack'))
+    self.assertEqual(2, akodo.roll_skill(target, 'attack'))
 
   def test_speculative_wound_check(self):
     '''
