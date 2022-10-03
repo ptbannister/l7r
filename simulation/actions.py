@@ -136,6 +136,17 @@ class DoubleAttackAction(AttackAction):
     return self.target().tn_to_hit() + 20
 
 
+class FeintAction(AttackAction):
+  def __init__(self, subject, target, vp=0):
+    super().__init__(subject, target, 'feint', vp)
+
+  def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
+    return 0
+
+  def roll_damage(self):
+    return 0
+
+
 class LungeAction(AttackAction):
   def __init__(self, subject, target, vp=0):
     super().__init__(subject, target, 'lunge', vp)
@@ -147,7 +158,7 @@ class LungeAction(AttackAction):
 class ParryAction(Action):
   def __init__(self, subject, target, attack, predeclared=False, vp=0):
     skill = 'parry'
-    if (attack.target != subject):
+    if (attack.target() != subject):
       skill = 'parry_other'
     super().__init__(subject, target, skill, vp)
     self._attack = attack

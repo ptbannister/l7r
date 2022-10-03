@@ -162,7 +162,8 @@ class WoundCheckDeclaredListener(Listener):
     if isinstance(event, events.WoundCheckDeclaredEvent):
       if event.subject == character:
         roll = character.roll_wound_check(event.damage, event.vp)
-        yield events.SpendVoidPointsEvent(character, event.vp)
+        if event.vp > 0:
+          yield events.SpendVoidPointsEvent(character, event.vp)
         yield events.WoundCheckRolledEvent(character, event.damage, roll)
 
 

@@ -35,8 +35,8 @@ class TestNewRoundListener(unittest.TestCase):
     character.set_roll_provider(roll_provider)
     event = NewRoundEvent(1)
     listener = NewRoundListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(result is None)
+    responses = list(listener.handle(character, event, context))
+    self.assertTrue(responses == [])
     self.assertEqual([1, 2], character.actions())
 
 
@@ -48,9 +48,11 @@ class TestLightWoundsDamageListener(unittest.TestCase):
     damage = 20
     event = LightWoundsDamageEvent(character, damage)
     listener = LightWoundsDamageListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, WoundCheckDeclaredEvent))
-    self.assertEqual(damage, result.damage)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, WoundCheckDeclaredEvent))
+    self.assertEqual(damage, response.damage)
     self.assertEqual(damage, character.lw())
 
   def test_additive_light_wounds(self):
@@ -61,9 +63,11 @@ class TestLightWoundsDamageListener(unittest.TestCase):
     damage = 20
     event = LightWoundsDamageEvent(character, damage)
     listener = LightWoundsDamageListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, WoundCheckDeclaredEvent))
-    self.assertEqual(damage, result.damage)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, WoundCheckDeclaredEvent))
+    self.assertEqual(damage, response.damage)
     # character should now have 25 LW
     self.assertEqual(25, character.lw())
 
@@ -75,9 +79,11 @@ class TestSeriousWoundsDamageListener(unittest.TestCase):
     damage = 5
     event = SeriousWoundsDamageEvent(character, damage)
     listener = SeriousWoundsDamageListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, DeathEvent))
-    self.assertEqual(character, result.subject)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, DeathEvent))
+    self.assertEqual(character, response.subject)
 
   def test_unconscious(self):
     character = Character()
@@ -85,9 +91,11 @@ class TestSeriousWoundsDamageListener(unittest.TestCase):
     damage = 4
     event = SeriousWoundsDamageEvent(character, damage)
     listener = SeriousWoundsDamageListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, UnconsciousEvent))
-    self.assertEqual(character, result.subject)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, UnconsciousEvent))
+    self.assertEqual(character, response.subject)
 
   def test_wounds(self):
     character = Character()
@@ -95,9 +103,9 @@ class TestSeriousWoundsDamageListener(unittest.TestCase):
     damage = 2
     event = SeriousWoundsDamageEvent(character, damage)
     listener = SeriousWoundsDamageListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(result is None)
-    self.assertEqual(2, character.sw())
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual([], responses)
+    self.assertEqual(damage, character.sw())
 
 
 class TestTakeSeriousWoundListener(unittest.TestCase):
@@ -107,9 +115,12 @@ class TestTakeSeriousWoundListener(unittest.TestCase):
     context = EngineContext([[character,], [Character(),]])
     event = TakeSeriousWoundEvent(character, 1)
     listener = TakeSeriousWoundListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, SeriousWoundsDamageEvent))
-    self.assertEqual(result.damage, 1)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, SeriousWoundsDamageEvent))
+    self.assertEqual(character, response.target)
+    self.assertEqual(1, response.damage) 
     # the character's lw should be reset, but the sw is not taken until the serious wound event is handled
     self.assertEqual(0, character.lw())
     self.assertEqual(0, character.sw())
@@ -127,10 +138,12 @@ class TestWoundCheckDeclaredListener(unittest.TestCase):
     vp = 0
     event = WoundCheckDeclaredEvent(character, damage, vp)
     listener = WoundCheckDeclaredListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, WoundCheckRolledEvent))
-    self.assertEqual(20, result.damage)
-    self.assertEqual(50, result.roll)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, WoundCheckRolledEvent))
+    self.assertEqual(20, response.damage)
+    self.assertEqual(50, response.roll)
 
 
 class TestWoundCheckRolledListener(unittest.TestCase):
@@ -141,10 +154,12 @@ class TestWoundCheckRolledListener(unittest.TestCase):
     roll = 10
     event = WoundCheckRolledEvent(character, damage, roll)
     listener = WoundCheckRolledListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, WoundCheckFailedEvent))
-    self.assertEqual(damage, result.damage)
-    self.assertEqual(roll, result.roll)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, WoundCheckFailedEvent))
+    self.assertEqual(damage, response.damage)
+    self.assertEqual(roll, response.roll)
 
   def test_succeed(self):
     character = Character()
@@ -153,10 +168,12 @@ class TestWoundCheckRolledListener(unittest.TestCase):
     roll = 20
     event = WoundCheckRolledEvent(character, damage, roll)
     listener = WoundCheckRolledListener()
-    result = listener.handle(character, event, context)
-    self.assertTrue(isinstance(result, WoundCheckSucceededEvent))
-    self.assertEqual(damage, result.damage)
-    self.assertEqual(roll, result.roll)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, WoundCheckSucceededEvent))
+    self.assertEqual(damage, response.damage)
+    self.assertEqual(roll, response.roll)
 
 
 class TestWoundCheckFailedListener(unittest.TestCase):
@@ -168,10 +185,12 @@ class TestWoundCheckFailedListener(unittest.TestCase):
     roll = 10
     event = WoundCheckFailedEvent(character, damage, roll)
     listener = WoundCheckFailedListener()
-    result = listener.handle(character, event, context)
+    responses = list(listener.handle(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
     # missing a wound check by 19 means 2 SW
-    self.assertTrue(isinstance(result, SeriousWoundsDamageEvent))
-    self.assertEqual(2, result.damage)
+    self.assertTrue(isinstance(response, SeriousWoundsDamageEvent))
+    self.assertEqual(2, response.damage)
     # character's lw should be reset
     self.assertEqual(0, character.lw())
 

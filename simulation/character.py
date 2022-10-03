@@ -202,7 +202,8 @@ class Character(object):
 
     Gain a "floating bonus" that may be applied to the given skill
     in the future.
-    If the bonus may be applied to anything, it the skills should be 'any'.
+    If the bonus may be applied to anything, its skill should be 'any'.
+    If the bonus may be applied to any attack, its skill should be 'any attack'.
     '''
     stripped_skill = self.strip_suffix(skill)
     if stripped_skill in self._floating_bonuses.keys():
@@ -227,7 +228,7 @@ class Character(object):
     elif skill == 'double attack':
       return actions.DoubleAttackAction(self, target, vp)
     elif skill == 'feint':
-      return actions.AttackAction(self, target, skill, vp)
+      return actions.FeintAction(self, target, skill, vp)
     elif skill == 'lunge':
       return actions.LungeAction(self, target, vp)
 
@@ -235,10 +236,10 @@ class Character(object):
     # calculate extra rolled dice
     ring = self.ring(self.get_skill_ring('damage'))
     my_extra_rolled = self.extra_rolled('damage') + self.extra_rolled('damage_' + skill)
-    rolled = ring + my_extra_rolled + attack_extra_rolled + self.weapon().rolled() + vp
+    rolled = ring + my_extra_rolled + attack_extra_rolled + self.weapon().rolled()
     # calculate extra kept dice
     my_extra_kept = self.extra_kept('damage') + self.extra_kept('damage_' + skill)
-    kept = self.weapon().kept() + my_extra_kept + vp
+    kept = self.weapon().kept() + my_extra_kept
     # calculate modifier
     mod = self.modifier('damage', None) + self.modifier('damage_' + skill, None)
     return normalize_roll_params(rolled, kept, mod)
@@ -500,7 +501,7 @@ class Character(object):
     make a Character roll damage.
     '''
     rolled, kept, mod = self.get_damage_roll_params(target, skill, attack_extra_rolled, vp)
-    roll = self._roll_provider.get_damage_roll(rolled, kept) + mod
+    roll = self.roll_provider().get_damage_roll(rolled, kept) + mod
     logger.debug('{} rolled damage: {}'.format(self._name, roll))
     return roll
 
@@ -514,9 +515,12 @@ class Character(object):
     make a Character roll initiative.
     '''
     (rolled, kept, mod) = self.get_initiative_roll_params()
-    self._actions = self._roll_provider.get_initiative_roll(rolled, kept)
+    self._actions = self.roll_provider().get_initiative_roll(rolled, kept)
     logger.debug('{} rolled initiative: {}'.format(self._name, self._actions))
     return self._actions
+
+  def roll_provider(self):
+    return self._roll_provider
 
   def roll_skill(self, target, skill, vp=0):
     '''
@@ -529,7 +533,7 @@ class Character(object):
     '''
     (rolled, kept, mod) = self.get_skill_roll_params(target, skill, vp)
     explode = not self.crippled()
-    roll = self._roll_provider.get_skill_roll(skill, rolled, kept, explode) + mod
+    roll = self.roll_provider().get_skill_roll(self.strip_suffix(skill), rolled, kept, explode) + mod
     logger.debug('{} rolled {}: {}'.format(self._name, skill, roll))
     return roll
 
@@ -542,7 +546,7 @@ class Character(object):
     Roll a Wound Check for this character.
     '''
     (rolled, kept, mod) = self.get_wound_check_roll_params(vp)
-    roll = self._roll_provider.get_wound_check_roll(rolled, kept) + mod
+    roll = self.roll_provider().get_wound_check_roll(rolled, kept) + mod
     logger.debug('{} rolled wound check: {}'.format(self._name, roll))
     return roll
 
@@ -622,7 +626,6 @@ class Character(object):
     # verify the given roll_provider satisfies the roll provider API
     if not isinstance(roll_provider, RollProvider):
       raise ValueError('roll_provider must be a RollProvider')
-
     self._roll_provider = roll_provider
 
   def set_skill(self, skill, rank):

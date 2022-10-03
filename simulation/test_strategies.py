@@ -17,7 +17,7 @@ from simulation.events import AttackDeclaredEvent, AttackRolledEvent, LightWound
 from simulation.groups import Group
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
-from simulation.strateges import PlainAttackStrategy, KeepLightWoundsStrategy, NeverParryStrategy, ReluctantParryStrategy, WoundCheckStrategy, get_expected_kept_damage_dice, optimize_attack
+from simulation.strategies import PlainAttackStrategy, KeepLightWoundsStrategy, NeverParryStrategy, ReluctantParryStrategy, WoundCheckStrategy, get_expected_kept_damage_dice, optimize_attack
 
 
 # set up logging
@@ -125,12 +125,13 @@ class TestAttackStrategy(unittest.TestCase):
     strategy = PlainAttackStrategy()
     # play event on strategy in phase 1
     self.assertEqual(1, context.phase())
-    recommendation = strategy.recommend(akodo, NewPhaseEvent(context.phase()), context)
-    self.assertTrue(recommendation is not None)
-    self.assertTrue(isinstance(recommendation, TakeAttackActionEvent))
-    self.assertTrue(isinstance(recommendation.action, AttackAction))
-    self.assertEqual(akodo, recommendation.action.subject())
-    self.assertEqual(bayushi, recommendation.action.target())
+    responses = list(strategy.recommend(akodo, NewPhaseEvent(context.phase()), context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, TakeAttackActionEvent))
+    self.assertTrue(isinstance(response.action, AttackAction))
+    self.assertEqual(akodo, response.action.subject())
+    self.assertEqual(bayushi, response.action.target())
 
   def test_recommend_no_action(self):
     # set up characters and context
@@ -143,8 +144,8 @@ class TestAttackStrategy(unittest.TestCase):
     strategy = PlainAttackStrategy()
     # play event on strategy in phase 0
     self.assertEqual(0, context.phase())
-    recommendation = strategy.recommend(akodo, NewPhaseEvent(context.phase()), context)
-    self.assertTrue(recommendation is None)
+    responses = list(strategy.recommend(akodo, NewPhaseEvent(context.phase()), context))
+    self.assertEqual([], responses)
 
 
 class TestKeepLightWoundsStrategy(unittest.TestCase):
@@ -157,9 +158,9 @@ class TestKeepLightWoundsStrategy(unittest.TestCase):
     context.load_probability_data()
     strategy = KeepLightWoundsStrategy()
     event = WoundCheckSucceededEvent(character, 10, 30)
-    recommendation = strategy.recommend(character, event, context)
+    responses = list(strategy.recommend(character, event, context))
     # should not recommend taking SW for a small hit
-    self.assertTrue(recommendation is None)
+    self.assertEqual([], responses)
 
   def test_keep_lw_near_defeat(self):
     # set up character and wound check roll event
@@ -169,9 +170,9 @@ class TestKeepLightWoundsStrategy(unittest.TestCase):
     context = EngineContext([Group([character]), Group([Character()])])
     strategy = KeepLightWoundsStrategy()
     event = WoundCheckSucceededEvent(character, 9001, 9002)
-    recommendation = strategy.recommend(character, event, context)
+    responses = list(strategy.recommend(character, event, context))
     # should not recommend taking SW when one hit from defeat
-    self.assertTrue(recommendation is None)
+    self.assertEqual([], responses)
 
   def test_take_sw(self):
     # set up character and wound check roll event
@@ -181,10 +182,12 @@ class TestKeepLightWoundsStrategy(unittest.TestCase):
     context.load_probability_data()
     strategy = KeepLightWoundsStrategy()
     event = WoundCheckSucceededEvent(character, 100, 101)
-    recommendation = strategy.recommend(character, event, context)
+    responses = list(strategy.recommend(character, event, context))
     # should recommend taking SW when the next wound check looks dangerous
-    self.assertTrue(isinstance(recommendation, TakeSeriousWoundEvent))
-    self.assertEqual(1, recommendation.damage)
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, TakeSeriousWoundEvent))
+    self.assertEqual(1, response.damage)
 
 
 class TestReluctantParryStrategy(unittest.TestCase):
@@ -207,13 +210,13 @@ class TestReluctantParryStrategy(unittest.TestCase):
     event = AttackRolledEvent(attack, 1)
     # get the recommendation
     strategy = ReluctantParryStrategy()
-    recommendation = strategy.recommend(target, event, context)
+    responses = list(strategy.recommend(target, event, context))
     # should not try to parry a missed attack
     self.assertFalse(attack.is_hit())
     self.assertEqual(0, len(attack.parries_declared()))
     self.assertFalse(attack.parry_attempted())
     self.assertFalse(attack.parried())
-    self.assertTrue(recommendation is None)
+    self.assertEqual([], responses)
 
   def test_do_not_parry_for_enemies(self):
     shiba = Character('Shiba')
@@ -235,12 +238,12 @@ class TestReluctantParryStrategy(unittest.TestCase):
     event = AttackRolledEvent(attack, 9001)
     # get the recommendation
     strategy = ReluctantParryStrategy()
-    recommendation = strategy.recommend(shiba, event, context)
+    responses = list(strategy.recommend(shiba, event, context))
     # shiba should not parry for fu leng
     self.assertEqual(0, len(attack.parries_declared()))
     self.assertFalse(attack.parry_attempted())
     self.assertFalse(attack.parried())
-    self.assertTrue(recommendation is None)
+    self.assertEqual([], responses)
 
   def test_do_not_parry_small_attack(self):
     attacker = Character('attacker')
@@ -262,14 +265,14 @@ class TestReluctantParryStrategy(unittest.TestCase):
     event = AttackRolledEvent(attack, 20)
     # use the strategy
     strategy = ReluctantParryStrategy()
-    recommendation = strategy.recommend(target, event, context)
+    responses = list(strategy.recommend(target, event, context))
     # should not parry a small attack
     self.assertTrue(attack.is_hit())
     self.assertEqual(0, len(attack.parries_declared()))
     self.assertFalse(attack.parry_attempted())
     self.assertFalse(attack.parried())
     self.assertEqual(2, attack.calculate_extra_damage_dice())
-    self.assertTrue(recommendation is None)
+    self.assertEqual([], responses)
 
   def test_parry_big_hit(self):
     attacker = Character('attacker')
@@ -292,10 +295,12 @@ class TestReluctantParryStrategy(unittest.TestCase):
     event = AttackRolledEvent(attack, 9001)
     # use the strategy
     strategy = ReluctantParryStrategy()
-    recommendation = strategy.recommend(target, event, context)
+    responses = list(strategy.recommend(target, event, context))
     # should parry a big hit
     self.assertTrue(attack.is_hit())
-    self.assertTrue(isinstance(recommendation, TakeParryActionEvent))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, TakeParryActionEvent))
 
   def test_parry_double_attack(self):
     attacker = Character('attacker')
@@ -318,10 +323,12 @@ class TestReluctantParryStrategy(unittest.TestCase):
     event = AttackRolledEvent(attack, 30)
     # use the strategy
     strategy = ReluctantParryStrategy()
-    recommendation = strategy.recommend(target, event, context)
+    responses = list(strategy.recommend(target, event, context))
     # should parry a double attack
     self.assertTrue(attack.is_hit())
-    self.assertTrue(isinstance(recommendation, TakeParryActionEvent))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, TakeParryActionEvent))
 
 
 class TestNeverParryStrategy(unittest.TestCase):
@@ -344,9 +351,9 @@ class TestNeverParryStrategy(unittest.TestCase):
     event = AttackRolledEvent(attack, 9001)
     # use the strategy
     strategy = NeverParryStrategy()
-    recommendation = strategy.recommend(target, event, context)
+    responses = list(strategy.recommend(target, event, context))
     # should never parry
-    self.assertTrue(recommendation is None)
+    self.assertEqual([], responses)
 
   def test_do_not_parry_double_attack(self):
     attacker = Character('attacker')
@@ -367,9 +374,9 @@ class TestNeverParryStrategy(unittest.TestCase):
     event = AttackRolledEvent(attack, 30)
     # use the strategy
     strategy = NeverParryStrategy()
-    recommendation = strategy.recommend(target, event, context)
+    responses = list(strategy.recommend(target, event, context))
     # should never parry
-    self.assertTrue(recommendation is None)
+    self.assertEqual([], responses)
 
 
 class TestWoundCheckStrategy(unittest.TestCase):
@@ -381,9 +388,11 @@ class TestWoundCheckStrategy(unittest.TestCase):
     context.load_probability_data()
     strategy = WoundCheckStrategy()
     event = LightWoundsDamageEvent(character, 10)
-    recommendation = strategy.recommend(character, event, context)
-    self.assertTrue(isinstance(recommendation, WoundCheckDeclaredEvent))
-    self.assertEqual(0, recommendation.vp)
+    responses = list(strategy.recommend(character, event, context))
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, WoundCheckDeclaredEvent))
+    self.assertEqual(0, response.vp)
 
 
 if (__name__ == '__main__'):

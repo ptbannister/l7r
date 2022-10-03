@@ -18,7 +18,7 @@ from simulation import events
 from simulation.groups import Group
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
-from simulation.strategy import NeverParryStrategy, ReluctantParryStrategy
+from simulation.strategies import AlwaysParryStrategy, NeverParryStrategy, PlainAttackStrategy, ReluctantParryStrategy
 
 
 # set up logging
@@ -203,10 +203,12 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attacker = Character('attacker')
     attacker.set_ring('fire', 5)
     attacker.set_skill('attack', 4)
+    attacker.set_strategy('attack', PlainAttackStrategy())
     attacker._actions = [1]
     target = Character('target')
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
+    target.set_strategy('parry', AlwaysParryStrategy())
     target._actions = [1]
     # rig the attack roll to hit by 20
     attacker_roll_provider = TestRollProvider()

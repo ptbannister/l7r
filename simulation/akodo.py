@@ -98,7 +98,8 @@ class AkodoFifthDanStrategy(Strategy):
         # calculate max vp spendable on damage
         max_vp = min(character.vp(), character.max_vp_per_roll())
         # TODO: implement a little more intelligence
-        yield SpendVoidPointsEvent(character, max_vp)
+        if max_vp > 0:
+          yield SpendVoidPointsEvent(character, max_vp)
         yield LightWoundsDamageEvent(character, event.target, 10 * max_vp)
 
 
