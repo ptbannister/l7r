@@ -9,9 +9,10 @@
 import math
 import uuid
 
-from simulation import actions, listener, strategy
+from simulation import actions, listeners, strategies
 from simulation.knowledge import Knowledge
 from simulation.log import logger
+from simulation.modifiers import PARRY_OTHER_PENALTY
 from simulation.roll import normalize_roll_params
 from simulation.roll_provider import DEFAULT_ROLL_PROVIDER, RollProvider
 from simulation.weapons import KATANA
@@ -31,7 +32,6 @@ class Character(object):
       'water': 2 }
     self._actions = []
     self._advantages = []
-    self._ap = 0
     self._ap_base_skill = None
     self._ap_skills = []
     self._ap_spent = 0
@@ -44,22 +44,26 @@ class Character(object):
     self._interrupt_skills = []
     self._interrupt_costs = {}
     self._knowledge = Knowledge()
-    self._modifiers = []
+    self._modifiers = [ PARRY_OTHER_PENALTY ]
     # default listeners
-    action_taken_listener = listener.TakeActionListener()
+    action_taken_listener = listeners.TakeActionListener()
     self._listeners = {
-      'attack_rolled': listener.AttackRolledListener(),
-      'lw_damage': listener.LightWoundsDamageListener(),
-      'new_phase': listener.NewPhaseListener(),
-      'new_round': listener.NewRoundListener(),
-      'sw_damage': listener.SeriousWoundsDamageListener(),
+      'attack_declared': listeners.AttackDeclaredListener(),
+      'attack_rolled': listeners.AttackRolledListener(),
+      'gain_tvp': listeners.GainTemporaryVoidPointsListener(),
+      'lw_damage': listeners.LightWoundsDamageListener(),
+      'new_phase': listeners.NewPhaseListener(),
+      'new_round': listeners.NewRoundListener(),
+      'spend_ap': listeners.SpendAdventurePointsListener(),
+      'spend_vp': listeners.SpendVoidPointsListener(),
+      'sw_damage': listeners.SeriousWoundsDamageListener(),
       'take_attack': action_taken_listener,
       'take_parry': action_taken_listener,
-      'take_sw': listener.TakeSeriousWoundListener(),
-      'wound_check_declared': listener.WoundCheckDeclaredListener(),
-      'wound_check_failed': listener.WoundCheckFailedListener(),
-      'wound_check_rolled': listener.WoundCheckRolledListener(),
-      'wound_check_succeeded': listener.WoundCheckSucceededListener()
+      'take_sw': listeners.TakeSeriousWoundListener(),
+      'wound_check_declared': listeners.WoundCheckDeclaredListener(),
+      'wound_check_failed': listeners.WoundCheckFailedListener(),
+      'wound_check_rolled': listeners.WoundCheckRolledListener(),
+      'wound_check_succeeded': listeners.WoundCheckSucceededListener()
     }
     self._lw = 0
     self._lw_history = []
@@ -78,13 +82,12 @@ class Character(object):
     }
     # default strategies
     self._strategies = {
-      'action': strategy.AlwaysAttackActionStrategy(),
-      'attack': strategy.UniversalAttackStrategy(),
-      'light_wounds': strategy.KeepLightWoundsStrategy(),
-      'parry': strategy.ReluctantParryStrategy(),
-      'wound_check': strategy.WoundCheckStrategy()
+      'action': strategies.HoldOneActionStrategy(),
+      'attack': strategies.PlainAttackStrategy(),
+      'light_wounds': strategies.KeepLightWoundsStrategy(),
+      'parry': strategies.ReluctantParryStrategy(),
+      'wound_check': strategies.WoundCheckStrategy()
     }
-    #'attack': strategy.UniversalAttackStrategy(),
     self._sw = 0
     self._tvp = 0
     self._vp_spent = 0
@@ -129,7 +132,16 @@ class Character(object):
 
     Return the number of Adventure Points (Third Dan Free Raises) this character has available to spend.
     '''
-    return self._ap - self._ap_spent
+    return (2 * self.skill(self.ap_base_skill())) - self._ap_spent
+
+  def ap_base_skill(self):
+    '''
+    ap_base_skill() -> str
+
+    Return the base skill used to calculate this character's
+    Adventure Points (3rd Dan Free Raises), or None.
+    '''
+    return self._ap_base_skill
 
   def attack_strategy(self):
     return self._strategies['attack']
@@ -157,16 +169,15 @@ class Character(object):
   def event(self, event, context):
     if event.name in self._listeners.keys():
       logger.debug('{} handling {}'.format(self._name, event.name))
-      return self._listeners[event.name].handle(self, event, context)
+      yield from self._listeners[event.name].handle(self, event, context)
     else:
       logger.debug('{} ignoring {}'.format(self._name, event.name))
-      return None
 
   def extra_kept(self, skill):
-    return self._extra_kept.get(skill, 0)
+    return self._extra_kept.get(self.strip_suffix(skill), 0)
 
   def extra_rolled(self, skill):
-    return self._extra_rolled.get(skill, 0)
+    return self._extra_rolled.get(self.strip_suffix(skill), 0)
 
   def floating_bonuses(self, skill):
     '''
@@ -193,10 +204,11 @@ class Character(object):
     in the future.
     If the bonus may be applied to anything, it the skills should be 'any'.
     '''
-    if skill in self._floating_bonuses.keys():
-      self._floating_bonuses[skill] = [bonus]
+    stripped_skill = self.strip_suffix(skill)
+    if stripped_skill in self._floating_bonuses.keys():
+      self._floating_bonuses[stripped_skill] = [bonus]
     else:
-      self._floating_bonuses[skill].append(bonus)
+      self._floating_bonuses[stripped_skill].append(bonus)
 
   def gain_tvp(self, n=1):
     '''
@@ -244,7 +256,7 @@ class Character(object):
 
     Returns the ring used to use the given skill.
     '''
-    return self._skill_rings[skill]
+    return self._skill_rings.get(self.strip_suffix(skill), 0)
 
   def get_skill_roll_params(self, target, skill, vp=0):
     '''
@@ -387,6 +399,18 @@ class Character(object):
     Used to predict future damage.
     '''
     return self._lw_history
+
+  def max_ap_per_roll(self):
+    '''
+    max_ap_per_roll() -> int
+
+    Return the maximum number of Adventure Points (3rd Dan Free Raises)
+    this character may spend on a single roll.
+    '''
+    if self.ap_base_skill() is not None:
+      return self.skill(self.ap_base_skill())
+    else:
+      return 0
 
   def max_sw(self):
     '''
@@ -561,6 +585,16 @@ class Character(object):
     '''
     self._interrupt_costs[skill] = actions
 
+  def set_listener(self, event_name, listener):
+    '''
+    set_listener(event_name, listener)
+      event_name (str): name of the event to listen for
+      listener (Listener): listener to handle this event
+
+    Set this character's listener for a named event.
+    '''
+    self._listeners[event_name] = listener
+
   def set_parry_strategy(self, strategy):
     self._strategies['parry'] = strategy
 
@@ -610,8 +644,12 @@ class Character(object):
       skill (str): name of skill of interest
 
     Returns this character's rank in the given skill.
+
+    Skills may contain an underscore character and a suffix,
+    such as 'parry_other'. In this case, the underscore and suffix
+    are stripped before the lookup.
     '''
-    return self._skills.get(skill, 0)
+    return self._skills.get(self.strip_suffix(skill), 0)
 
   def spend_ap(self, skill, n):
     '''
@@ -655,6 +693,12 @@ class Character(object):
         still_unspent -= 1
       else:
         raise ValueError('Not enough Void Points')
+
+  def strip_suffix(self, word):
+    if word is not None and word.find('_') > 0:
+      return word[:word.find('_')]
+    else:
+      return word
 
   def sw(self):
     '''

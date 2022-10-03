@@ -146,7 +146,10 @@ class LungeAction(AttackAction):
 
 class ParryAction(Action):
   def __init__(self, subject, target, attack, predeclared=False, vp=0):
-    super().__init__(subject, target, 'parry', vp)
+    skill = 'parry'
+    if (attack.target != subject):
+      skill = 'parry_other'
+    super().__init__(subject, target, skill, vp)
     self._attack = attack
     self._parry_roll = 0
     self._predeclared = predeclared

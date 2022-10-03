@@ -6,6 +6,7 @@ from simulation.actions import AttackAction, ParryAction
 from simulation.events import AttackDeclaredEvent, AttackRolledEvent, LightWoundsDamageEvent, NewPhaseEvent, TakeAttackActionEvent, TakeParryActionEvent, TakeSeriousWoundEvent, WoundCheckDeclaredEvent, WoundCheckRolledEvent, WoundCheckSucceededEvent
 from simulation.knowledge import TheoreticalCharacter
 from simulation.log import logger
+from simulation.roll import normalize_roll_params
 
 class Strategy(ABC):
   '''
@@ -159,18 +160,28 @@ def optimize_attack(subject, target, skill, context):
   if (ap > 0) or (vp > 0):
     margin = expected_kept[(ap, vp)] - expected_kept[(0, 0)] 
     logger.debug('{} spending {} VP (expecting to spend {} AP) to try to get {} extra kept damage dice'.format(subject.name(), vp, ap, margin))
-  return subject.get_attack_action(target, skill)
+  return subject.get_attack_action(target, skill, vp)
 
 
 class AlwaysAttackActionStrategy(Strategy):
   def recommend(self, character, event, context):
-    if not isinstance(event, NewPhaseEvent):
-      return None
-    # try to attack if action available
-    if character.has_action(context):
-      return character.attack_strategy().recommend(character, event, context)
-    # TODO: evaluate whether to interrupt
-    return None
+    if isinstance(event, NewPhaseEvent):
+      # try to attack if action available
+      # TODO: evaluate whether to interrupt
+      if character.has_action(context):
+        yield from character.attack_strategy().recommend(character, event, context)
+
+
+class HoldOneActionStrategy(Strategy):
+  def recommend(self, character, event, context):
+    if isinstance(event, NewPhaseEvent):
+      # try to hold an action in reserve until Phase 10
+      if character.has_action(context):
+        available_actions = [action for action in character.actions() if action <= context.phase()]
+        if len(available_actions) > 1 or context.phase() == 10:
+          yield from character.attack_strategy().recommend(character, event, context)
+        else:
+          logger.debug('{} is holding an action'.format(character.name()))
 
 
 class UniversalAttackStrategy(Strategy):
@@ -181,14 +192,14 @@ class UniversalAttackStrategy(Strategy):
         # try to double attack first
         double_attack_event = self._try_skill(character, 'double attack', context)
         if double_attack_event is not None:
-          return double_attack_event
+          yield double_attack_event
+          return
         # TODO: consider a feint (probably need a FeintStrategy)
         # then consider a lunge (probably need a LungeStrategy)
         attack_event = self._try_skill(character, 'attack', context)
         if attack_event is not None:
-          return attack_event
-    # do nothing
-    return None
+          yield attack_event
+          return
 
   def _try_skill(self, character, skill, context):
     if character.skill(skill) > 0:
@@ -208,7 +219,7 @@ class PlainAttackStrategy(Strategy):
         if target is not None:
           attack = optimize_attack(character, target, 'attack', context)
           logger.debug('{} is attacking {}'.format(character.name(), target.name()))
-          return TakeAttackActionEvent(attack)
+          yield TakeAttackActionEvent(attack)
     # do nothing
     return None
 
@@ -233,7 +244,7 @@ class BaseParryStrategy(Strategy):
         logger.debug('{} will not parry an attack was already parried'.format(character.name()))
         return
       # delegate to specific parry strategy recommendation
-      return self._recommend(character, event, context)
+      yield from self._recommend(character, event, context)
 
   def _recommend(self, character, event, context):
     raise NotImplementedError()
@@ -282,7 +293,7 @@ class AlwaysParryStrategy(BaseParryStrategy):
   def _recommend(self, character, event, context):
     logger.debug('{} always parries for friends'.format(character.name()))
     parry = ParryAction(character, event.action.subject(), event.action)
-    return TakeParryActionEvent(parry)
+    yield TakeParryActionEvent(parry)
 
 
 class NeverParryStrategy(Strategy):
@@ -291,6 +302,7 @@ class NeverParryStrategy(Strategy):
   '''
   def recommend(self, character, event, context):
     logger.debug('{} never parries'.format(character.name()))
+    yield from ()
 
 
 class ReluctantParryStrategy(BaseParryStrategy):
@@ -322,7 +334,7 @@ class ReluctantParryStrategy(BaseParryStrategy):
         elif probably_critical:
           logger.debug('{} reluctantly parries because the attack looks dangerous'.format(character.name()))
         parry = ParryAction(character, event.action.subject(), event.action)
-        return TakeParryActionEvent(parry)
+        yield TakeParryActionEvent(parry)
       else:
         logger.debug('{} will not parry a small attack'.format(character.name()))
 
@@ -330,6 +342,7 @@ class ReluctantParryStrategy(BaseParryStrategy):
 class NeverParryStrategy(Strategy):
   def recommend(self, character, event, context):
     logger.debug('{} never parries'.format(character.name()))
+    yield from ()
 
 
 class KeepLightWoundsStrategy(Strategy):
@@ -358,7 +371,7 @@ class KeepLightWoundsStrategy(Strategy):
         if p_fail_by_ten > 0.5:
           # take the wound if the next wound check probably will be bad
           logger.debug('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
-          return TakeSeriousWoundEvent(character, 1)
+          yield TakeSeriousWoundEvent(character, 1)
         else:
           logger.debug('{} keeping light wounds because the next wound check should be ok.'.format(character.name()))
 
@@ -370,13 +383,46 @@ class WoundCheckStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, LightWoundsDamageEvent):
       if event.target == character:
-        (rolled, kept, bonus) = character.get_wound_check_roll_params()
         spend_vp = 0
-        # What is the probability of making the roll?
-        p_success = context.p(event.damage - bonus, rolled, kept)
-        if p_success < 0.5:
-          # What is the probability of failing by 10 or more?
-          p_fail_bad = context.p(event.damage - bonus - 10, rolled, kept)
-         
-        return WoundCheckDeclaredEvent(character, event.damage, 0)
+        declared_vp = self._declare_vp(character, event, context)
+        yield WoundCheckDeclaredEvent(character, event.damage, declared_vp)
 
+  def _declare_vp(self, character, event, context):
+    # get roll params
+    (rolled, kept, modifier) = character.get_wound_check_roll_params()
+    # initialize climbing parameters
+    declared_vp = 0
+    planned_ap = 0
+    max_vp = min(character.max_vp_per_roll(), character.vp())
+    max_ap = min(character.max_ap_per_roll(), character.ap())
+    new_rolled = rolled
+    new_kept = kept
+    new_modifier = modifier
+    # how many SW are expected?
+    # TODO: be more conservative and calculate the worst roll within 1 stdev of the mean
+    expected_roll = context.mean_roll(rolled, kept) + modifier
+    expected_sw = character.wound_check(expected_roll)
+    # tolerable_sw is normally 1
+    # but if 1 SW from defeat, tolerable SW is 0
+    tolerable_sw = min(character.sw_remaining() - 1, 1)
+    while expected_sw > tolerable_sw:
+      if declared_vp == max_vp:
+        # stop trying to spend VP if maxed out
+        break
+      elif new_kept == 10:
+        # stop trying to spend VP if already keeping 10 dice
+        break
+      declared_vp += 1
+      if planned_ap < (2 * declared_vp) and planned_ap < max_ap:
+        # try to spend 2 AP per VP
+        planned_ap += min(2, max_ap - planned_ap)
+      (new_rolled, new_kept, modifier) = normalize_roll_params(
+        new_rolled + declared_vp,
+        new_kept + declared_vp,
+        new_modifier)
+      expected_roll = context.mean_roll(new_rolled, new_kept) \
+        + new_modifier + (5 * planned_ap)
+      expected_sw = character.wound_check(expected_roll)
+    logger.debug('{} declaring {} VP for wound check'.format(character.name(), declared_vp))
+    return declared_vp
+    

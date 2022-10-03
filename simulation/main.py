@@ -9,6 +9,7 @@
 
 import argparse as ap
 import logging
+import os
 
 from simulation.character import Character
 from simulation.context import EngineContext
@@ -20,7 +21,8 @@ LOG_LEVELS = {
   'critical': logging.CRITICAL,
   'error': logging.ERROR,
   'fatal': logging.FATAL,
-  'warn': logging.WARN
+  'warn': logging.WARN,
+  'debug': logging.DEBUG
 }
 
 MAX_TRIALS = 1000
@@ -53,11 +55,16 @@ def main():
   argparser = ap.ArgumentParser()
   argparser.add_argument('-t', '--trials', help='How many trials to run', type=int, default=100)
   argparser.add_argument('--log-level', help='Log level to use', choices=[k for k in LOG_LEVELS.keys()], default='error')
+  argparser.add_argument('--log-path', help='Path to write logs', type=str, default=os.path.join(os.getcwd(), 'simulation.log'))
 
   args = argparser.parse_args()
 
-  # set log level
-  logger.setLevel(LOG_LEVELS[args.log_level])
+  # reset log file
+  if os.path.exists(args.log_path):
+    os.unlink(args.log_path)
+
+  # log to file
+  logging.basicConfig(filename=args.log_path, level=LOG_LEVELS[args.log_level])
 
   # validate number of trials
   ntrials = args.trials

@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+
+#
+# modifiers.py
+# Author: Patrick Bannister (ptbannister@gmail.com)
+# Implement modifiers (flat bonuses or penalties to rolls) that can expire in response to events.
+#
 
 
 class Modifier(object):
@@ -8,14 +15,15 @@ class Modifier(object):
     self._subject = subject
     self._target = target
     self._skill = skill
-    self._adjustment = modifier
+    self._adjustment = adjustment
     self._listeners = {}
 
-  def apply(self, subject, target, skill, context):
+  def apply(self, subject, target, skill):
     '''
-    apply(subject, target, skill, context) -> int
+    apply(subject, target, skill) -> int
 
-    Returns the effect of this modifier on a skill or thing, or zero if it doesn't apply.
+    Returns the effect of this modifier on a skill or thing,
+    or zero if it doesn't apply.
     '''
     if self.skill() == skill or self.skill() == 'any':
       if self.subject() is None or self.subject() == subject:
@@ -43,6 +51,10 @@ class Modifier(object):
     return self._target
 
 
+# the standard penalty for parrying on behalf of another character
+PARRY_OTHER_PENALTY = Modifier(None, None, 'parry_other', -10)
+
+
 class FreeRaise(Modifier):
   def __init__(self, skill):
     super().__init__(None, None, skill, 5)
@@ -50,27 +62,4 @@ class FreeRaise(Modifier):
   def apply(self, skill):
     if self.skill() == skill:
       return 5
-
-
-class ModifierListener(Listener):
-  def __init__(self, modifier):
-    self._modifier = modifier
-
-  def matches_action_event(self, character, event):
-    if event.action.subject() == character:
-      if self.modifier().subject() is None or self.modifier().subject() == event.action.subject():
-        if self.modifier().target() is None or self.modifier().target() == event.action.target():
-          if self.modifier().skill() == 'any' or self.modifier().skill() == event.skill:
-            return True
-    return False
-
-  def modifier(self):
-    return self._modifier
-
- 
-class ExpireAfterNextAttackListener(ModifierListener):
-  def handle(self, character, event, context):
-    if isinstance(event, AttackFailedEvent) or isinstance(event, AttackSucceededEvent):
-      if self.matches_action_event(character, event):
-        character.remove_modifier()(self.modifier())
 

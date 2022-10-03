@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #
-# test_listener.py
+# test_listeners.py
 # Author: Patrick Bannister
 # Unit tests for L7R combat simulator Listener classes
 #
@@ -14,7 +14,7 @@ from simulation.actions import AttackAction
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.events import DeathEvent, NewRoundEvent, LightWoundsDamageEvent, SeriousWoundsDamageEvent, TakeSeriousWoundEvent, UnconsciousEvent, WoundCheckDeclaredEvent, WoundCheckFailedEvent, WoundCheckRolledEvent, WoundCheckSucceededEvent
-from simulation.listener import NewRoundListener, LightWoundsDamageListener, SeriousWoundsDamageListener, TakeSeriousWoundListener, WoundCheckDeclaredListener, WoundCheckFailedListener, WoundCheckRolledListener
+from simulation.listeners import NewRoundListener, LightWoundsDamageListener, SeriousWoundsDamageListener, TakeSeriousWoundListener, WoundCheckDeclaredListener, WoundCheckFailedListener, WoundCheckRolledListener
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
 

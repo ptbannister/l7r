@@ -264,7 +264,7 @@ class WoundCheckFailedEvent(WoundCheckEvent):
     self.roll = roll
 
 class WoundCheckRolledEvent(WoundCheckEvent):
-  def __init__(self, subject, damage, roll):
+  def __init__(self, subject, damage, roll, vp=0):
     super().__init__('wound_check_rolled', subject, damage)
     self.roll = roll
 
@@ -273,3 +273,19 @@ class WoundCheckSucceededEvent(WoundCheckEvent):
     super().__init__('wound_check_succeeded', subject, damage)
     self.roll = roll
 
+
+class SpendResourcesEvent(Event):
+  def __init__(self, name, subject, amount):
+    super().__init__(name)
+    self.subject = subject
+    self.amount = amount
+
+class SpendAdventurePointsEvent(SpendResourcesEvent):
+  def __init__(self, subject, amount):
+    super().__init__('spend_ap', subject, amount)
+
+class SpendVoidPointsEvent(SpendResourcesEvent):
+  def __init__(self, subject, amount):
+    super().__init__('spend_vp', subject, amount)
+
+  

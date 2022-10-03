@@ -36,9 +36,8 @@ class Engine(object):
     else:
       # play event on each character in initiative order
       for character in self._context.characters():
-        reaction = character.event(event, self._context)
-        if reaction is not None:
-          self.event(reaction)
+        for response in character.event(event, self._context):
+          self.event(response)
 
   def get_history(self):
     return self._history
