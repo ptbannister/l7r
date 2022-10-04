@@ -118,7 +118,7 @@ class TakeAttackActionEvent(TakeActionEvent):
 
   def _roll_damage(self):
     damage_roll = self.action.roll_damage()
-    return LightWoundsDamageEvent(self.action.target(), damage_roll)
+    return LightWoundsDamageEvent(self.action.subject(), self.action.target(), damage_roll)
 
   def _succeeded(self):
     return AttackSucceededEvent(self.action)
@@ -167,7 +167,7 @@ class ShibaTakeParryEvent(TakeParryActionEvent):
   def _roll_damage(self):
     rolled = self._action.subject().skill('attack') * 2
     damage_roll = self._action.subject().roll_damage(rolled, 1)
-    return LightWoundsDamageEvent(self._action.target(), damage_roll)
+    return LightWoundsDamageEvent(self._action.subject(), self._action.target(), damage_roll)
 
 
 class AttackDeclaredEvent(ActionEvent):
@@ -211,22 +211,26 @@ class ParryFailedEvent(ActionEvent):
 
 
 class DamageEvent(Event):
-  def __init__(self, name, target, damage):
+  '''
+  Event used when a character takes damage.
+
+  The "subject" is the character who inflicted the damage.
+  The "target" is the character who is receiving the damage.
+  The "damage" is the amount of damage inflicted.
+  '''
+  def __init__(self, name, subject, target, damage):
     super().__init__(name)
+    self.subject = subject
     self.target = target
     self.damage = damage
 
 class LightWoundsDamageEvent(DamageEvent):
-  def __init__(self, target, damage):
-    super().__init__('lw_damage', target, damage)
+  def __init__(self, subject, target, damage):
+    super().__init__('lw_damage', subject, target, damage)
 
 class SeriousWoundsDamageEvent(DamageEvent):
-  def __init__(self, target, damage):
-    super().__init__('sw_damage', target, damage)
-
-class TakeSeriousWoundEvent(DamageEvent):
-  def __init__(self, target, damage):
-    super().__init__('take_sw', target, damage)
+  def __init__(self, target, subject, damage):
+    super().__init__('sw_damage', subject, target, damage)
 
 
 class StatusEvent(Event):
@@ -248,33 +252,63 @@ class UnconsciousEvent(StatusEvent):
 
 
 class WoundCheckEvent(Event):
-  def __init__(self, name, subject, damage):
+  '''
+  Event for a character's wound check.
+
+  The "subject" is the character making the wound check.
+  The "attacker" is the character who inflicted the damage.
+  The "damage" is the character's total Light Wounds for the
+  wound check (including new damage as well as previous damage).
+  '''
+  def __init__(self, name, subject, attacker, damage):
     super().__init__(name)
     self.subject = subject
+    self.attacker = attacker
     self.damage = damage
 
 class WoundCheckDeclaredEvent(WoundCheckEvent):
-  def __init__(self, subject, damage, vp=0):
-    super().__init__('wound_check_declared', subject, damage)
+  def __init__(self, subject, attacker, damage, vp=0):
+    super().__init__('wound_check_declared', subject, attacker, damage)
     self.vp = vp
 
 class WoundCheckFailedEvent(WoundCheckEvent):
-  def __init__(self, subject, damage, roll):
-    super().__init__('wound_check_failed', subject, damage)
+  def __init__(self, subject, attacker, damage, roll):
+    super().__init__('wound_check_failed', subject, attacker, damage)
     self.roll = roll
 
 class WoundCheckRolledEvent(WoundCheckEvent):
-  def __init__(self, subject, damage, roll, vp=0):
-    super().__init__('wound_check_rolled', subject, damage)
+  def __init__(self, subject, attacker, damage, roll, vp=0):
+    super().__init__('wound_check_rolled', subject, attacker, damage)
     self.roll = roll
 
 class WoundCheckSucceededEvent(WoundCheckEvent):
-  def __init__(self, subject, damage, roll):
-    super().__init__('wound_check_succeeded', subject, damage)
+  def __init__(self, subject, attacker, damage, roll):
+    super().__init__('wound_check_succeeded', subject, attacker, damage)
     self.roll = roll
+
+class TakeSeriousWoundEvent(WoundCheckEvent):
+  def __init__(self, subject, attacker, damage):
+    super().__init__('take_sw', subject, attacker, damage)
+
+
+class GainResourcesEvent(Event):
+  def __init__(self, name, subject, amount):
+    super().__init__(name)
+    self.subject = subject
+    self.amount = amount
+
+class GainTemporaryVoidPointsEvent(GainResourcesEvent):
+  def __init__(self, subject, amount):
+    super().__init__('gain_tvp', subject, amount)
 
 
 class SpendResourcesEvent(Event):
+  '''
+  Event for when a character spends resources that can be measured in an amount.
+
+  The "subject" is the character spending resources.
+  The "amount" is the amount of the resource being spent.
+  '''
   def __init__(self, name, subject, amount):
     super().__init__(name)
     self.subject = subject

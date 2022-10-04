@@ -96,7 +96,7 @@ class LightWoundsDamageListener(Listener):
     if isinstance(event, events.LightWoundsDamageEvent):
       if event.target == character:
         character.take_lw(event.damage)
-        character.knowledge().observe_damage_roll(event.target, event.damage)
+        character.knowledge().observe_damage_roll(event.subject, event.damage)
         yield from character.wound_check_strategy().recommend(character, event, context)
 
 
@@ -126,11 +126,9 @@ class TakeActionListener(Listener):
 class TakeSeriousWoundListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.TakeSeriousWoundEvent):
-      if event.target == character:
+      if event.subject == character:
         character.reset_lw()
-        yield events.SeriousWoundsDamageEvent(character, event.damage)
-      else:
-        character.knowledge().observe_wounds(event.target, event.damage)
+        yield events.SeriousWoundsDamageEvent(character, event.attacker, event.damage)
 
 
 class GainTemporaryVoidPointsListener(Listener):
@@ -164,7 +162,7 @@ class WoundCheckDeclaredListener(Listener):
         roll = character.roll_wound_check(event.damage, event.vp)
         if event.vp > 0:
           yield events.SpendVoidPointsEvent(character, event.vp)
-        yield events.WoundCheckRolledEvent(character, event.damage, roll)
+        yield events.WoundCheckRolledEvent(character, event.attacker, event.damage, roll)
 
 
 class WoundCheckFailedListener(Listener):
@@ -173,7 +171,7 @@ class WoundCheckFailedListener(Listener):
       if event.subject == character:
         sw = character.wound_check(event.roll)
         character.reset_lw()
-        yield events.SeriousWoundsDamageEvent(character, sw)
+        yield events.SeriousWoundsDamageEvent(character, event.attacker, sw)
 
 
 class WoundCheckRolledListener(Listener):
@@ -182,9 +180,9 @@ class WoundCheckRolledListener(Listener):
       if event.subject == character:
         if event.roll <= event.damage:
           # wound check failed
-          yield events.WoundCheckFailedEvent(character, event.damage, event.roll)
+          yield events.WoundCheckFailedEvent(character, event.attacker, event.damage, event.roll)
         else:
-          yield events.WoundCheckSucceededEvent(character, event.damage, event.roll)
+          yield events.WoundCheckSucceededEvent(character, event.attacker, event.damage, event.roll)
 
 
 class WoundCheckSucceededListener(Listener):

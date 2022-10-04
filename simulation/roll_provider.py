@@ -89,15 +89,22 @@ class TestRollProvider(RollProvider):
       'initiative': [],
       'wound_check': []
     }
+    self._observed_params = {
+      'damage': [],
+      'initiative': [],
+      'wound_check': []
+    }
 
   def get_damage_roll(self, rolled, kept):
     if len(self._queues['damage']) == 0:
       raise IndexError('No roll queued for damage')
+    self._observed_params['damage'].append((rolled, kept))
     return self._queues['damage'].pop(0)
 
   def get_initiative_roll(self, rolled, kept):
     if len(self._queues['initiative']) == 0:
       raise IndexError('No roll queued for initiative')
+    self._observed_params['initiative'].append((rolled, kept))
     return self._queues['initiative'].pop(0)
 
   def get_skill_roll(self, skill, rolled, kept, explode=True):
@@ -105,12 +112,28 @@ class TestRollProvider(RollProvider):
       raise KeyError('No roll queued for ' + skill)
     elif len(self._queues[skill]) == 0:
       raise IndexError('No roll queued for ' + skill)
+    if skill not in self._observed_params.keys():
+      self._observed_params[skill] = []
+    self._observed_params[skill].append((rolled, kept))
     return self._queues[skill].pop(0)
 
   def get_wound_check_roll(self, rolled, kept):
     if len(self._queues['wound_check']) == 0:
       raise IndexError('No roll queued for wound_check')
+    self._observed_params['wound_check'].append((rolled, kept))
     return self._queues['wound_check'].pop(0)
+
+  def pop_observed_params(self, roll_type):
+    '''
+    pop_observed_params(roll_type) -> tuple of ints
+      roll_type (str): the type of roll of interest
+        (either damage, initiative, wound_check,
+        or a skill name)
+
+    Pops and returns the oldest observed parameters for
+    the given roll type.
+    '''
+    return self._observed_params[roll_type].pop(0)
 
   def put_damage_roll(self, result):
     self._queues['damage'].append(result)

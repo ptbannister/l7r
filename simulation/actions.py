@@ -130,7 +130,7 @@ class DoubleAttackAction(AttackAction):
     return ((skill_roll - self.tn()) // 5) - penalty
 
   def direct_damage(self):
-    return SeriousWoundsDamageEvent(self.target(), 1)
+    return SeriousWoundsDamageEvent(self.subject(), self.target(), 1)
 
   def tn(self):
     return self.target().tn_to_hit() + 20
@@ -138,7 +138,7 @@ class DoubleAttackAction(AttackAction):
 
 class FeintAction(AttackAction):
   def __init__(self, subject, target, vp=0):
-    super().__init__(subject, target, 'feint', vp)
+    super().__init__(subject, target, skill='feint', vp=vp)
 
   def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
     return 0

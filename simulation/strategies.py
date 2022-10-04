@@ -2,8 +2,7 @@
 from abc import ABC, abstractmethod
 import itertools
 
-from simulation.actions import AttackAction, ParryAction
-from simulation.events import AttackDeclaredEvent, AttackRolledEvent, LightWoundsDamageEvent, NewPhaseEvent, TakeAttackActionEvent, TakeParryActionEvent, TakeSeriousWoundEvent, WoundCheckDeclaredEvent, WoundCheckRolledEvent, WoundCheckSucceededEvent
+from simulation import actions, events
 from simulation.knowledge import TheoreticalCharacter
 from simulation.log import logger
 from simulation.roll import normalize_roll_params
@@ -43,129 +42,9 @@ class Strategy(ABC):
     pass
 
 
-# utility function to find targets
-def find_target(subject, skill, context):
-  '''
-  find_target(subject, target, skill, context) -> Character
-     subject (Character): character who is finding a target to attack
-     skill (str): attack skill being used
-     context (EngineContext): context
-
-  Returns a Character who is a good target to attack, or returns None if no good target is found.
-  '''
-  targets = []
-  for other_character in context.characters():
-    # don't try to fight yourself or your buddies
-    if other_character not in subject.group():
-      # don't stab the corpses
-      if other_character.is_fighting():
-        # can I hit this character with this skill?
-        proxy_target = TheoreticalCharacter(subject.knowledge(), other_character)
-        action = subject.get_attack_action(proxy_target, skill)
-        (rolled, kept, modifier) = subject.get_skill_roll_params(other_character, skill)
-        # TODO: use a threshold
-        p_hit = context.p(action.tn() - modifier, rolled, kept)
-        targets.append((other_character, p_hit))
-  # sort targets in order of probability of hitting
-  # TODO: prefer certain targets because they are closer to defeat, or they are more dangerous, etc
-  targets.sort(key=lambda t: t[1], reverse=True)
-  # return the easiest target to hit
-  if len(targets) > 0:
-    return targets[0][0]
-  else:
-    return None
-
-
-def get_expected_kept_damage_dice(subject, target, skill, context, ap, vp):
-  '''
-  get_expected_damage_params(subject, target, skill, context, ap, vp) -> int
-    subject (Character): character who would be the attacker
-    target (Character): character who would be the target
-    skill (str): name of the skill to be used to attack
-    context (EngineContext): context
-    ap (int): number of Adventure Points to spend on this attack
-    vp (int): number of Void Points to spend on this attack
-
-  Return the expected kept damage dice for an attack given the inputs.
-  '''
-  theoretical_target = TheoreticalCharacter(subject.knowledge(), target)
-  speculative_action = subject.get_attack_action(theoretical_target, skill, vp)
-  # how many kept damage dice are expected?
-  attack_rolled, attack_kept, attack_mod = subject.get_skill_roll_params(target, skill, vp)
-  expected_attack_roll = context.mean_roll(attack_rolled, attack_kept) + attack_mod + (5 * ap)
-  expected_extra_rolled = speculative_action.calculate_extra_damage_dice(expected_attack_roll, subject.knowledge().tn_to_hit(target))
-  damage_rolled, damage_kept, damage_bonus = subject.get_damage_roll_params(target, skill, expected_extra_rolled)
-  return damage_kept
-
-
-def optimize_attack(subject, target, skill, context):
-  '''
-  optimize_attack(subject, target, skill, context) -> AttackAction
-
-  Returns an AttackAction optimized to spend VP for more damage.
-
-  Optimizing an attack is about getting more damage for the minimum expenditure of resources.
-  Attacks get an extra rolled damage die for every increment of 5 by which they exceed the TN to hit.
-  A base damage roll, with no extra rolled dice, normally keeps 2 dice.
-
-  It helps to understand the curve of average damage rolls:
-   6k2: 18 (Base damage for characters with 2 Fire)
-   7k2: 19 (Base damage for 3 Fire)
-   8k2: 21 (Base damage for 4 Fire)
-   9k2: 22 (Base damage for 5 Fire)
-  10k2: 23 (Base damage for 6 Fire)
-  10k3: 31
-  10k4: 38
-  10k5: 44
-  10k6: 49
-  10k7: 53
-  10k8: 56
-  10k9: 59
-  10k10: 60
-
-  The marginal benefit of extra rolled damage dice is a bell curve.
-  The big margins come between 10k3 and 10k6.
-
-  This function is designed to find an acceptable expenditure of resources
-  to reach extra kept damage dice if possible.
-  '''
-  ap, vp = 0, 0
-  # establish how many ap and vp we can and want to spend
-  # TODO: write AdventurePointStrategy and VoidPointStrategy
-  max_ap_spend = min(subject.ap(), 2)
-  possible_ap_spends = [ap_spend for ap_spend in range(subject.ap() + 1)]
-  # character should be conservative with vp on attacks, unless they are tvp
-  # mostly need to save vp for wound checks
-  # it's too easy for a parry to wipe out the gains of vp spent on attacks
-  max_vp_spend = min(1, subject.vp())
-  max_vp_spend = max(max_vp_spend, subject.tvp())
-  possible_vp_spends = [vp_spend for vp_spend in range(max_vp_spend + 1)]
-  resource_spends = [spend for spend in itertools.product(possible_ap_spends, possible_vp_spends)]
-  # calculate expected gains for different combinations of resources
-  expected_kept = {}
-  for (ap_spend, vp_spend) in resource_spends:
-    expected_kept[(ap_spend, vp_spend)] = get_expected_kept_damage_dice(subject, target, skill, context, ap_spend, vp_spend)
-  # climb resource expenditures for extra kept dice
-  prev_kept = 2
-  for vp_spend in range(max_vp_spend + 1):
-    for ap_spend in range(max_ap_spend + 1):
-      new_kept = expected_kept[(ap_spend, vp_spend)]
-      if new_kept - prev_kept > 0:
-        ap = ap_spend
-        vp = vp_spend
-        prev_kept = new_kept
-      if new_kept == 6:
-        # marginal benefit recedes after 6
-        break
-  if (ap > 0) or (vp > 0):
-    margin = expected_kept[(ap, vp)] - expected_kept[(0, 0)] 
-    logger.debug('{} spending {} VP (expecting to spend {} AP) to try to get {} extra kept damage dice'.format(subject.name(), vp, ap, margin))
-  return subject.get_attack_action(target, skill, vp)
-
-
 class AlwaysAttackActionStrategy(Strategy):
   def recommend(self, character, event, context):
-    if isinstance(event, NewPhaseEvent):
+    if isinstance(event, events.NewPhaseEvent):
       # try to attack if action available
       # TODO: evaluate whether to interrupt
       if character.has_action(context):
@@ -174,7 +53,7 @@ class AlwaysAttackActionStrategy(Strategy):
 
 class HoldOneActionStrategy(Strategy):
   def recommend(self, character, event, context):
-    if isinstance(event, NewPhaseEvent):
+    if isinstance(event, events.NewPhaseEvent):
       # try to hold an action in reserve until Phase 10
       if character.has_action(context):
         available_actions = [action for action in character.actions() if action <= context.phase()]
@@ -184,9 +63,142 @@ class HoldOneActionStrategy(Strategy):
           logger.debug('{} is holding an action'.format(character.name()))
 
 
-class UniversalAttackStrategy(Strategy):
+class BaseAttackStrategy(Strategy):
+  def find_target(self, subject, skill, context):
+    '''
+    find_target(subject, skill, context) -> Character
+       subject (Character): character who is finding a target to attack
+       skill (str): attack skill being used
+       context (EngineContext): context
+  
+    Returns a Character who is a good target to attack, or returns None if no good target is found.
+    '''
+    targets = []
+    for other_character in context.characters():
+      # don't try to fight yourself or your buddies
+      if other_character not in subject.group():
+        # don't stab the corpses
+        if other_character.is_fighting():
+          # can I hit this character with this skill?
+          proxy_target = TheoreticalCharacter(subject.knowledge(), other_character)
+          action = self.get_attack_action(subject, proxy_target, skill)
+          (rolled, kept, modifier) = subject.get_skill_roll_params(other_character, skill)
+          # TODO: use a threshold
+          p_hit = context.p(action.tn() - modifier, rolled, kept)
+          targets.append((other_character, p_hit))
+    # sort targets in order of probability of hitting
+    # TODO: prefer certain targets because they are closer to defeat, or they are more dangerous, etc
+    targets.sort(key=lambda t: t[1], reverse=True)
+    # return the easiest target to hit
+    if len(targets) > 0:
+      return targets[0][0]
+    else:
+      return None
+  
+  def get_attack_action(self, subject, target, skill, vp=0):
+    if skill == 'attack':
+      return actions.AttackAction(subject, target, skill, vp)
+    elif skill == 'counterattack':
+      return actions.AttackAction(subject, target, skill, vp)
+    elif skill == 'double attack':
+      return actions.DoubleAttackAction(subject, target, vp)
+    elif skill == 'feint':
+      return actions.FeintAction(subject, target, vp)
+    elif skill == 'lunge':
+      return actions.LungeAction(subject, target, vp)
+
+  def get_expected_kept_damage_dice(self, subject, target, skill, context, ap, vp):
+    '''
+    get_expected_damage_params(subject, target, skill, context, ap, vp) -> int
+      subject (Character): character who would be the attacker
+      target (Character): character who would be the target
+      skill (str): name of the skill to be used to attack
+      context (EngineContext): context
+      ap (int): number of Adventure Points to spend on this attack
+      vp (int): number of Void Points to spend on this attack
+  
+    Return the expected kept damage dice for an attack given the inputs.
+    '''
+    theoretical_target = TheoreticalCharacter(subject.knowledge(), target)
+    speculative_action = self.get_attack_action(subject, theoretical_target, skill, vp)
+    # how many kept damage dice are expected?
+    attack_rolled, attack_kept, attack_mod = subject.get_skill_roll_params(target, skill, vp)
+    expected_attack_roll = context.mean_roll(attack_rolled, attack_kept) + attack_mod + (5 * ap)
+    expected_extra_rolled = speculative_action.calculate_extra_damage_dice(expected_attack_roll, subject.knowledge().tn_to_hit(target))
+    damage_rolled, damage_kept, damage_bonus = subject.get_damage_roll_params(target, skill, expected_extra_rolled)
+    return damage_kept
+  
+  def optimize_attack(self, subject, target, skill, context):
+    '''
+    optimize_attack(subject, target, skill, context) -> AttackAction
+  
+    Returns an AttackAction optimized to spend VP for more damage.
+  
+    Optimizing an attack is about getting more damage for the minimum expenditure of resources.
+    Attacks get an extra rolled damage die for every increment of 5 by which they exceed the TN to hit.
+    A base damage roll, with no extra rolled dice, normally keeps 2 dice.
+  
+    It helps to understand the curve of average damage rolls:
+     6k2: 18 (Base damage for characters with 2 Fire)
+     7k2: 19 (Base damage for 3 Fire)
+     8k2: 21 (Base damage for 4 Fire)
+     9k2: 22 (Base damage for 5 Fire)
+    10k2: 23 (Base damage for 6 Fire)
+    10k3: 31
+    10k4: 38
+    10k5: 44
+    10k6: 49
+    10k7: 53
+    10k8: 56
+    10k9: 59
+    10k10: 60
+  
+    The marginal benefit of extra rolled damage dice is a bell curve.
+    The big margins come between 10k3 and 10k6.
+  
+    This function is designed to find an acceptable expenditure of resources
+    to reach extra kept damage dice if possible.
+    '''
+    ap, vp = 0, 0
+    # establish how many ap and vp we can and want to spend
+    # TODO: write AdventurePointStrategy and VoidPointStrategy
+    max_ap_spend = min(subject.ap(), 2)
+    possible_ap_spends = [ap_spend for ap_spend in range(subject.ap() + 1)]
+    # character should be conservative with vp on attacks, unless they are tvp
+    # mostly need to save vp for wound checks
+    # it's too easy for a parry to wipe out the gains of vp spent on attacks
+    max_vp_spend = min(1, subject.vp())
+    max_vp_spend = max(max_vp_spend, subject.tvp())
+    possible_vp_spends = [vp_spend for vp_spend in range(max_vp_spend + 1)]
+    resource_spends = [spend for spend in itertools.product(possible_ap_spends, possible_vp_spends)]
+    # calculate expected gains for different combinations of resources
+    expected_kept = {}
+    for (ap_spend, vp_spend) in resource_spends:
+      expected_kept[(ap_spend, vp_spend)] = self.get_expected_kept_damage_dice(subject, target, skill, context, ap_spend, vp_spend)
+    # climb resource expenditures for extra kept dice
+    prev_kept = 2
+    for vp_spend in range(max_vp_spend + 1):
+      for ap_spend in range(max_ap_spend + 1):
+        new_kept = expected_kept[(ap_spend, vp_spend)]
+        if new_kept - prev_kept > 0:
+          ap = ap_spend
+          vp = vp_spend
+          prev_kept = new_kept
+        if new_kept == 6:
+          # marginal benefit recedes after 6
+          break
+    if (ap > 0) or (vp > 0):
+      margin = expected_kept[(ap, vp)] - expected_kept[(0, 0)] 
+      logger.debug('{} spending {} VP (expecting to spend {} AP) to try to get {} extra kept damage dice'.format(subject.name(), vp, ap, margin))
+    return self.get_attack_action(subject, target, skill, vp)
+
   def recommend(self, character, event, context):
-    if isinstance(event, NewPhaseEvent):
+    raise NotImplementedError()
+
+
+class UniversalAttackStrategy(BaseAttackStrategy):
+  def recommend(self, character, event, context):
+    if isinstance(event, events.NewPhaseEvent):
       # TODO: implement intelligence around interrupts
       if character.has_action(context):
         # try to double attack first
@@ -203,30 +215,30 @@ class UniversalAttackStrategy(Strategy):
 
   def _try_skill(self, character, skill, context):
     if character.skill(skill) > 0:
-      target = find_target(character, skill, context)
+      target = self.find_target(character, skill, context)
       if target is not None:
         attack = optimize_attack(character, target, skill, context)
         if attack is not None:
           logger.debug('{} is attacking {} with {}'.format(character.name(), target.name(), skill))
-          return TakeAttackActionEvent(attack)
+          return events.TakeAttackActionEvent(attack)
 
 
-class PlainAttackStrategy(Strategy):
+class PlainAttackStrategy(BaseAttackStrategy):
   def recommend(self, character, event, context):
-    if isinstance(event, NewPhaseEvent):
+    if isinstance(event, events.NewPhaseEvent):
       if character.has_action(context):
-        target = find_target(character, 'attack', context)
+        target = self.find_target(character, 'attack', context)
         if target is not None:
-          attack = optimize_attack(character, target, 'attack', context)
+          attack = self.optimize_attack(character, target, 'attack', context)
           logger.debug('{} is attacking {}'.format(character.name(), target.name()))
-          yield TakeAttackActionEvent(attack)
+          yield events.TakeAttackActionEvent(attack)
     # do nothing
     return None
 
 
 class BaseParryStrategy(Strategy):
   def recommend(self, character, event, context):
-    if isinstance(event, AttackRolledEvent):
+    if isinstance(event, events.AttackRolledEvent):
       # bail if no action
       if not character.has_action(context) and not character.has_interrupt_action('parry', context):
         logger.debug('{} will not parry because no action'.format(character.name()))
@@ -292,8 +304,8 @@ class AlwaysParryStrategy(BaseParryStrategy):
   '''
   def _recommend(self, character, event, context):
     logger.debug('{} always parries for friends'.format(character.name()))
-    parry = ParryAction(character, event.action.subject(), event.action)
-    yield TakeParryActionEvent(parry)
+    parry = actions.ParryAction(character, event.action.subject(), event.action)
+    yield events.TakeParryActionEvent(parry)
 
 
 class NeverParryStrategy(Strategy):
@@ -333,8 +345,8 @@ class ReluctantParryStrategy(BaseParryStrategy):
           logger.debug('{} reluctantly parries because the attack would probably be fatal'.format(character.name()))
         elif probably_critical:
           logger.debug('{} reluctantly parries because the attack looks dangerous'.format(character.name()))
-        parry = ParryAction(character, event.action.subject(), event.action)
-        yield TakeParryActionEvent(parry)
+        parry = actions.ParryAction(character, event.action.subject(), event.action)
+        yield events.TakeParryActionEvent(parry)
       else:
         logger.debug('{} will not parry a small attack'.format(character.name()))
 
@@ -350,7 +362,7 @@ class KeepLightWoundsStrategy(Strategy):
   Strategy to decide whether to keep LW or take SW.
   '''
   def recommend(self, character, event, context):
-    if isinstance(event, WoundCheckSucceededEvent):
+    if isinstance(event, events.WoundCheckSucceededEvent):
       if event.subject == character:
         if event.damage > event.roll:
           raise RuntimeError('KeepLightWoundsStrategy should not be consulted for a failed wound check')
@@ -371,7 +383,7 @@ class KeepLightWoundsStrategy(Strategy):
         if p_fail_by_ten > 0.5:
           # take the wound if the next wound check probably will be bad
           logger.debug('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
-          yield TakeSeriousWoundEvent(character, 1)
+          yield events.TakeSeriousWoundEvent(character, event.attacker, 1)
         else:
           logger.debug('{} keeping light wounds because the next wound check should be ok.'.format(character.name()))
 
@@ -381,11 +393,11 @@ class WoundCheckStrategy(Strategy):
   Strategy to decide how many VP to spend on a wound check.
   '''
   def recommend(self, character, event, context):
-    if isinstance(event, LightWoundsDamageEvent):
+    if isinstance(event, events.LightWoundsDamageEvent):
       if event.target == character:
         spend_vp = 0
         declared_vp = self._declare_vp(character, event, context)
-        yield WoundCheckDeclaredEvent(character, event.damage, declared_vp)
+        yield events.WoundCheckDeclaredEvent(character, event.subject, event.damage, declared_vp)
 
   def _declare_vp(self, character, event, context):
     # get roll params

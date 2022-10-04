@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 #
-# akodo.py
+# akodo_school.py
 # Author: Patrick Bannister (ptbanni@gmail.com)
 # Implement Akodo Bushi School.
 #
 
+from simulation import events
 from simulation.listeners import Listener
 from simulation.modifiers import FreeRaise
 from simulation.schools import BaseSchool
@@ -55,10 +56,10 @@ class AkodoAttackFailedListener(Listener):
   to gain 1 TVP on a failed feint.
   '''
   def handle(self, character, event, context):
-    if isinstance(event, AttackFailedEvent):
-      if event.subject() == character:
-        if event.skill() == 'feint':
-          yield GainTemporaryVoidPointEvent(character, 1)
+    if isinstance(event, events.AttackFailedEvent):
+      if event.action.subject() == character:
+        if event.action.skill() == 'feint':
+          yield events.GainTemporaryVoidPointsEvent(character, 1)
 
 class AkodoAttackSucceededListener(Listener):
   '''
@@ -66,10 +67,10 @@ class AkodoAttackSucceededListener(Listener):
   to gain 4 TVP on a successful feint.
   '''
   def handle(self, character, event, context):
-    if isinstance(event, AttackSucceededEvent):
-      if event.subject() == character:
-        if event.skill() == 'feint':
-          yield GainTemporaryVoidPointEvent(character, 4)
+    if isinstance(event, events.AttackSucceededEvent):
+      if event.action.subject() == character:
+        if event.action.skill() == 'feint':
+          yield events.GainTemporaryVoidPointsEvent(character, 4)
 
 class AkodoLightWoundsDamageListener(Listener):
   '''
@@ -79,10 +80,10 @@ class AkodoLightWoundsDamageListener(Listener):
     self._strategy = AkodoFifthDanStrategy(Strategy)
 
   def handle(self, character, event, context):
-    if isinstance(event, LightWoundsDamageEvent):
+    if isinstance(event, events.LightWoundsDamageEvent):
       if event.target == character:
         character.take_lw(event.damage)
-        character.knowledge().observe_damage_roll(event.target, event.damage)
+        character.knowledge().observe_damage_roll(event.subject, event.damage)
         yield from character.wound_check_strategy().recommend(character, event, context)
         yield from self._strategy.recommend(character, event, context)
 
@@ -93,14 +94,14 @@ class AkodoFifthDanStrategy(Strategy):
   per VP spent to the attacker.
   '''
   def recommend(self, character, event, context):
-    if isinstance(event, LightWoundsDamageEvent):
+    if isinstance(event, events.LightWoundsDamageEvent):
       if event.target == character:
         # calculate max vp spendable on damage
         max_vp = min(character.vp(), character.max_vp_per_roll())
         # TODO: implement a little more intelligence
         if max_vp > 0:
-          yield SpendVoidPointsEvent(character, max_vp)
-        yield LightWoundsDamageEvent(character, event.target, 10 * max_vp)
+          yield events.SpendVoidPointsEvent(character, max_vp)
+          yield events.LightWoundsDamageEvent(character, event.subject, 10 * max_vp)
 
 
 class AkodoWoundCheckSucceededListener(Listener):
@@ -109,7 +110,7 @@ class AkodoWoundCheckSucceededListener(Listener):
   to gain a floating bonus after a successful Wound Check.
   '''
   def handle(self, character, event, context):
-    if isinstance(event, WoundCheckSucceededEvent):
+    if isinstance(event, events.WoundCheckSucceededEvent):
       if event.subject == character:
         bonus = ((event.roll - event.damage) // 5) * character.skill('attack')
         character.gain_floating_bonus('attack_any', bonus)
@@ -127,10 +128,10 @@ class AkodoWoundCheckDeclaredListener(Listener):
     self._strategy = AkodoWoundCheckRolledStrategy()
 
   def handle(self, character, event, context):
-    if isinstance(event, WoundCheckDeclaredEvent):
+    if isinstance(event, events.WoundCheckDeclaredEvent):
       if event.subject == character:
         roll = character.roll_wound_check(event.damage, event.vp)
-        event = WoundCheckRolledEvent(character, event.damage, roll)
+        event = events.WoundCheckRolledEvent(character, event.damage, roll)
         yield from self._strategy.recommend(character, event, context)
 
 
@@ -140,7 +141,7 @@ class AkodoWoundCheckRolledStrategy(Strategy):
   whether to spend VP to improve a wound check roll.
   '''
   def recommend(self, character, event, context):
-    if isinstance(event, WoundCheckRolledEvent):
+    if isinstance(event, events.WoundCheckRolledEvent):
       if event.target == character:
         # how many wounds would I take?
         expected_sw = character.wound_check(event.roll)
@@ -158,11 +159,10 @@ class AkodoWoundCheckRolledStrategy(Strategy):
             if expected_sw < prev_expected_sw:
               chosen_spend = vp
             prev_expected_sw = expected_sw
-          # send a WoundCheckRolledEvent with the adjusted roll
-          # wrap in a ResourcesSpentEvent so a Listener can spend character resources
+          # spend chosen amount of VP
           new_roll = event.roll + (5 * chosen_spend)
-          new_event = WoundCheckRolledEvent(character, event.damage, new_roll)
           if (chosen_spend > 0):
-            yield VoidPointsSpentEvent(chosen_spend)
-          yield WoundCheckRolledEvent(character, event.damage, new_roll)
+            yield events.VoidPointsSpentEvent(chosen_spend)
+          # yield adjusted wound check roll
+          yield events.WoundCheckRolledEvent(character, event.attacker, event.damage, new_roll)
 

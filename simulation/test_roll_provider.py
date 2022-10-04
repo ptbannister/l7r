@@ -48,6 +48,18 @@ class TestTestRollProvider(unittest.TestCase):
     with self.assertRaises(KeyError):
       roll_provider.get_skill_roll('attack', 6, 3)
 
+  def test_pop_observed_params(self):
+    roll_provider = TestRollProvider()
+    roll_provider.put_damage_roll(9001)
+    roll_provider.put_initiative_roll([1, 2, 3])
+    roll_provider.put_skill_roll('attack', 50)
+    roll_provider.put_wound_check_roll(30)
+    roll_provider.get_damage_roll(4, 1)
+    self.assertEqual((4, 1), roll_provider.pop_observed_params('damage'))
+    roll_provider.get_initiative_roll(4, 3)
+    self.assertEqual((4, 3), roll_provider.pop_observed_params('initiative'))
+    
+
 if (__name__ == '__main__'):
   unittest.main()
 

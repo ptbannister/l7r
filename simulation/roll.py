@@ -9,29 +9,7 @@
 
 import random
 
-
-def normalize_roll_params(rolled, kept, bonus=0):
-  '''
-  normalize_roll_params(rolled, kept, bonus=0) -> tuple of ints
-    rolled (int): number of rolled dice
-    kept (int): number of kept dice
-    bonus (int): flat bonus to roll
-
-  Returns normalized roll parameters, which is the tuple of
-  (rolled, kept, bonus) for a roll.
-  The algorithm is that excess rolled dice above ten become
-  extra kept dice, excess kept dice above ten become a bonus,
-  and the bonus is added to the roll.
-  '''
-  if rolled > 10:
-    excess_rolled = rolled - 10
-    rolled = 10
-    kept += excess_rolled
-  if kept > 10:
-    excess_kept = kept - 10
-    kept = 10
-    bonus += excess_kept
-  return (rolled, kept, bonus)
+from simulation.roll_params import normalize_roll_params
 
 
 class TestDice(object):

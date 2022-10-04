@@ -15,7 +15,7 @@ class BaseSchool(object):
     self._ap_base_skill = None
     self._ap_skills = []
     self._free_raises = []
-    self._skills = dict([(skill, 1)] for skill in self.school_knacks()
+    self._skills = dict([(skill, 1)] for skill in self.school_knacks())
     if skill not in self.school_knacks():
       raise ValueError('{} is not a school knack for {}'.format(skill, self.name()))
     self._skills[skill] = skills_dict[skill]
