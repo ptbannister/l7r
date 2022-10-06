@@ -11,14 +11,11 @@ from simulation.modifiers import FreeRaise
 
 class BaseSchool(object):
 
-  def __init__(self, skills_dict):
+  def __init__(self):
     self._ap_base_skill = None
     self._ap_skills = []
     self._free_raises = []
-    self._skills = dict([(skill, 1)] for skill in self.school_knacks())
-    if skill not in self.school_knacks():
-      raise ValueError('{} is not a school knack for {}'.format(skill, self.name()))
-    self._skills[skill] = skills_dict[skill]
+    self._skills = dict([(skill, 1) for skill in self.school_knacks()])
 
   def ap_base_skill(self):
     '''
@@ -34,6 +31,7 @@ class BaseSchool(object):
     return self._ap_skills
 
   def apply(self, character):
+    # TODO: rewrite this a bit
     self.apply_special(character)
     self.apply_extra_rolled(character)
     self.apply_school_ring(character)
@@ -54,18 +52,18 @@ class BaseSchool(object):
       character.set_ap_base_skill(self.ap_base_skill())
       character.set_ap_skills(self.ap_skills())
 
-  def apply_extra_rolled(self, character):
+  def apply_rank_one_ability(self, character):
     '''
-    apply_extra_rolled(character)
+    apply_rank_one_ability(character)
 
     Apply this school's extra rolled dice (the standard 1st Dan ability).
     '''
-    for skill, n in self.extra_rolled():
+    for skill in self.extra_rolled():
       character.set_extra_rolled(skill, 1)
 
-  def apply_free_raises(self, character):
+  def apply_rank_two_ability(self, character):
     '''
-    apply_free_raises(character)
+    apply_rank_two_ability(character)
 
     Apply this school's Free Raises (the standard 2nd Dan ability).
     '''
@@ -79,9 +77,9 @@ class BaseSchool(object):
     Apply this school's rank ability to a character.
     '''
     if rank == 1:
-      self.apply_extra_rolled(character)
+      self.apply_rank_one_ability(character)
     elif rank == 2:
-      self.apply_free_raises(character)
+      self.apply_rank_two_ability(character)
     elif rank == 3:
       self.apply_rank_three_ability(character)
     elif rank == 4:

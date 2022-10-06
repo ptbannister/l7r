@@ -8,30 +8,7 @@
 
 import unittest
 
-from simulation.roll import InitiativeRoll, Roll, TestDice, normalize_roll_params
-
-class TestNormalize(unittest.TestCase):
-  def test_normal(self):
-    self.assertEqual((1, 1, 0), normalize_roll_params(1, 1))
-    self.assertEqual((6, 3, 0), normalize_roll_params(6, 3))
-    self.assertEqual((10, 10, 0), normalize_roll_params(10, 10))
-    self.assertEqual((7, 3, 0), normalize_roll_params(7, 3))
-
-  def test_excess_rolled(self):
-    self.assertEqual((10, 5, 0), normalize_roll_params(12, 3))
-    self.assertEqual((10, 5, 0), normalize_roll_params(11, 4))
-    self.assertEqual((10, 10, 0), normalize_roll_params(14, 6))
-
-  def test_excess_kept(self):
-    self.assertEqual((10, 10, 1), normalize_roll_params(11, 10))
-    self.assertEqual((10, 10, 5), normalize_roll_params(17, 8))
-    self.assertEqual((10, 10, 10), normalize_roll_params(25, 5))
-
-  def test_bonus(self):
-    self.assertEqual((6, 3, 5), normalize_roll_params(6, 3, 5))
-    self.assertEqual((7, 3, 5), normalize_roll_params(7, 3, 5))
-    self.assertEqual((10, 10, 6), normalize_roll_params(15, 6, 5))
-
+from simulation.roll import InitiativeRoll, Roll, TestDice
 
 class TestInitiativeRoll(unittest.TestCase):
   def test_keep_low(self):

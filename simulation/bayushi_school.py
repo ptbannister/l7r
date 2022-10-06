@@ -6,6 +6,7 @@
 # Implement Bayushi Bushi School.
 #
 
+from simulation import events
 from simulation.actions import FeintAction
 from simulation.character import Character
 from simulation.listeners import Listener
@@ -14,17 +15,15 @@ from simulation.modifiers import FreeRaise
 from simulation.roll_params import DefaultRollParameterProvider, RollParameterProvider, normalize_roll_params
 from simulation.schools import BaseSchool
 from simulation.strategies import BaseAttackStrategy, Strategy, UniversalAttackStrategy
+from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
 
 
 class BayushiBushiSchool(BaseSchool):
-  def __init__(self, skills_dict):
-    super().__init__(skills_dict)
-  
   def ap_base_skill(self):
     return None
 
   def apply_rank_five_ability(self, character):
-    character.wound_check = bayushi_wound_check
+    character.set_wound_check_provider(BayushiWoundCheckProvider())
 
   def apply_rank_four_ability(self, character):
     self.apply_school_ring_raise_and_discount(character)
@@ -83,18 +82,14 @@ class BayushiRollParameterProvider(DefaultRollParameterProvider):
 BAYUSHI_ROLL_PARAMETER_PROVIDER = BayushiRollParameterProvider()
 
 
-def bayushi_wound_check(character, roll, lw=None):
+class BayushiWoundCheckProvider(WoundCheckProvider):
   '''
-  get_bayushi_wound_check(character, roll, lw=None) -> int
-
-  Returns the number of Serious Wounds that would be taken
-  from a wound check roll against a damage amount.
-
-  Implements the Bayushi 5th Dan ability to take Serious Wounds
-  as if the character had half as many light wounds.
+  WoundCheckProvider to implement the Bayushi 5th Dan ability
+  to take Serious Wounds as if the character had half as many light wounds.
   '''
-  lw = lw // 2 if lw is not None else character.lw() // 2
-  return character.__class__.wound_check(character, roll, lw)
+  def wound_check(self, roll, lw=None):
+    lw = lw // 2
+    return DEFAULT_WOUND_CHECK_PROVIDER.wound_check(roll, lw)
 
 
 class BayushiFeintAction(FeintAction):
@@ -112,10 +107,11 @@ class BayushiAttackFailedListener(Listener):
   to gain a floating bonus to any attack after a Feint.
   '''
   def handle(self, character, event, context):
-    if isinstance(event, AttackFailedEvent):
-      if event.subject() == character:
-        if event.skill() == 'feint':
+    if isinstance(event, events.AttackFailedEvent):
+      if event.action.subject() == character:
+        if event.action.skill() == 'feint':
           character.gain_floating_bonus('attack_any', 5)
+    yield from ()
 
 
 class BayushiAttackSucceededListener(Listener):
@@ -124,8 +120,9 @@ class BayushiAttackSucceededListener(Listener):
   to gain a floating bonus to any attack after a Feint.
   '''
   def handle(self, character, event, context):
-    if isinstance(event, AttackSucceededEvent):
-      if event.subject() == character:
-        if event.skill() == 'feint':
+    if isinstance(event, events.AttackSucceededEvent):
+      if event.action.subject() == character:
+        if event.action.skill() == 'feint':
           character.gain_floating_bonus('attack_any', 5)
+    yield from ()
 

@@ -17,6 +17,7 @@ from simulation.roll import normalize_roll_params
 from simulation.roll_params import DEFAULT_ROLL_PARAMETER_PROVIDER, RollParameterProvider
 from simulation.roll_provider import DEFAULT_ROLL_PROVIDER, RollProvider
 from simulation.weapons import KATANA
+from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
 
 
 RING_NAMES = ['air', 'earth', 'fire', 'water', 'void']
@@ -53,9 +54,10 @@ class Character(object):
       'attack_rolled': listeners.AttackRolledListener(),
       'gain_tvp': listeners.GainTemporaryVoidPointsListener(),
       'lw_damage': listeners.LightWoundsDamageListener(),
-      'new_phase': listeners.NewPhaseListener(),
       'new_round': listeners.NewRoundListener(),
+      'spend_action': listeners.SpendActionListener(),
       'spend_ap': listeners.SpendAdventurePointsListener(),
+      'spend_floating_bonus': listeners.SpendFloatingBonusListener(),
       'spend_vp': listeners.SpendVoidPointsListener(),
       'sw_damage': listeners.SeriousWoundsDamageListener(),
       'take_attack': action_taken_listener,
@@ -64,7 +66,8 @@ class Character(object):
       'wound_check_declared': listeners.WoundCheckDeclaredListener(),
       'wound_check_failed': listeners.WoundCheckFailedListener(),
       'wound_check_rolled': listeners.WoundCheckRolledListener(),
-      'wound_check_succeeded': listeners.WoundCheckSucceededListener()
+      'wound_check_succeeded': listeners.WoundCheckSucceededListener(),
+      'your_move': listeners.YourMoveListener()
     }
     self._lw = 0
     self._lw_history = []
@@ -84,16 +87,20 @@ class Character(object):
     }
     # default strategies
     self._strategies = {
-      'action': strategies.HoldOneActionStrategy(),
+      'action': strategies.AlwaysAttackActionStrategy(),
       'attack': strategies.PlainAttackStrategy(),
+      'attack_rolled': strategies.AttackRolledStrategy(),
       'light_wounds': strategies.KeepLightWoundsStrategy(),
-      'parry': strategies.ReluctantParryStrategy(),
-      'wound_check': strategies.WoundCheckStrategy()
+      'parry': strategies.NeverParryStrategy(),
+      'parry_rolled': strategies.ParryRolledStrategy(),
+      'wound_check': strategies.WoundCheckStrategy(),
+      'wound_check_rolled': strategies.WoundCheckRolledStrategy()
     }
     self._sw = 0
     self._tvp = 0
     self._vp_spent = 0
     self._weapon = KATANA
+    self._wound_check_provider = DEFAULT_WOUND_CHECK_PROVIDER
 
   def actions(self):
     '''
@@ -126,7 +133,7 @@ class Character(object):
     Add a modifier to this character.
     '''
     # TODO: register modifier listeners
-    self._modifiers.add(modifier)
+    self._modifiers.append(modifier)
 
   def ap(self):
     '''
@@ -144,6 +151,9 @@ class Character(object):
     Adventure Points (3rd Dan Free Raises), or None.
     '''
     return self._ap_base_skill
+
+  def attack_rolled_strategy(self):
+    return self._strategies['attack_rolled']
 
   def attack_strategy(self):
     return self._strategies['attack']
@@ -170,10 +180,10 @@ class Character(object):
 
   def event(self, event, context):
     if event.name in self._listeners.keys():
-      logger.debug('{} handling {}'.format(self._name, event.name))
+      #logger.debug('{} handling {}'.format(self._name, event.name))
       yield from self._listeners[event.name].handle(self, event, context)
-    else:
-      logger.debug('{} ignoring {}'.format(self._name, event.name))
+    #else:
+    #  logger.debug('{} ignoring {}'.format(self._name, event.name))
 
   def extra_kept(self, skill):
     return self._extra_kept.get(self.strip_suffix(skill), 0)
@@ -403,13 +413,17 @@ class Character(object):
 
     Returns the modifier (positive or negative) for using the given skill on a target.
     '''
-    return sum([mod.apply(self, target, skill) for mod in self._modifiers])
+    applicable_modifiers = [mod.apply(self, target, skill) for mod in self._modifiers]
+    return sum(applicable_modifiers) if len(applicable_modifiers) > 0 else 0
 
   def name(self):
     return self._name
 
   def parry_strategy(self):
     return self._strategies['parry']
+
+  def parry_rolled_strategy(self):
+    return self._strategies['parry_rolled']
 
   def reset(self):
     self._actions = []
@@ -609,6 +623,11 @@ class Character(object):
   def set_strategy(self, name, strategy):
     self._strategies[name] = strategy
 
+  def set_wound_check_provider(self, provider):
+    if not isinstance(provider, WoundCheckProvider):
+      raise ValueError('Provider is not a WoundCheckProvider')
+    self._wound_check_provider = provider
+
   def skill(self, skill):
     '''
     skill(skill) -> int
@@ -622,6 +641,17 @@ class Character(object):
     '''
     return self._skills.get(self.strip_suffix(skill), 0)
 
+  def spend_action(self, phase):
+    '''
+    spend_action(phase)
+      phase (int): phase of the action being spent
+
+    Spend one of the character's actions in the given phase.
+    '''
+    if phase not in self._actions:
+      raise ValueError('{} does not have an action in phase {}'.format(self.name(), phase))
+    self._actions.remove(phase)
+
   def spend_ap(self, skill, n):
     '''
     spend_ap(skill, n)
@@ -630,9 +660,11 @@ class Character(object):
 
     Spend Adventure Points (Third Dan Free Raises) if allowed.
     '''
+    if not self.can_spend_ap(skill):
+      raise ValueError('{} may not spend Adventure Points on {}'.format(self.name(), skill))
     if n > 0:
-      if self._ap - self._ap_spent < n:
-        raise ValueError('Not enough Adventure Points')
+      if self.ap() < n:
+        raise ValueError('{} does not have enough Adventure Points')
       self._ap_spent += n
 
   def spend_floating_bonus(self, skill, bonus):
@@ -643,7 +675,12 @@ class Character(object):
     
     Spend a floating bonus for the given skill.
     '''
-    self._floating_bonuses[skill].remove(bonus)
+    if skill not in self._floating_bonuses.keys():
+      raise ValueError('{} does not have any floating bonusees for {}'.format(self.name(), skill))
+    elif bonus not in self._floating_bonuses[skill]:
+      raise ValueError('{} does not have a floating bonus of {} for {}'.format(self.name(), bonus, skill))
+    else:
+      self._floating_bonuses[skill].remove(bonus)
 
   def spend_vp(self, n):
     '''
@@ -705,7 +742,7 @@ class Character(object):
     self._sw += amount
 
   def tn_to_hit(self):
-    return 5 * (1 + self.skill('parry'))
+    return (5 * (1 + self.skill('parry'))) + self.modifier(None, 'tn_to_hit')
 
   def tvp(self):
     '''
@@ -728,24 +765,15 @@ class Character(object):
     return self._weapon
 
   def wound_check(self, roll, lw=None):
-    '''
-    wound_check(roll, lw=None) -> int
-      wound_check_roll (int): wound check roll
-      lw (int): light wounds taken. Defaults to character's current lw total.
-
-    Returns the number of Serious Wounds that would be taken
-    from a wound check roll against a damage amount.
-
-    This function is only a Serious Wound calculator. It does not
-    cause the character to take Serious Wounds when used. To
-    inflict Serious Wounds, use the take_sw function.
-    '''
     if lw is None:
       lw = self.lw()
-    if roll <= lw:
-      return 1 + ((lw - roll) // 10)
-    else:
-      return 0
+    return self.wound_check_provider().wound_check(roll, lw)
+
+  def wound_check_rolled_strategy(self):
+    return self._strategies['wound_check_rolled']
+
+  def wound_check_provider(self):
+    return self._wound_check_provider
 
   def wound_check_strategy(self):
     '''

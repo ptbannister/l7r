@@ -43,26 +43,37 @@ class TestBayushiAttackStrategy(unittest.TestCase):
     self.assertEqual('feint', action.skill()) 
 
 
-class TestBayushiWoundCheck(unittest.TestCase):
+class TestBayushiWoundCheckProvider(unittest.TestCase):
   def test_default_lw(self):
+    # provider should return 0 SW for 50 LW with a roll of 30
+    provider = bayushi_school.BayushiWoundCheckProvider()
+    self.assertEqual(0, provider.wound_check(30, 50))
+    # set up the same test using a character with the provider
     bayushi = Character('Bayushi')
+    bayushi.set_wound_check_provider(provider)
     bayushi.take_lw(50)
     roll = 30
     # Bayushi would take 3 SW from a normal Wound Check, but takes 0 from the school wound check
-    self.assertEqual(0, bayushi_school.bayushi_wound_check(bayushi, roll))
+    self.assertEqual(0, bayushi.wound_check(roll))
 
   def test_large_damage(self):
+    # provider should return 0 SW for 50 LW with a roll of 30
+    provider = bayushi_school.BayushiWoundCheckProvider()
+    self.assertEqual(3, provider.wound_check(30, 100))
+    # set up the same test using a character with the provider
     bayushi = Character('Bayushi')
+    bayushi.set_wound_check_provider(provider)
     bayushi.take_lw(100)
     roll = 30
     # Bayushi would take 8 SW from a normal Wound Check, but takes 3 from the school wound check
-    self.assertEqual(3, bayushi_school.bayushi_wound_check(bayushi, roll))
+    self.assertEqual(3, bayushi.wound_check(30))
 
   def test_specified_lw(self):
     bayushi = Character('Bayushi')
+    bayushi.set_wound_check_provider(bayushi_school.BayushiWoundCheckProvider())
     roll = 30
     # Bayushi would take 3 SW from a normal Wound Check, but takes 0 from the school wound check
-    self.assertEqual(0, bayushi_school.bayushi_wound_check(bayushi, roll, lw=50))
+    self.assertEqual(0, bayushi.wound_check(roll, lw=50))
 
 
 class TestBayushiFeintAction(unittest.TestCase):

@@ -1,6 +1,7 @@
 
 from abc import ABC, abstractmethod
 import itertools
+import math
 
 from simulation import actions, events
 from simulation.knowledge import TheoreticalCharacter
@@ -44,16 +45,18 @@ class Strategy(ABC):
 
 class AlwaysAttackActionStrategy(Strategy):
   def recommend(self, character, event, context):
-    if isinstance(event, events.NewPhaseEvent):
+    if isinstance(event, events.YourMoveEvent):
       # try to attack if action available
       # TODO: evaluate whether to interrupt
       if character.has_action(context):
         yield from character.attack_strategy().recommend(character, event, context)
+      else:
+        yield events.NoActionEvent(character)
 
 
 class HoldOneActionStrategy(Strategy):
   def recommend(self, character, event, context):
-    if isinstance(event, events.NewPhaseEvent):
+    if isinstance(event, events.YourMoveEvent):
       # try to hold an action in reserve until Phase 10
       if character.has_action(context):
         available_actions = [action for action in character.actions() if action <= context.phase()]
@@ -61,6 +64,9 @@ class HoldOneActionStrategy(Strategy):
           yield from character.attack_strategy().recommend(character, event, context)
         else:
           logger.debug('{} is holding an action'.format(character.name()))
+          yield events.HoldActionEvent(character)
+      else:
+        yield events.NoActionEvent(character)
 
 
 class BaseAttackStrategy(Strategy):
@@ -192,48 +198,81 @@ class BaseAttackStrategy(Strategy):
       logger.debug('{} spending {} VP (expecting to spend {} AP) to try to get {} extra kept damage dice'.format(subject.name(), vp, ap, margin))
     return self.get_attack_action(subject, target, skill, vp)
 
-  def recommend(self, character, event, context):
-    raise NotImplementedError()
+  def spend_action(self, character, skill, context):
+    '''
+    spend_action(character, skill, context) -> SpendActionEvent
 
+    Spend an available action to take an attack.
+    '''
+    # spend the newest available action
+    # older actions are usually more valuable
+    chosen_phase = max([phase for phase in character.actions() if phase <= context.phase()])
+    return events.SpendActionEvent(character, chosen_phase)
+ 
+  def try_skill(self, character, skill, context):
+    '''
+    try_skill(character, skill, context) -> TakeAttackActionEvent or None
 
-class UniversalAttackStrategy(BaseAttackStrategy):
-  def recommend(self, character, event, context):
-    if isinstance(event, events.NewPhaseEvent):
-      # TODO: implement intelligence around interrupts
-      if character.has_action(context):
-        # try to double attack first
-        double_attack_event = self._try_skill(character, 'double attack', context)
-        if double_attack_event is not None:
-          yield double_attack_event
-          return
-        # TODO: consider a feint (probably need a FeintStrategy)
-        # then consider a lunge (probably need a LungeStrategy)
-        attack_event = self._try_skill(character, 'attack', context)
-        if attack_event is not None:
-          yield attack_event
-          return
-
-  def _try_skill(self, character, skill, context):
+    Returns a TakeAttackActionEvent if the strategy can successfully
+    find a target and optimize an attack using the given skill.
+    '''
     if character.skill(skill) > 0:
       target = self.find_target(character, skill, context)
       if target is not None:
-        attack = optimize_attack(character, target, skill, context)
+        attack = self.optimize_attack(character, target, skill, context)
         if attack is not None:
           logger.debug('{} is attacking {} with {}'.format(character.name(), target.name(), skill))
           return events.TakeAttackActionEvent(attack)
 
+  def recommend(self, character, event, context):
+    raise NotImplementedError()
+
 
 class PlainAttackStrategy(BaseAttackStrategy):
   def recommend(self, character, event, context):
-    if isinstance(event, events.NewPhaseEvent):
+    if isinstance(event, events.YourMoveEvent):
       if character.has_action(context):
         target = self.find_target(character, 'attack', context)
         if target is not None:
           attack = self.optimize_attack(character, target, 'attack', context)
           logger.debug('{} is attacking {}'.format(character.name(), target.name()))
+          yield self.spend_action(character, 'attack', context)
           yield events.TakeAttackActionEvent(attack)
-    # do nothing
-    return None
+        else:
+          yield events.HoldActionEvent(character)
+      else:
+        yield events.NoActionEvent(character)
+
+
+class UniversalAttackStrategy(BaseAttackStrategy):
+  def recommend(self, character, event, context):
+    if isinstance(event, events.YourMoveEvent):
+      # TODO: implement intelligence around interrupts
+      if character.has_action(context):
+        # try to double attack first
+        double_attack_event = self.try_skill(character, 'double attack', context)
+        if double_attack_event is not None:
+          yield self.spend_action(character, 'double attack', context)
+          yield double_attack_event
+          return
+        # TODO: consider a lunge (probably need a LungeStrategy)
+        if character.vp() == 0 and len(character.actions()) > 1:
+          # if this character is out of VP and has more than one action in this round, a feint might be worth it
+          feint_event = self.try_skill(character, 'feint', context)
+          if feint_event is not None:
+            yield self.spend_action(character, 'feint', context)
+            yield feint_event
+            return
+        # try a plain attack
+        attack_event = self.try_skill(character, 'attack', context)
+        if attack_event is not None:
+          yield self.spend_action(character, 'attack', context)
+          yield attack_event
+          return
+        # fell through: do nothing
+        yield events.HoldActionEvent(character)
+      else:
+        yield events.NoActionEvent(character)
 
 
 class BaseParryStrategy(Strategy):
@@ -297,6 +336,17 @@ class BaseParryStrategy(Strategy):
     expected_sw = target.wound_check(expected_roll, target.lw() + expected_damage)
     return expected_sw
 
+  def spend_action(self, character, skill, context):
+    '''
+    spend_action(character, skill, context) -> SpendActionEvent
+
+    Spend an available action to take an attack.
+    '''
+    # spend the newest available action
+    # older actions are usually more valuable
+    chosen_phase = max([phase for phase in character.actions() if phase <= context.phase()])
+    yield events.SpendActionEvent(character, chosen_phase)
+ 
 
 class AlwaysParryStrategy(BaseParryStrategy):
   '''
@@ -305,6 +355,7 @@ class AlwaysParryStrategy(BaseParryStrategy):
   def _recommend(self, character, event, context):
     logger.debug('{} always parries for friends'.format(character.name()))
     parry = actions.ParryAction(character, event.action.subject(), event.action)
+    yield self.spend_action(character, 'parry', context)
     yield events.TakeParryActionEvent(parry)
 
 
@@ -346,6 +397,7 @@ class ReluctantParryStrategy(BaseParryStrategy):
         elif probably_critical:
           logger.debug('{} reluctantly parries because the attack looks dangerous'.format(character.name()))
         parry = actions.ParryAction(character, event.action.subject(), event.action)
+        yield self.spend_action(character, 'parry', context)
         yield events.TakeParryActionEvent(parry)
       else:
         logger.debug('{} will not parry a small attack'.format(character.name()))
@@ -355,6 +407,196 @@ class NeverParryStrategy(Strategy):
   def recommend(self, character, event, context):
     logger.debug('{} never parries'.format(character.name()))
     yield from ()
+
+
+class SkillRolledStrategy(Strategy):
+  '''
+  Strategy to decide how to spend resources after a roll.
+  '''
+  def __init__(self):
+    self._chosen_ap = 0
+    self._chosen_bonuses = []
+
+  def event_matches(self, character, event):
+    '''
+    Return whether this event is relevant for the strategy and character.
+    '''
+    raise NotImplementedError()
+
+  def get_bonus_skills(self, event):
+    '''
+    Returns the skills that could be used for floating bonuses for
+    this skill roll, in the order that they should be spent.
+
+    For example, for a Double Attack, the character should spend
+    floating bonuses for 'double attack' first, then 'attack_any',
+    then 'any'.
+    '''
+    raise NotImplementedError()
+
+  def get_tn(self, event):
+    '''
+    Return the desired TN.
+    '''
+    raise NotImplementedError()
+
+  def recommend(self, character, event, context):
+    if self.event_matches(character, event):
+      self.reset()
+      tn = self.get_tn(event)
+      margin = tn - event.action.skill_roll()
+      if margin <= 0:
+        # if the roll was successful, do nothing
+        yield event
+        return
+      # use floating bonuses to try to make the TN
+      for skill in self.get_bonus_skills(event):
+        self.use_floating_bonuses(character, skill, margin)
+        margin = tn - event.action.skill_roll() - sum([t[1] for t in self._chosen_bonuses])
+        if margin <= 0:
+          break
+      if margin > 0:
+        # use adventure points to try to make the TN
+        self.use_ap(character, event.action.skill(), margin)
+        margin -= (5 * self._chosen_ap)
+      if margin <= 0:
+        # if we reached the TN, spend resources and update the event
+        for (skill, bonus) in self._chosen_bonuses:
+          yield events.SpendFloatingBonusEvent(character, skill, bonus)
+        if self._chosen_ap > 0:
+          yield events.SpendAdventurePointsEvent(character, skill, self._chosen_ap)
+        new_roll = event.action.skill_roll() - sum([t[1] for t in self._chosen_bonuses]) - (5 * self._chosen_ap)
+        event.action.set_skill_roll(new_roll)
+        event.roll = new_roll
+      yield event
+    
+  def reset(self):
+    '''
+    Reset this strategy. Should be called before each use.
+    '''
+    self._chosen_ap = 0
+    self._chosen_bonuses.clear()
+
+  def use_ap(self, character, skill, margin):
+    if character.ap() > 0:
+      if skill in character.ap_skills():
+        ap_needed = math.ceil(margin / 5)
+        max_spend = min(character.ap(), character.max_ap_per_roll())
+        self._chosen_ap = min(max_spend, ap_needed)
+       
+  def use_floating_bonuses(self, character, skill, margin):
+    available_bonuses = list(character.floating_bonuses(skill))
+    available_bonuses.sort()
+    while margin > 0 and len(available_bonuses) > 0:
+      bonus = available_bonuses.pop(0)
+      self._chosen_bonuses.append((skill, bonus))
+      margin -= bonus
+
+
+class AttackRolledStrategy(SkillRolledStrategy):
+  def event_matches(self, character, event):
+    return isinstance(event, events.AttackRolledEvent) and character == event.action.subject()
+
+  def get_bonus_skills(self, event):
+    return [event.action.skill(), 'attack_any', 'any']
+
+  def get_tn(self, event):
+    return event.action.tn()
+
+
+class ParryRolledStrategy(SkillRolledStrategy):
+  def event_matches(self, character, event):
+    return isinstance(event, events.ParryRolledEvent) and character == event.action.subject()
+
+  def get_bonus_skills(self, event):
+    return [event.action.skill(), 'parry_any', 'any']
+
+  def get_tn(self, event):
+    return event.action.tn()
+
+
+class WoundCheckRolledStrategy(SkillRolledStrategy):
+  '''
+  Strategy to decide how to spend resources to improve
+  a wound check roll.
+
+  This strategy is written to only spend resources to avoid
+  defeat or taking more than 1 SW. It will not spend resources
+  to try to succeed at the Wound Check.
+  '''
+  def __init__(self):
+    self._chosen_ap = 0
+    self._chosen_bonuses = []
+
+  def recommend(self, character, event, context):
+    if isinstance(event, events.WoundCheckRolledEvent):
+      if event.subject == character:
+        self.reset()
+        # how many wounds would I take?
+        expected_sw = character.wound_check(event.roll)
+        if expected_sw == 0:
+          # ignore it if no SW expected
+          yield event
+        else:
+          # calculate how many SW are tolerable
+          # normally 1 SW is tolerable
+          # but if one wound means defeat, then only 0 SW is tolerable
+          tolerable_sw = min(1, character.sw_remaining() - 1)
+          # use wound check specific floating bonuses
+          new_event = self.use_floating_bonuses(character, event, tolerable_sw, 'wound check')
+          new_expected_sw = character.wound_check(new_event.roll)
+          if new_expected_sw > tolerable_sw:
+            # use universal floating bonuses
+            new_event = self.use_floating_bonuses(character, new_event, tolerable_sw, 'any')
+          new_expected_sw = character.wound_check(new_event.roll)
+          if new_expected_sw > tolerable_sw:
+            # use adventure points
+            new_event = self.use_ap(character, new_event, tolerable_sw, 'wound check')
+          new_expected_sw = character.wound_check(new_event.roll)
+          # check if anything changed
+          new_expected_sw = character.wound_check(new_event.roll)
+          if new_expected_sw < expected_sw:
+            # progress: spend resources and use the new roll
+            for (skill, bonus) in self._chosen_bonuses:
+              yield events.SpendFloatingBonusEvent(character, skill, bonus)
+            yield events.SpendAdventurePointsEvent(character, self._chosen_ap)
+            yield new_event
+          else:
+            # but the future refused to change
+            # spend nothing and take the hit
+            yield event
+
+  def reset(self):
+    self._chosen_ap = 0
+    self._chosen_bonuses.clear()
+
+  def use_ap(self, character, event, tolerable_sw, skill):
+    ap = character.ap()
+    max_spend = min(ap, character.max_ap_per_roll())
+    new_roll = event.roll
+    if character.can_spend_ap('wound check'):
+      new_roll = event.roll
+      new_expected_sw = character.wound_check(new_roll)
+      while self._chosen_ap < max_spend:
+        self._chosen_ap += 1
+        new_roll += 5
+        new_expected_sw = character.wound_check(new_roll)
+        if new_expected_sw == tolerable_sw:
+          break
+    return events.WoundCheckRolledEvent(event.subject, event.attacker, event.damage, new_roll)
+
+  def use_floating_bonuses(self, character, event, tolerable_sw, skill):
+    available_bonuses = character.floating_bonuses(skill)
+    available_bonuses.sort()
+    new_roll = event.roll
+    new_expected_sw = character.wound_check(new_roll)
+    for bonus in available_bonuses:
+      self._chosen_bonuses.append((skill, bonus))
+      new_roll += bonus
+      new_expected_sw = character.wound_check(new_roll)
+      if new_expected_sw == tolerable_sw:
+        break
+    return events.WoundCheckRolledEvent(event.subject, event.attacker, event.damage, new_roll) 
 
 
 class KeepLightWoundsStrategy(Strategy):
@@ -376,11 +618,12 @@ class KeepLightWoundsStrategy(Strategy):
           expected_damage = context.mean_roll(7, 2)
         else:
           expected_damage = int(sum(character.lw_history()) / len(character.lw_history()))
-        # what is the probability of making the next wound check?
-        (rolled, kept, bonus) = character.get_wound_check_roll_params()
+        # what do we expect to get for the next wound check?
+        (rolled, kept, modifier) = character.get_wound_check_roll_params()
         future_damage = character.lw() + expected_damage
-        p_fail_by_ten = 1.0 - context.p(future_damage - bonus - 10, rolled, kept)
-        if p_fail_by_ten > 0.5:
+        expected_roll = context.mean_roll(rolled, kept) + modifier
+        # how many wounds do we expect?
+        if character.wound_check(expected_roll, future_damage) > 2:
           # take the wound if the next wound check probably will be bad
           logger.debug('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
           yield events.TakeSeriousWoundEvent(character, event.attacker, 1)

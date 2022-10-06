@@ -59,7 +59,8 @@ class FreeRaise(Modifier):
   def __init__(self, skill):
     super().__init__(None, None, skill, 5)
 
-  def apply(self, skill):
+  def apply(self, subject, target, skill):
     if self.skill() == skill:
       return 5
+    return 0
 

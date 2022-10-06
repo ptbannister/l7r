@@ -14,9 +14,6 @@ from simulation.strategies import Strategy
 
 
 class AkodoBushiSchool(BaseSchool):
-  def __init__(self, skills_dict):
-    super().__init__(skills_dict)
-  
   def ap_base_skill(self):
     return None
 
@@ -61,6 +58,7 @@ class AkodoAttackFailedListener(Listener):
         if event.action.skill() == 'feint':
           yield events.GainTemporaryVoidPointsEvent(character, 1)
 
+
 class AkodoAttackSucceededListener(Listener):
   '''
   Listener to implement the Akodo special ability
@@ -71,6 +69,7 @@ class AkodoAttackSucceededListener(Listener):
       if event.action.subject() == character:
         if event.action.skill() == 'feint':
           yield events.GainTemporaryVoidPointsEvent(character, 4)
+
 
 class AkodoLightWoundsDamageListener(Listener):
   '''
@@ -86,6 +85,7 @@ class AkodoLightWoundsDamageListener(Listener):
         character.knowledge().observe_damage_roll(event.subject, event.damage)
         yield from character.wound_check_strategy().recommend(character, event, context)
         yield from self._strategy.recommend(character, event, context)
+
 
 class AkodoFifthDanStrategy(Strategy):
   '''
@@ -142,7 +142,7 @@ class AkodoWoundCheckRolledStrategy(Strategy):
   '''
   def recommend(self, character, event, context):
     if isinstance(event, events.WoundCheckRolledEvent):
-      if event.target == character:
+      if event.subject == character:
         # how many wounds would I take?
         expected_sw = character.wound_check(event.roll)
         if expected_sw == 0:

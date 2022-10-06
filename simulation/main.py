@@ -11,6 +11,7 @@ import argparse as ap
 import logging
 import os
 
+from simulation.bayushi_school import BayushiBushiSchool
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.engine import CombatEngine
@@ -32,22 +33,31 @@ def load_characters():
   # TODO: load characters from YAML or JSON or something
   akodo = Character('Akodo')
   akodo.set_ring('air', 3)
-  akodo.set_ring('earth', 5)
-  akodo.set_ring('fire', 5)
-  akodo.set_ring('water', 6)
-  akodo.set_ring('void', 5)
-  akodo.set_skill('attack', 4)
-  akodo.set_skill('double attack', 5)
-  akodo.set_skill('parry', 5)
+  akodo.set_ring('earth', 3)
+  akodo.set_ring('fire', 3)
+  akodo.set_ring('water', 3)
+  akodo.set_ring('void', 3)
+  akodo.set_skill('attack', 3)
+  #akodo.set_skill('double attack', 5)
+  akodo.set_skill('parry', 4)
   bayushi = Character('Bayushi')
   bayushi.set_ring('air', 3)
-  bayushi.set_ring('earth', 5)
-  bayushi.set_ring('fire', 6)
-  bayushi.set_ring('water', 5)
-  bayushi.set_ring('void', 5)
+  bayushi.set_ring('earth', 3)
+  bayushi.set_ring('fire', 3)
+  bayushi.set_ring('water', 3)
+  bayushi.set_ring('void', 3)
   bayushi.set_skill('attack', 4)
-  bayushi.set_skill('double attack', 5)
+  #bayushi.set_skill('double attack', 5)
+  #bayushi.set_skill('feint', 5)
+  #bayushi.set_skill('iaijutsu', 5)
   bayushi.set_skill('parry', 5)
+  bayushi_school = BayushiBushiSchool()
+  #bayushi_school.apply_special(bayushi)
+  #bayushi_school.apply_rank_one_ability(bayushi)
+  #bayushi_school.apply_rank_two_ability(bayushi)
+  #bayushi_school.apply_rank_three_ability(bayushi)
+  #bayushi_school.apply_rank_four_ability(bayushi)
+  #bayushi_school.apply_rank_five_ability(bayushi)
   return [Group([akodo]), Group([bayushi])]
 
 
@@ -80,7 +90,7 @@ def main():
 
   # set up engine
   context = EngineContext(groups)
-  context.load_probability_data()
+  context.initialize()
   engine = CombatEngine(context)
 
   test_victories = 0

@@ -16,6 +16,13 @@ class Action(object):
     self._target = target
     self._skill = skill
     self._vp = vp
+    self._skill_roll = None
+
+  def set_skill_roll(self, skill_roll):
+    self._skill_roll = skill_roll
+
+  def skill_roll(self):
+    return self._skill_roll
 
   def skill(self):
     return self._skill
@@ -33,7 +40,6 @@ class Action(object):
 class AttackAction(Action):
   def __init__(self, subject, target, skill='attack', vp=0):
     super().__init__(subject, target, skill, vp)
-    self._attack_roll = None
     self._damage_roll = None
     self._parries_declared = []
     self._parries_declined = []
@@ -53,7 +59,7 @@ class AttackAction(Action):
 
   def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
     if skill_roll is None:
-      skill_roll = self._attack_roll
+      skill_roll = self.skill_roll()
     if tn is None:
       tn = self.tn()
     if self.parry_attempted():
@@ -65,7 +71,7 @@ class AttackAction(Action):
     return None
 
   def is_hit(self):
-    return self._attack_roll >= self.tn() and not self.parried()
+    return self.skill_roll() >= self.tn() and not self.parried()
 
   def parried(self):
     return self._parried
@@ -80,9 +86,8 @@ class AttackAction(Action):
     return self._parries_declined
 
   def roll_attack(self):
-    self._attack_roll = self.subject().roll_skill(self.target(), self.skill(), self.vp())
-    self.subject().spend_vp(self.vp())
-    return self._attack_roll
+    self.set_skill_roll(self.subject().roll_skill(self.target(), self.skill(), self.vp()))
+    return self.skill_roll()
 
   def roll_damage(self):
     extra_rolled = self.calculate_extra_damage_dice()
@@ -102,7 +107,6 @@ class AttackAction(Action):
 class DoubleAttackAction(AttackAction):
   def __init__(self, subject, target, vp=0):
     super().__init__(subject, target, 'double attack', vp)
-    self._attack_roll = None
     self._damage_roll = None
     self._parries_declared = []
     self._parries_declined = []
@@ -112,7 +116,7 @@ class DoubleAttackAction(AttackAction):
 
   def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
     if skill_roll is None:
-      skill_roll = self._attack_roll
+      skill_roll = self.skill_roll()
     if tn is None:
       tn = self.tn() - 20
     penalty = 0
@@ -162,11 +166,10 @@ class ParryAction(Action):
       skill = 'parry_other'
     super().__init__(subject, target, skill, vp)
     self._attack = attack
-    self._parry_roll = 0
     self._predeclared = predeclared
 
   def is_success(self):
-    return self._parry_roll >= self._attack._attack_roll
+    return self.skill_roll() >= self.tn()
 
   def roll_parry(self):
     penalty = 0
@@ -174,9 +177,8 @@ class ParryAction(Action):
       # parry on behalf of others has a penalty
       penalty = 10
     # roll parry
-    self._parry_roll = self.subject().roll_skill(self.target(), self.skill(), self.vp()) - penalty
-    self.subject().spend_vp(self.vp())
-    return self._parry_roll
+    self.set_skill_roll(self.subject().roll_skill(self.target(), self.skill(), self.vp()) - penalty)
+    return self.skill_roll()
 
   def set_attack_parry_declared(self, event):
     self._attack.add_parry_declared(event)
@@ -186,4 +188,7 @@ class ParryAction(Action):
 
   def set_attack_parry_attempted(self):
     self._attack.set_parry_attempted()
+
+  def tn(self):
+    return self._attack.tn()
 

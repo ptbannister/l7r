@@ -68,6 +68,15 @@ class EndOfRoundEvent(TimingEvent):
     self.round = round
 
 
+class YourMoveEvent(Event):
+  '''
+  Played on characters to ask them if they will use an action.
+  '''
+  def __init__(self, subject):
+    super().__init__('your_move')
+    self.subject = subject
+
+
 class InitiativeChangedEvent(Event):
   def __init__(self):
     super().__init__('initiative_changed')
@@ -87,9 +96,9 @@ class TakeAttackActionEvent(TakeActionEvent):
   def __init__(self, action):
     super().__init__('take_attack', action)
 
-  def play(self):
+  def play(self, context):
     yield self._declare_attack()
-    yield self._roll_attack()
+    yield from self._roll_attack(context)
     if self.action.parried():
       yield self._failed()
       return
@@ -112,9 +121,11 @@ class TakeAttackActionEvent(TakeActionEvent):
   def _failed(self):
     return AttackFailedEvent(self.action)
 
-  def _roll_attack(self):
+  def _roll_attack(self,  context):
     attack_roll = self.action.roll_attack()
-    return AttackRolledEvent(self.action, attack_roll)
+    yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
+    initial_event = AttackRolledEvent(self.action, attack_roll)
+    yield from self.action.subject().attack_rolled_strategy().recommend(self.action.subject(), initial_event, context)
 
   def _roll_damage(self):
     damage_roll = self.action.roll_damage()
@@ -128,9 +139,9 @@ class TakeParryActionEvent(TakeActionEvent):
   def __init__(self, action):
     super().__init__('take_parry', action)
 
-  def play(self):
+  def play(self, context):
     yield self._declare_parry()
-    yield self._roll_parry()
+    yield from self._roll_parry(context)
     if self.action.is_success():
       yield self._succeeded()
     else:
@@ -144,10 +155,12 @@ class TakeParryActionEvent(TakeActionEvent):
   def _failed(self):
     return ParryFailedEvent(self.action)
 
-  def _roll_parry(self):
+  def _roll_parry(self, context):
     parry_roll = self.action.roll_parry()
     self.action.set_attack_parry_attempted()
-    return ParryRolledEvent(self.action, parry_roll)
+    yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
+    initial_event = ParryRolledEvent(self.action, parry_roll)
+    yield from self.action.subject().parry_rolled_strategy().recommend(self.action.subject(), initial_event, context)
 
   def _succeeded(self):
     self.action.set_attack_parried()
@@ -155,9 +168,9 @@ class TakeParryActionEvent(TakeActionEvent):
 
 
 class ShibaTakeParryEvent(TakeParryActionEvent):
-  def play(self):
+  def play(self, context):
     yield self._declare_parry()
-    yield self._roll_parry()
+    yield self._roll_parry(context)
     if self.action.is_success():
       yield self._succeeded()
     else:
@@ -238,17 +251,38 @@ class StatusEvent(Event):
     super().__init__(name)
     self.subject = subject
 
-class DeathEvent(StatusEvent):
+class DefeatEvent(StatusEvent):
+  pass
+
+class DeathEvent(DefeatEvent):
   def __init__(self, subject):
     super().__init__('death', subject)
 
-class SurrenderEvent(StatusEvent):
+class SurrenderEvent(DefeatEvent):
   def __init__(self, subject):
     super().__init__('surrender', subject)
 
-class UnconsciousEvent(StatusEvent):
+class UnconsciousEvent(DefeatEvent):
   def __init__(self, subject):
     super().__init__('unconscious', subject)
+
+
+class NotMovingEvent(StatusEvent):
+  pass
+
+class HoldActionEvent(NotMovingEvent):
+  '''
+  Response by characters to YourMoveEvent to indicate they are holding their action.
+  '''
+  def __init__(self, subject):
+    super().__init__('hold_action', subject)
+
+class NoActionEvent(NotMovingEvent):
+  '''
+  Response by characters to YourMoveEvent to indicate they have no action.
+  '''
+  def __init__(self, subject):
+    super().__init__('no_action', subject)
 
 
 class WoundCheckEvent(Event):
@@ -277,7 +311,7 @@ class WoundCheckFailedEvent(WoundCheckEvent):
     self.roll = roll
 
 class WoundCheckRolledEvent(WoundCheckEvent):
-  def __init__(self, subject, attacker, damage, roll, vp=0):
+  def __init__(self, subject, attacker, damage, roll):
     super().__init__('wound_check_rolled', subject, attacker, damage)
     self.roll = roll
 
@@ -302,6 +336,16 @@ class GainTemporaryVoidPointsEvent(GainResourcesEvent):
     super().__init__('gain_tvp', subject, amount)
 
 
+class SpendActionEvent(Event):
+  '''
+  Event for when a character spends an action.
+  '''
+  def __init__(self, subject, phase):
+    super().__init__('spend_action')
+    self.subject = subject
+    self.phase = phase
+
+
 class SpendResourcesEvent(Event):
   '''
   Event for when a character spends resources that can be measured in an amount.
@@ -318,8 +362,21 @@ class SpendAdventurePointsEvent(SpendResourcesEvent):
   def __init__(self, subject, amount):
     super().__init__('spend_ap', subject, amount)
 
+
 class SpendVoidPointsEvent(SpendResourcesEvent):
   def __init__(self, subject, amount):
     super().__init__('spend_vp', subject, amount)
 
   
+class SpendFloatingBonusEvent(Event):
+  '''
+  Event for when a character spends a floating bonus.
+  Since floating bonuses are skill-specific, they aren't a good fit
+  for a SpendResourcesEvent.
+  '''
+  def __init__(self, subject, skill, bonus):
+    super().__init__('spend_floating_bonus')
+    self.subject = subject
+    self.skill = skill
+    self.bonus = bonus
+

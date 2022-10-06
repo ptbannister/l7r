@@ -112,7 +112,7 @@ class DefaultRollParameterProvider(RollParameterProvider):
   def get_wound_check_roll_params(self, character, vp=0):
     ring = character.ring(character.get_skill_ring('wound check'))
     rolled = ring + 1 + character.extra_rolled('wound check') + vp
-    kept = ring + character.extra_kept('wound check')
+    kept = ring + character.extra_kept('wound check') + vp
     modifier = character.modifier(None, 'wound check')
     return normalize_roll_params(rolled, kept, modifier)
 

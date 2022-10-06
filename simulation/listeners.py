@@ -46,10 +46,11 @@ class NewRoundListener(Listener):
       yield from ()
 
 
-class NewPhaseListener(Listener):
+class YourMoveListener(Listener):
   def handle(self, character, event, context):
-    if isinstance(event, events.NewPhaseEvent):
-      yield from character.action_strategy().recommend(character, event, context)
+    if isinstance(event, events.YourMoveEvent):
+      if character == event.subject:
+        yield from character.action_strategy().recommend(character, event, context)
 
 
 class AttackDeclaredListener(Listener):
@@ -73,7 +74,7 @@ class AttackDeclaredListener(Listener):
 class AttackRolledListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.AttackRolledEvent):
-      if event.action.subject() != character:
+      if character != event.action.subject():
         character.knowledge().observe_attack_roll(event.action.subject(), event.roll)
         yield from character.parry_strategy().recommend(character, event, context)
 
@@ -137,13 +138,28 @@ class GainTemporaryVoidPointsListener(Listener):
       if event.subject == character:
         character.gain_tvp(event.amount)
         yield from ()
- 
+
+class SpendActionListener(Listener):
+  def handle(self, character, event, context):
+    if isinstance(event, events.SpendActionEvent):
+      if event.subject == character:
+        character.spend_action(event.phase)
+        yield from ()
+
 
 class SpendAdventurePointsListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.SpendAdventurePointsEvent):
       if event.subject == character:
         character.spend_ap(event.amount)
+        yield from ()
+
+
+class SpendFloatingBonusListener(Listener):
+  def handle(self, character, event, context):
+    if isinstance(event, events.SpendFloatingBonusEvent):
+      if event.subject == character:
+        character.spend_floating_bonus(event.skill, event.bonus)
         yield from ()
 
 
@@ -162,7 +178,8 @@ class WoundCheckDeclaredListener(Listener):
         roll = character.roll_wound_check(event.damage, event.vp)
         if event.vp > 0:
           yield events.SpendVoidPointsEvent(character, event.vp)
-        yield events.WoundCheckRolledEvent(character, event.attacker, event.damage, roll)
+        initial_roll = events.WoundCheckRolledEvent(character, event.attacker, event.damage, roll)
+        yield from character.wound_check_rolled_strategy().recommend(character, initial_roll, context)
 
 
 class WoundCheckFailedListener(Listener):

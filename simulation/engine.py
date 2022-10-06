@@ -1,7 +1,7 @@
 
 from abc import abstractmethod
 
-from simulation.events import ActionEvent, EndOfPhaseEvent, EndOfRoundEvent, InitiativeChangedEvent, NewPhaseEvent, NewRoundEvent, StatusEvent, TakeActionEvent
+from simulation import events
 from simulation.exceptions import CombatEnded
 from simulation.log import logger
 
@@ -20,31 +20,32 @@ class Engine(object):
 
   def event(self, event):
     logger.debug('Got {} event'.format(event.name))
-    self._history.append(event)
+    self.history().append(event)
     # status events might end the run
-    if isinstance(event, StatusEvent):
+    if isinstance(event, events.StatusEvent):
       logger.debug('Evaluating status event')
-      self._context.update_status(event)
+      self.context().update_status(event)
     # take action events require reevaluating initiative priority
-    if isinstance(event, InitiativeChangedEvent) or isinstance(event, TakeActionEvent):
+    if isinstance(event, events.InitiativeChangedEvent) or isinstance(event, events.TakeActionEvent):
       logger.debug('Reevaluating initiative priority')
-      self._context.reevaluate_initiative()
+      self.context().reevaluate_initiative()
+    # playable events should be played out completely
     if hasattr(event, 'play'):
       # event play method is a generator for more events
-      for next_event in event.play():
+      for next_event in event.play(self.context()):
         self.event(next_event)
     else:
       # play event on each character in initiative order
-      for character in self._context.characters():
-        for response in character.event(event, self._context):
+      for character in self.context().characters():
+        for response in character.event(event, self.context()):
           self.event(response)
 
-  def get_history(self):
+  def history(self):
     return self._history
 
   def reset(self):
-    self._history.clear()
-    self._context.reset()
+    self.history().clear()
+    self.context().reset()
 
   @abstractmethod
   def run(self):
@@ -77,18 +78,30 @@ class CombatEngine(Engine):
   def run_round(self):
     logger.debug('Starting Round {}'.format(self.context().round()))
     self.context().features().observe_round()
-    self.event(NewRoundEvent(self.context().round()))
+    self.event(events.NewRoundEvent(self.context().round()))
     if self.context().phase() != 0:
       raise RuntimeError('New round should begin in phase 0')
+    self.context().reevaluate_initiative()
     while True:
       logger.debug('Starting Phase {}'.format(self.context().phase()))
+      # start new phase
       self.context().features().observe_phase()
-      self.event(NewPhaseEvent(self.context().phase()))
-      self.event(EndOfPhaseEvent(self.context().phase()))
+      self.event(events.NewPhaseEvent(self.context().phase()))
+      # play YourMoveEvent on characters who have actions
+      # until they have all responded with HoldActionEvent
+      self.context().reset_still_moving()
+      while self.context().is_anybody_still_moving():
+        for character in self.context().characters():
+          if self.context().is_still_moving(character):
+            self.event(events.YourMoveEvent(character))
+      # end phase
+      self.event(events.EndOfPhaseEvent(self.context().phase()))
+      # next phase
       if self.context().phase() < 10:
         self.context().next_phase()
       else:
         break
-    self.event(EndOfRoundEvent(self.context().round()))
+    # end of round
+    self.event(events.EndOfRoundEvent(self.context().round()))
     self.context().next_round()
 
