@@ -33,7 +33,7 @@ class BayushiBushiSchool(BaseSchool):
   def apply_rank_three_ability(self, character):
     character.set_strategy('attack', BAYUSHI_ATTACK_STRATEGY)
 
-  def apply_special(self, character):
+  def apply_special_ability(self, character):
     character.set_roll_parameter_provider(BAYUSHI_ROLL_PARAMETER_PROVIDER)
 
   def extra_rolled(self):

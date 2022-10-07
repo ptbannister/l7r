@@ -6,11 +6,70 @@
 # Character Schools for L7R combat simulator.
 #
 
+from abc import ABC, abstractmethod
+
 from simulation.modifiers import FreeRaise
 
 
-class BaseSchool(object):
+class School(ABC):
+  @abstractmethod
+  def ap_base_skill(self):
+    pass
 
+  @abstractmethod
+  def ap_skills(self):
+    pass
+
+  @abstractmethod
+  def apply_ap(self, character):
+    pass
+
+  @abstractmethod
+  def apply_special_ability(self, character):
+    pass
+
+  @abstractmethod
+  def apply_rank_one_ability(self, character):
+    pass
+
+  @abstractmethod
+  def apply_rank_two_ability(self, character):
+    pass
+
+  @abstractmethod
+  def apply_rank_three_ability(self, character):
+    pass
+
+  @abstractmethod
+  def apply_rank_four_ability(self, character):
+    pass
+
+  @abstractmethod
+  def apply_rank_five_ability(self, character):
+    pass
+
+  @abstractmethod
+  def extra_rolled(self):
+    pass
+
+  @abstractmethod
+  def free_raises(self):
+    pass
+
+  @abstractmethod
+  def name(self):
+    pass
+
+  @abstractmethod
+  def school_knacks(self):
+    pass
+
+  @abstractmethod
+  def school_ring(self):
+    pass
+
+
+class BaseSchool(School):
   def __init__(self):
     self._ap_base_skill = None
     self._ap_skills = []
@@ -132,9 +191,9 @@ class BaseSchool(object):
       raise ValueError('{}\'s {} ring is not 2, cannot apply school ring bonus'.format(character.name(), self.school_ring()))
     character.set_ring(self.school_ring(), 3)
 
-  def apply_special(self, character):
+  def apply_special_ability(self, character):
     '''
-    apply_special(character)
+    apply_special_ability(character)
 
     Apply this school's special ability to the character.
     This usually involves setting special listeners or strategies.

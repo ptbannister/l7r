@@ -13,9 +13,11 @@ from simulation import actions, listeners, strategies
 from simulation.knowledge import Knowledge
 from simulation.log import logger
 from simulation.modifiers import PARRY_OTHER_PENALTY
+from simulation.professions import Profession
 from simulation.roll import normalize_roll_params
 from simulation.roll_params import DEFAULT_ROLL_PARAMETER_PROVIDER, RollParameterProvider
 from simulation.roll_provider import DEFAULT_ROLL_PROVIDER, RollProvider
+from simulation.schools import School
 from simulation.weapons import KATANA
 from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
 
@@ -71,8 +73,10 @@ class Character(object):
     }
     self._lw = 0
     self._lw_history = []
+    self._profession = None
     self._roll_parameter_provider = DEFAULT_ROLL_PARAMETER_PROVIDER
     self._roll_provider = DEFAULT_ROLL_PROVIDER
+    self._school = None
     self._skills = { 'attack': 1, 'parry': 1 }
     self._skill_rings = {
       'attack': 'fire',
@@ -135,6 +139,9 @@ class Character(object):
     # TODO: register modifier listeners
     self._modifiers.append(modifier)
 
+  def advantages(self):
+    return self._advantages
+
   def ap(self):
     '''
     ap() -> int
@@ -177,6 +184,9 @@ class Character(object):
     '''
     # TODO: does anything change this threshold?
     return self.sw() >= self.ring('earth')
+
+  def disadvantages(self):
+    return self._disadvantages
 
   def event(self, event, context):
     if event.name in self._listeners.keys():
@@ -425,6 +435,9 @@ class Character(object):
   def parry_rolled_strategy(self):
     return self._strategies['parry_rolled']
 
+  def profession(self):
+    return self._profession
+
   def reset(self):
     self._actions = []
     self._ap_spent = 0
@@ -451,6 +464,9 @@ class Character(object):
     Return this character's rank in the named ring.
     '''
     return self._rings[ring]
+
+  def rings(self):
+    return self._rings
 
   def roll_damage(self, target, skill, attack_extra_rolled=0, vp=0):
     '''
@@ -520,6 +536,9 @@ class Character(object):
     logger.debug('{} rolled wound check: {}'.format(self._name, roll))
     return roll
 
+  def school(self):
+    return self._school
+
   def set_action_strategy(self, strategy):
     self._strategies['action'] = strategy
 
@@ -572,6 +591,11 @@ class Character(object):
   def set_parry_strategy(self, strategy):
     self._strategies['parry'] = strategy
 
+  def set_profession(self, profession):
+    if not isinstance(profession, Profession):
+      raise ValueError('Character set_profession function requires a Profession')
+    self._profession = profession
+
   def set_ring(self, ring, rank):
     '''
     set_ring(ring, rank)
@@ -610,6 +634,11 @@ class Character(object):
       raise ValueError('provider must be a RollProvider')
     self._roll_provider = provider
 
+  def set_school(self, school):
+    if not isinstance(school, School):
+      raise ValueError('Character set_school function requires a School')
+    self._school = school
+
   def set_skill(self, skill, rank):
     '''
     set_skill(skill, rank)
@@ -640,6 +669,9 @@ class Character(object):
     are stripped before the lookup.
     '''
     return self._skills.get(self.strip_suffix(skill), 0)
+
+  def skills(self):
+    return self._skills
 
   def spend_action(self, phase):
     '''
@@ -724,6 +756,12 @@ class Character(object):
     before unconsciousness.
     '''
     return self.max_sw() - self.sw() 
+
+  def take_advantage(self, advantage):
+    self._advantages.append(advantage)
+
+  def take_disadvantage(self, disadvantage):
+    self._disadvantages.append(disadvantage)
 
   def take_lw(self, amount):
     '''

@@ -27,7 +27,7 @@ class AkodoBushiSchool(BaseSchool):
   def apply_rank_three_ability(self, character):
     character.set_listener('wound_check_succeeded', AkodoWoundCheckSucceededListener())
 
-  def apply_special(self, character):
+  def apply_special_ability(self, character):
     character.set_listener('attack_failed', AkodoAttackFailedListener())
     character.set_listener('attack_succeeded', AkodoAttackSucceededListener())
 
@@ -76,7 +76,7 @@ class AkodoLightWoundsDamageListener(Listener):
   Listener to implement the Akodo 5th Dan technique.
   '''
   def __init__(self):
-    self._strategy = AkodoFifthDanStrategy(Strategy)
+    self._strategy = AkodoFifthDanStrategy()
 
   def handle(self, character, event, context):
     if isinstance(event, events.LightWoundsDamageEvent):
