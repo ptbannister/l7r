@@ -14,7 +14,6 @@
 from simulation import events
 from simulation.exceptions import CombatEnded
 from simulation.features import TrialFeatures
-from simulation.log import logger
 from simulation.probability_provider import DefaultProbabilityProvider
 
 

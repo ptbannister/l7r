@@ -85,6 +85,9 @@ class AttackAction(Action):
   def parries_declined(self):
     return self._parries_declined
 
+  def parries_predeclared(self):
+    return self._parries_predeclared
+
   def roll_attack(self):
     self.set_skill_roll(self.subject().roll_skill(self.target(), self.skill(), self.vp()))
     return self.skill_roll()
@@ -190,5 +193,5 @@ class ParryAction(Action):
     self._attack.set_parry_attempted()
 
   def tn(self):
-    return self._attack.tn()
+    return self._attack.skill_roll()
 

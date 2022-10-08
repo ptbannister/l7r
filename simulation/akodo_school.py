@@ -131,7 +131,7 @@ class AkodoWoundCheckDeclaredListener(Listener):
     if isinstance(event, events.WoundCheckDeclaredEvent):
       if event.subject == character:
         roll = character.roll_wound_check(event.damage, event.vp)
-        event = events.WoundCheckRolledEvent(character, event.damage, roll)
+        event = events.WoundCheckRolledEvent(character, event.attacker, event.damage, roll)
         yield from self._strategy.recommend(character, event, context)
 
 
@@ -162,7 +162,7 @@ class AkodoWoundCheckRolledStrategy(Strategy):
           # spend chosen amount of VP
           new_roll = event.roll + (5 * chosen_spend)
           if (chosen_spend > 0):
-            yield events.VoidPointsSpentEvent(chosen_spend)
+            yield events.SpendVoidPointsEvent(character, chosen_spend)
           # yield adjusted wound check roll
           yield events.WoundCheckRolledEvent(character, event.attacker, event.damage, new_roll)
 

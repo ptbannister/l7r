@@ -11,8 +11,9 @@ class Group(MutableSet):
   Class to represent a group of characters, used in a combat that is more than one-on-one.
   Provides features to help characters tell friend from foe and to create group knowledge.
   '''
-  def __init__(self, characters=[]):
+  def __init__(self, name, characters=[]):
    self._characters = {}
+   self._name = name
    for character in characters:
      character.set_group(self)
      self._characters[character.name()] = character
@@ -45,6 +46,9 @@ class Group(MutableSet):
     Return a list of characters in this group who have actions and are still fighting.
     '''
     return [character for character in self._characters.values() if character.has_action(context) and character.is_fighting()]
+
+  def name(self):
+    return self._name
 
   def __contains__(self, character):
     if isinstance(character, Character):

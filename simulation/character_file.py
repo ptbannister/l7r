@@ -20,9 +20,58 @@ from simulation.disadvantages import Disadvantage
 from simulation.professions import Profession
 from simulation.school_factory import get_school
 from simulation.skills import Skill
+from simulation.strategy_factory import get_strategy
 
 
 class CharacterReader(object):
+  '''
+  Read a Character from a YAML format file.
+  Uses a CharacterBuilder to build the character. This will reject invalid characters,
+  including characters that don't have enough XP for the indicated build.
+  You can always give the character a large number of XP to avoid having to calculate
+  the cost of the build!
+
+  Character must have rings and skills.
+
+  Characters may have a school, a profession, or neither.
+
+  Name, xp, advantages, and disadvantages are optional.
+
+  If no name is given, the character is assigned a random UUID for their name.
+  If no xp is given, the character is assigned 100 xp.
+
+  Here is an example character file. More examples are available in the data directory
+  of this package.
+
+  name: Kakita Haruo
+  school: Courtier
+  rings:
+    air: 4
+    earth: 3
+    fire: 2
+    void: 2
+    water: 3
+  skills:
+    attack: 3
+    culture: 3
+    discern honor: 2
+    etiquette: 3
+    heraldry: 3
+    law: 1
+    parry: 4
+    manipulation: 3
+    oppose social: 3
+    sincerity: 3
+    tact: 5 
+    worldliness: 5
+  advantages:
+    discerning
+    genealogist
+  disadvantages:
+    permanent wound
+    slow healer
+  xp: 1000000
+  '''
   def read(self, f):
     data = yaml.safe_load(f)
     xp = int(data.get('xp', 100))
@@ -30,21 +79,32 @@ class CharacterReader(object):
     if 'name' in data.keys():
       builder.with_name(data['name']) 
     # take profession or school
-    if 'school' in data.keys():
-      school = get_school(data['school'])
-      builder = builder.with_school(school)
+    if 'school' in data.keys() and 'profession' in data.keys():
+      raise IOError('Invalid Character (may not have both a profession and a school')
     elif 'profession' in data.keys():
       builder = builder.with_profession(data['profession'])
+    elif 'school' in data.keys():
+      school = get_school(data['school'])
+      builder = builder.with_school(school)
     else:
-      raise IOError('Invalid Character (no profession or school)')
-    # take disadvantages
-    if 'disadvantages' in data.keys():
-      for disadvantage in data['disadvantages']:
-        builder.take_disadvantage('disadvantage')
-    # buy advantages
-    if 'advantages' in data.keys():
-      for advantage in data['advantages']:
-        builder.take_advantage('advantage')
+      builder = builder.generic()
+    # build character
+    builder = self._take_disadvantages(data, builder)
+    builder = self._take_advantages(data, builder)
+    builder = self._buy_skills(data, builder)
+    builder = self._buy_rings(data, builder)
+    builder = self._set_strategies(data, builder)
+    return builder.build()
+
+  def _buy_rings(self, data, builder):
+    # character must have rings
+    if 'rings' not in data.keys():
+      raise IOError('Invalid Character (no rings)')
+    for (ring, rank) in data['rings'].items():
+      builder.buy_ring(ring, rank)
+    return builder
+
+  def _buy_skills(self, data, builder):
     # character must have skills
     if 'skills' not in data.keys():
       raise IOError('Invalid Character (no skills)')
@@ -56,15 +116,35 @@ class CharacterReader(object):
     # buy other skills
     for (skill, rank) in data['skills'].items():
       builder.buy_skill(skill, rank)
-    # buy rings
-    if 'rings' not in data.keys():
-      raise IOError('Invalid Character (no rings)')
-    for (ring, rank) in data['rings'].items():
-      builder.buy_ring(ring, rank)
-    return builder.build()
+    return builder
+
+  def _set_strategies(self, data, builder):
+    # strategies are optional
+    if 'strategies' in data.keys():
+      for (event, strategy_name) in data['strategies'].items():
+        strategy = get_strategy(strategy_name)
+        builder.set_strategy(event, strategy)
+    return builder
+
+  def _take_advantages(self, data, builder):
+    # advantages are optional
+    if 'advantages' in data.keys():
+      for advantage in data['advantages']:
+        builder.take_advantage('advantage')
+    return builder
+
+  def _take_disadvantages(self, data, builder):
+    # disadvantages are optional
+    if 'disadvantages' in data.keys():
+      for disadvantage in data['disadvantages']:
+        builder.take_disadvantage('disadvantage')
+    return builder
 
 
 class CharacterWriter(object):
+  '''
+  Writes a character to a YAML format file.
+  '''
   def write(self, character, f):
     if character.profession():
       return ProfessionCharacterWriter().write(character, f)
@@ -75,8 +155,11 @@ class CharacterWriter(object):
 
 
 # TODO: handle Honor, Rank, and Recognition
-
+# TODO: support overrides for strategies and listeners
 class GenericCharacterWriter(CharacterWriter):
+  '''
+  CharacterWriter for characters without a samurai school or a peasant profession.
+  '''
   def write(self, character, f):
     yaml.dump(self.build_data(character), f)
 
@@ -120,6 +203,10 @@ class GenericCharacterWriter(CharacterWriter):
 
 
 class ProfessionCharacterWriter(GenericCharacterWriter):
+  '''
+  CharacterWriter for characters with a peasant profession.
+  # TODO: support profession abilities
+  '''
   def build_data(self, character):
     data = super().build_data(character)
     data['profession'] = character.profession().name()
@@ -127,6 +214,9 @@ class ProfessionCharacterWriter(GenericCharacterWriter):
 
 
 class SchoolCharacterWriter(GenericCharacterWriter):
+  '''
+  CharacterWriter for samurai characters.
+  '''
   def build_data(self, character):
     data = super().build_data(character)
     data['school'] = character.school().name()

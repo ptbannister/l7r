@@ -16,6 +16,7 @@ from simulation.character import Character
 from simulation.disadvantages import Disadvantage
 from simulation.professions import Profession
 from simulation.skills import Skill
+from simulation.strategies import Strategy
 
 
 class CharacterBuilder(object):
@@ -28,6 +29,12 @@ class CharacterBuilder(object):
     self._name = None
     self._xp = xp
 
+  def generic(self):
+    if self._name:
+      return _BaseCharacterBuilder(self.xp(), self._name)
+    else:
+      return _BaseCharacterBuilder(self.xp())
+
   def with_name(self, name):
     self._name = name
 
@@ -38,9 +45,9 @@ class CharacterBuilder(object):
     Build a character with a non-samurai profession.
     '''
     if self._name:
-      return ProfessionCharacterBuilder(profession, self.xp(), self._name)
+      return _ProfessionCharacterBuilder(profession, self.xp(), self._name)
     else:
-      return ProfessionCharacterBuilder(profession, self.xp())
+      return _ProfessionCharacterBuilder(profession, self.xp())
 
   def with_school(self, school):
     '''
@@ -49,9 +56,9 @@ class CharacterBuilder(object):
     Build a character with a samurai school.
     '''
     if self._name:
-      return SchoolCharacterBuilder(school, self.xp(), self._name)
+      return _SchoolCharacterBuilder(school, self.xp(), self._name)
     else:
-      return SchoolCharacterBuilder(school, self.xp())
+      return _SchoolCharacterBuilder(school, self.xp())
 
   def with_xp(self, xp):
     '''
@@ -72,7 +79,7 @@ class CharacterBuilder(object):
     return self._xp
 
 
-class BaseCharacterBuilder(object):
+class _BaseCharacterBuilder(object):
   '''
   Provides basic functions for building a character.
   '''
@@ -143,6 +150,12 @@ class BaseCharacterBuilder(object):
   def name(self):
     return self._name
 
+  def set_strategy(self, event, strategy):
+    if not isinstance(strategy, Strategy):
+      raise ValueError('set_strategy requires a Strategy object')
+    self.character().set_strategy(event, strategy)
+    return self
+
   def spend_xp(self, amount):
     if self.xp() - self.xp_spent() < amount:
       raise ValueError('Not enough XP')
@@ -152,11 +165,13 @@ class BaseCharacterBuilder(object):
     cost = Advantage(advantage).cost()
     self.spend_xp(cost)
     self.character.take_advantage(advantage)
+    return self
 
   def take_disadvantage(self, disadvantage):
     cost = Disadvantage(disadvantage).cost()
     self.spend_xp(cost)
     self.character().take_disadvantage(disadvantage)
+    return self
 
   def xp(self):
     return self._xp
@@ -168,16 +183,16 @@ class BaseCharacterBuilder(object):
     return self._xp_spent
 
 
-class ProfessionCharacterBuilder(BaseCharacterBuilder):
+class _ProfessionCharacterBuilder(_BaseCharacterBuilder):
   '''
-  Builder for a character with a non-samurai profession.
+  Builder for a character with a peasant profession.
   '''
   def __init__(self, profession, xp=100, name=uuid.uuid4().hex):
     super().__init__(xp)
     self._profession = profession
 
 
-class SchoolCharacterBuilder(BaseCharacterBuilder):
+class _SchoolCharacterBuilder(_BaseCharacterBuilder):
   '''
   Builder for a character with a samurai school.
   '''

@@ -91,13 +91,13 @@ class Character(object):
     }
     # default strategies
     self._strategies = {
-      'action': strategies.AlwaysAttackActionStrategy(),
+      'action': strategies.HoldOneActionStrategy(),
       'attack': strategies.PlainAttackStrategy(),
       'attack_rolled': strategies.AttackRolledStrategy(),
       'light_wounds': strategies.KeepLightWoundsStrategy(),
       'parry': strategies.NeverParryStrategy(),
       'parry_rolled': strategies.ParryRolledStrategy(),
-      'wound_check': strategies.WoundCheckStrategy(),
+      'wound_check': strategies.StingyWoundCheckStrategy(),
       'wound_check_rolled': strategies.WoundCheckRolledStrategy()
     }
     self._sw = 0
@@ -190,10 +190,10 @@ class Character(object):
 
   def event(self, event, context):
     if event.name in self._listeners.keys():
-      #logger.debug('{} handling {}'.format(self._name, event.name))
+      logger.debug('{} handling {}'.format(self._name, event.name))
       yield from self._listeners[event.name].handle(self, event, context)
-    #else:
-    #  logger.debug('{} ignoring {}'.format(self._name, event.name))
+    else:
+      logger.debug('{} ignoring {}'.format(self._name, event.name))
 
   def extra_kept(self, skill):
     return self._extra_kept.get(self.strip_suffix(skill), 0)
@@ -225,13 +225,12 @@ class Character(object):
     Gain a "floating bonus" that may be applied to the given skill
     in the future.
     If the bonus may be applied to anything, its skill should be 'any'.
-    If the bonus may be applied to any attack, its skill should be 'any attack'.
+    If the bonus may be applied to any attack, its skill should be 'attack_any'.
     '''
-    stripped_skill = self.strip_suffix(skill)
-    if stripped_skill in self._floating_bonuses.keys():
-      self._floating_bonuses[stripped_skill] = [bonus]
+    if skill not in self._floating_bonuses.keys():
+      self._floating_bonuses[skill] = [bonus]
     else:
-      self._floating_bonuses[stripped_skill].append(bonus)
+      self._floating_bonuses[skill].append(bonus)
 
   def gain_tvp(self, n=1):
     '''
@@ -485,7 +484,7 @@ class Character(object):
     '''
     rolled, kept, mod = self.get_damage_roll_params(target, skill, attack_extra_rolled, vp)
     roll = self.roll_provider().get_damage_roll(rolled, kept) + mod
-    logger.debug('{} rolled damage: {}'.format(self._name, roll))
+    logger.info('{} rolled damage: {}'.format(self._name, roll))
     return roll
 
   def roll_initiative(self):
@@ -499,7 +498,7 @@ class Character(object):
     '''
     (rolled, kept, mod) = self.get_initiative_roll_params()
     self._actions = self.roll_provider().get_initiative_roll(rolled, kept)
-    logger.debug('{} rolled initiative: {}'.format(self._name, self._actions))
+    logger.info('{} rolled initiative: {}'.format(self._name, self._actions))
     return self._actions
 
   def roll_parameter_provider(self):
@@ -520,7 +519,7 @@ class Character(object):
     (rolled, kept, mod) = self.get_skill_roll_params(target, skill, vp)
     explode = not self.crippled()
     roll = self.roll_provider().get_skill_roll(self.strip_suffix(skill), rolled, kept, explode) + mod
-    logger.debug('{} rolled {}: {}'.format(self._name, skill, roll))
+    logger.info('{} rolled {}: {}'.format(self._name, skill, roll))
     return roll
 
   def roll_wound_check(self, damage, vp=0):
@@ -533,7 +532,7 @@ class Character(object):
     '''
     (rolled, kept, mod) = self.get_wound_check_roll_params(vp)
     roll = self.roll_provider().get_wound_check_roll(rolled, kept) + mod
-    logger.debug('{} rolled wound check: {}'.format(self._name, roll))
+    logger.info('{} rolled wound check: {}'.format(self._name, roll))
     return roll
 
   def school(self):
@@ -771,12 +770,12 @@ class Character(object):
     Add the given amount of Light Wounds to this character's Light
     Wound total.
     '''
-    logger.debug('{} takes {} Light Wounds'.format(self._name, amount))
+    logger.info('{} takes {} Light Wounds'.format(self._name, amount))
     self._lw += amount
     self._lw_history.append(amount)
 
   def take_sw(self, amount):
-    logger.debug('{} takes {} Serious Wounds'.format(self._name, amount))
+    logger.info('{} takes {} Serious Wounds'.format(self._name, amount))
     self._sw += amount
 
   def tn_to_hit(self):

@@ -18,7 +18,7 @@ from simulation import events
 from simulation.groups import Group
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
-from simulation.strategies import AlwaysParryStrategy, NeverParryStrategy, PlainAttackStrategy, ReluctantParryStrategy
+from simulation.strategies import AlwaysParryStrategy, NeverParryStrategy, PlainAttackStrategy, ReluctantParryStrategy, StingyPlainAttackStrategy
 
 
 # set up logging
@@ -55,21 +55,21 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attack = AttackAction(attacker, target)
     # set up engine
     context = EngineContext([attacker_group, target_group])
-    context.load_probability_data()
+    context.initialize()
     engine = CombatEngine(context)
     # run the event
     event = events.TakeAttackActionEvent(attack)
     # run the attack
     engine.event(event)
     # assert expected attack action state
-    self.assertEqual(31, attack._attack_roll)
+    self.assertEqual(31, attack.skill_roll())
     self.assertEqual([], attack.parries_declared())
     self.assertFalse(attack.parried())
     self.assertTrue(attack.is_hit())
     self.assertEqual(0, attack.calculate_extra_damage_dice())
     self.assertEqual(15, attack._damage_roll)
     # assert expected event history
-    history = engine.get_history()
+    history = engine.history()
     first_event = history.pop(0)
     self.assertTrue(isinstance(first_event, events.TakeAttackActionEvent))
     second_event = history.pop(0)
@@ -79,7 +79,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     self.assertEqual(31, third_event.roll)
     fourth_event = history.pop(0)
     self.assertTrue(isinstance(fourth_event, events.AttackSucceededEvent))
-    fifth_event = engine.get_history().pop(0)
+    fifth_event = engine.history().pop(0)
     self.assertTrue(isinstance(fifth_event, events.LightWoundsDamageEvent))
     self.assertEqual(target, fifth_event.target)
     self.assertEqual(15, fifth_event.damage)
@@ -89,6 +89,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attacker.set_ring('fire', 5)
     attacker.set_skill('attack', 4)
     attacker._actions = [1]
+    attacker.set_strategy('attack', PlainAttackStrategy())
     target = Character('target')
     target.set_parry_strategy(NeverParryStrategy())
     target.set_ring('air', 5)
@@ -105,20 +106,20 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attack = AttackAction(attacker, target)
     # set up engine
     context = EngineContext([attacker_group, target_group], round=1, phase=1)
-    context.load_probability_data()
+    context.initialize()
     engine = CombatEngine(context)
     # run the event
     event = events.TakeAttackActionEvent(attack)
     # run the attack
     engine.event(event)
     # assert expected attack action state
-    self.assertEqual(29, attack._attack_roll)
+    self.assertEqual(29, attack.skill_roll())
     self.assertEqual([], attack.parries_declared())
     self.assertFalse(attack.parried())
     self.assertFalse(attack.is_hit())
     self.assertEqual
     # assert expected event history
-    history = engine.get_history()
+    history = engine.history()
     first_event = history.pop(0)
     self.assertTrue(isinstance(first_event, events.TakeAttackActionEvent))
     second_event = history.pop(0)
@@ -134,6 +135,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attacker.set_ring('fire', 5)
     attacker.set_skill('attack', 4)
     attacker._actions = [1]
+    attacker.set_strategy('attack', StingyPlainAttackStrategy())
     target = Character('target')
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
@@ -153,7 +155,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     target.set_roll_provider(target_roll_provider)
     # set up engine and context
     context = EngineContext([attacker_group, target_group], round=1, phase=1)
-    context.load_probability_data()
+    context.initialize()
     engine = CombatEngine(context)
     # set up an attack action
     attack = AttackAction(attacker, target)
@@ -161,49 +163,65 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     event = events.TakeAttackActionEvent(attack)
     engine.event(event)
     # assert expected attack action state
-    self.assertEqual(50, attack._attack_roll)
-    self.assertEqual(1, len(attack._parries_declared))
-    self.assertEqual([], attack._parries_predeclared)
+    self.assertEqual(50, attack.skill_roll())
+    self.assertEqual(1, len(attack.parries_declared()))
+    self.assertEqual([], attack.parries_predeclared())
     self.assertFalse(attack.parried())
     self.assertTrue(attack.parry_attempted())
     self.assertTrue(attack.is_hit())
     self.assertEqual(0, attack.calculate_extra_damage_dice())
     self.assertEqual(15, attack._damage_roll)
     # assert expected event history
-    history = engine.get_history()
+    history = engine.history()
+    # take_attack
     first_event = history.pop(0)
     self.assertTrue(isinstance(first_event, events.TakeAttackActionEvent))
+    # attack_declared
     second_event = history.pop(0)
     self.assertTrue(isinstance(second_event, events.AttackDeclaredEvent))
+    # attack_rolled
     third_event = history.pop(0)
     self.assertTrue(isinstance(third_event, events.AttackRolledEvent))
     self.assertEqual(50, third_event.roll)
+    # spend_action
     fourth_event = history.pop(0)
-    self.assertTrue(isinstance(fourth_event, events.TakeParryActionEvent))
+    self.assertTrue(isinstance(fourth_event, events.SpendActionEvent))
+    # take_parry
     fifth_event = history.pop(0)
-    self.assertTrue(isinstance(fifth_event, events.ParryDeclaredEvent))
-    self.assertEqual(target, fifth_event.action.subject())
-    self.assertEqual(attacker, fifth_event.action.target())
+    self.assertTrue(isinstance(fifth_event, events.TakeParryActionEvent))
+    # parry_declared
     sixth_event = history.pop(0)
-    self.assertTrue(isinstance(sixth_event, events.ParryRolledEvent))
+    self.assertTrue(isinstance(sixth_event, events.ParryDeclaredEvent))
     self.assertEqual(target, sixth_event.action.subject())
     self.assertEqual(attacker, sixth_event.action.target())
-    self.assertEqual(49, sixth_event.roll)
-    self.assertFalse(sixth_event.action.is_success())
+    # parry_rolled
     seventh_event = history.pop(0)
-    self.assertTrue(isinstance(seventh_event, events.ParryFailedEvent))
+    self.assertTrue(isinstance(seventh_event, events.ParryRolledEvent))
+    self.assertEqual(target, seventh_event.action.subject())
+    self.assertEqual(attacker, seventh_event.action.target())
+    self.assertEqual(49, seventh_event.roll)
+    self.assertFalse(seventh_event.action.is_success())
+    # parry_failed
     eighth_event = history.pop(0)
-    self.assertTrue(isinstance(eighth_event, events.AttackSucceededEvent))
-    ninth_event = engine.get_history().pop(0)
-    self.assertTrue(isinstance(ninth_event, events.LightWoundsDamageEvent))
-    self.assertEqual(target, ninth_event.target)
-    self.assertEqual(15, ninth_event.damage)
+    self.assertTrue(isinstance(eighth_event, events.ParryFailedEvent))
+    # attack_succeeded
+    ninth_event = history.pop(0)
+    self.assertTrue(isinstance(ninth_event, events.AttackSucceededEvent))
+    # lw_damage
+    tenth_event = engine.history().pop(0)
+    self.assertTrue(isinstance(tenth_event, events.LightWoundsDamageEvent))
+    self.assertEqual(target, tenth_event.target)
+    self.assertEqual(15, tenth_event.damage)
+    # wound_check_declared
+    # wound_check_rolled
+    # wound_check_succeeded
+    # keep_lw
 
   def test_run_successful_parry(self):
     attacker = Character('attacker')
     attacker.set_ring('fire', 5)
     attacker.set_skill('attack', 4)
-    attacker.set_strategy('attack', PlainAttackStrategy())
+    attacker.set_strategy('attack', StingyPlainAttackStrategy())
     attacker._actions = [1]
     target = Character('target')
     target.set_ring('air', 5)
@@ -223,7 +241,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     target_group = Group([target])
     # set up engine and context
     context = EngineContext([attacker_group, target_group], round=1, phase=1)
-    context.load_probability_data()
+    context.initialize()
     engine = CombatEngine(context)
     # set up an attack action
     attack = AttackAction(attacker, target)
@@ -231,35 +249,47 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     event = events.TakeAttackActionEvent(attack)
     engine.event(event)
     # assert expected attack action state
-    self.assertEqual(50, attack._attack_roll)
+    self.assertEqual(50, attack.skill_roll())
     self.assertTrue(attack.parried())
     self.assertTrue(attack.parry_attempted())
     self.assertFalse(attack.is_hit())
     # assert expected event history
-    history = engine.get_history()
+    history = engine.history()
+    # take_attack
     first_event = history.pop(0)
     self.assertTrue(isinstance(first_event, events.TakeAttackActionEvent))
+    # attack_declared
     second_event = history.pop(0)
     self.assertTrue(isinstance(second_event, events.AttackDeclaredEvent))
+    # attack_rolled
     third_event = history.pop(0)
     self.assertTrue(isinstance(third_event, events.AttackRolledEvent))
     self.assertEqual(50, third_event.roll)
+    # spend_action
     fourth_event = history.pop(0)
-    self.assertTrue(isinstance(fourth_event, events.TakeParryActionEvent))
+    self.assertTrue(isinstance(fourth_event, events.SpendActionEvent))
+    # take_parry
     fifth_event = history.pop(0)
-    self.assertTrue(isinstance(fifth_event, events.ParryDeclaredEvent))
-    self.assertEqual(target, fifth_event.action.subject())
-    self.assertEqual(attacker, fifth_event.action.target())
+    self.assertTrue(isinstance(fifth_event, events.TakeParryActionEvent))
+    # parry_declared
     sixth_event = history.pop(0)
-    self.assertTrue(isinstance(sixth_event, events.ParryRolledEvent))
+    self.assertTrue(isinstance(sixth_event, events.ParryDeclaredEvent))
     self.assertEqual(target, sixth_event.action.subject())
     self.assertEqual(attacker, sixth_event.action.target())
-    self.assertEqual(51, sixth_event.roll)
-    self.assertTrue(sixth_event.action.is_success())
+    # parry_rolled
     seventh_event = history.pop(0)
-    self.assertTrue(isinstance(seventh_event, events.ParrySucceededEvent))
+    self.assertTrue(isinstance(seventh_event, events.ParryRolledEvent))
+    self.assertEqual(target, seventh_event.action.subject())
+    self.assertEqual(attacker, seventh_event.action.target())
+    self.assertEqual(51, seventh_event.roll)
+    self.assertTrue(seventh_event.action.is_success())
+    # parry_succeeded
     eighth_event = history.pop(0)
-    self.assertTrue(isinstance(eighth_event, events.AttackFailedEvent))
+    self.assertTrue(isinstance(eighth_event, events.ParrySucceededEvent))
+    # attack_failed
+    ninth_event = history.pop(0)
+    self.assertTrue(isinstance(ninth_event, events.AttackFailedEvent))
+    # no more events
     self.assertEqual(0, len(history))
 
 
@@ -278,11 +308,11 @@ class TestTakeParryActionEvent(unittest.TestCase):
     target_group = Group([target])
     # set up engine and context
     context = EngineContext([attacker_group, target_group], round=1, phase=1)
-    context.load_probability_data()
+    context.initialize()
     engine = CombatEngine(context)
     # set up an attack that hit by 20
     attack = AttackAction(attacker, target)
-    attack._attack_roll = 50
+    attack.set_skill_roll(50)
     # set up the parry action
     parry = ParryAction(target, attacker, attack)
     # rig the parry roll to succeed by 1
@@ -293,14 +323,14 @@ class TestTakeParryActionEvent(unittest.TestCase):
     event = events.TakeParryActionEvent(parry)
     engine.event(event)
     # assert expected parry action state
-    self.assertEqual(51, parry._parry_roll)
+    self.assertEqual(51, parry.skill_roll())
     self.assertTrue(parry.is_success())
     # assert expected attack action state
     self.assertTrue(attack.parried())
     self.assertTrue(attack.parry_attempted())
     self.assertFalse(attack.is_hit())
     # assert expected event history
-    history = engine.get_history()
+    history = engine.history()
     first_event = history.pop(0)
     self.assertTrue(isinstance(first_event, events.TakeParryActionEvent))
     second_event = history.pop(0)
@@ -327,11 +357,11 @@ class TestTakeParryActionEvent(unittest.TestCase):
     target_group = Group([target])
     # set up engine and context
     context = EngineContext([attacker_group, target_group], round=1, phase=1)
-    context.load_probability_data()
+    context.initialize()
     engine = CombatEngine(context)
     # set up an attack that hit by 20
     attack = AttackAction(attacker, target)
-    attack._attack_roll = 50
+    attack.set_skill_roll(50)
     # set up the parry action
     parry = ParryAction(target, attacker, attack)
     # rig the parry roll to fail by 1
@@ -342,7 +372,7 @@ class TestTakeParryActionEvent(unittest.TestCase):
     event = events.TakeParryActionEvent(parry)
     engine.event(event)
     # assert expected parry action state
-    self.assertEqual(49, parry._parry_roll)
+    self.assertEqual(49, parry.skill_roll())
     self.assertFalse(parry.is_success())
     # assert expected attack action state
     self.assertFalse(attack.parried())
@@ -350,7 +380,7 @@ class TestTakeParryActionEvent(unittest.TestCase):
     self.assertTrue(attack.is_hit())
     self.assertEqual(0, attack.calculate_extra_damage_dice())
     # assert expected event history
-    history = engine.get_history()
+    history = engine.history()
     first_event = history.pop(0)
     self.assertTrue(isinstance(first_event, events.TakeParryActionEvent))
     second_event = history.pop(0)

@@ -123,7 +123,8 @@ class TakeAttackActionEvent(TakeActionEvent):
 
   def _roll_attack(self,  context):
     attack_roll = self.action.roll_attack()
-    yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
+    if self.action.vp() > 0:
+      yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
     initial_event = AttackRolledEvent(self.action, attack_roll)
     yield from self.action.subject().attack_rolled_strategy().recommend(self.action.subject(), initial_event, context)
 
@@ -144,6 +145,7 @@ class TakeParryActionEvent(TakeActionEvent):
     yield from self._roll_parry(context)
     if self.action.is_success():
       yield self._succeeded()
+      return
     else:
       yield self._failed()
     
@@ -158,7 +160,8 @@ class TakeParryActionEvent(TakeActionEvent):
   def _roll_parry(self, context):
     parry_roll = self.action.roll_parry()
     self.action.set_attack_parry_attempted()
-    yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
+    if self.action.vp() > 0:
+      yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
     initial_event = ParryRolledEvent(self.action, parry_roll)
     yield from self.action.subject().parry_rolled_strategy().recommend(self.action.subject(), initial_event, context)
 
@@ -211,7 +214,7 @@ class ParryPredeclaredEvent(ActionEvent):
 
 class ParryRolledEvent(ActionEvent):
   def __init__(self, action, roll):
-    super().__init__('parry_succeeded', action)
+    super().__init__('parry_rolled', action)
     self.roll = roll
 
 class ParrySucceededEvent(ActionEvent):
@@ -242,7 +245,7 @@ class LightWoundsDamageEvent(DamageEvent):
     super().__init__('lw_damage', subject, target, damage)
 
 class SeriousWoundsDamageEvent(DamageEvent):
-  def __init__(self, target, subject, damage):
+  def __init__(self, subject, target, damage):
     super().__init__('sw_damage', subject, target, damage)
 
 

@@ -71,19 +71,20 @@ class CombatEngine(Engine):
       try:
         self.run_round()
       except CombatEnded:
+        logger.info('---------- Combat ended ----------')
         break
       except KeyboardInterrupt:
         break
 
   def run_round(self):
-    logger.debug('Starting Round {}'.format(self.context().round()))
+    logger.info('Starting Round {}'.format(self.context().round()))
     self.context().features().observe_round()
     self.event(events.NewRoundEvent(self.context().round()))
     if self.context().phase() != 0:
       raise RuntimeError('New round should begin in phase 0')
     self.context().reevaluate_initiative()
     while True:
-      logger.debug('Starting Phase {}'.format(self.context().phase()))
+      logger.info('Starting Phase {}'.format(self.context().phase()))
       # start new phase
       self.context().features().observe_phase()
       self.event(events.NewPhaseEvent(self.context().phase()))

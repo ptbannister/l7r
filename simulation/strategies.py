@@ -221,7 +221,7 @@ class BaseAttackStrategy(Strategy):
       if target is not None:
         attack = self.optimize_attack(character, target, skill, context)
         if attack is not None:
-          logger.debug('{} is attacking {} with {}'.format(character.name(), target.name(), skill))
+          logger.info('{} is attacking {} with {}'.format(character.name(), target.name(), skill))
           return events.TakeAttackActionEvent(attack)
 
   def recommend(self, character, event, context):
@@ -235,7 +235,27 @@ class PlainAttackStrategy(BaseAttackStrategy):
         target = self.find_target(character, 'attack', context)
         if target is not None:
           attack = self.optimize_attack(character, target, 'attack', context)
-          logger.debug('{} is attacking {}'.format(character.name(), target.name()))
+          logger.info('{} is attacking {}'.format(character.name(), target.name()))
+          yield self.spend_action(character, 'attack', context)
+          yield events.TakeAttackActionEvent(attack)
+        else:
+          yield events.HoldActionEvent(character)
+      else:
+        yield events.NoActionEvent(character)
+
+
+class StingyPlainAttackStrategy(BaseAttackStrategy):
+  '''
+  Always attack with available actions, never spend resources to optimize.
+  '''
+  def recommend(self, character, event, context):
+    if isinstance(event, events.YourMoveEvent):
+      # TODO: implement intelligence around interrupts
+      if character.has_action(context):
+        target = self.find_target(character, 'attack', context)
+        if target is not None:
+          attack = self.get_attack(character, target, 'attack')
+          logger.info('{} is attacking {}'.format(character.name(), target.name()))
           yield self.spend_action(character, 'attack', context)
           yield events.TakeAttackActionEvent(attack)
         else:
@@ -345,7 +365,7 @@ class BaseParryStrategy(Strategy):
     # spend the newest available action
     # older actions are usually more valuable
     chosen_phase = max([phase for phase in character.actions() if phase <= context.phase()])
-    yield events.SpendActionEvent(character, chosen_phase)
+    return events.SpendActionEvent(character, chosen_phase)
  
 
 class AlwaysParryStrategy(BaseParryStrategy):
@@ -599,6 +619,17 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
     return events.WoundCheckRolledEvent(event.subject, event.attacker, event.damage, new_roll) 
 
 
+class AlwaysKeepLightWoundsStrategy(Strategy):
+  '''
+  Strategy that always keeps LW.
+  '''
+  def recommend(self, character, event, context):
+    if isinstance(event, events.WoundCheckSucceededEvent):
+      if event.subject == character:
+        logger.info('{} always keeps light wounds'.format(character.name()))
+        yield from ()
+
+
 class KeepLightWoundsStrategy(Strategy):
   '''
   Strategy to decide whether to keep LW or take SW.
@@ -610,7 +641,7 @@ class KeepLightWoundsStrategy(Strategy):
           raise RuntimeError('KeepLightWoundsStrategy should not be consulted for a failed wound check')
         # keep LW to avoid unconsciousness
         if character.sw_remaining() == 1:
-          logger.debug('{} keeping light wounds to avoid defeat.'.format(character.name()))
+          logger.info('{} keeping light wounds to avoid defeat.'.format(character.name()))
           return
         # how much damage do we expect to take in the future?
         expected_damage = 0
@@ -625,10 +656,21 @@ class KeepLightWoundsStrategy(Strategy):
         # how many wounds do we expect?
         if character.wound_check(expected_roll, future_damage) > 2:
           # take the wound if the next wound check probably will be bad
-          logger.debug('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
+          logger.info('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
           yield events.TakeSeriousWoundEvent(character, event.attacker, 1)
         else:
-          logger.debug('{} keeping light wounds because the next wound check should be ok.'.format(character.name()))
+          logger.info('{} keeping light wounds because the next wound check should be ok.'.format(character.name()))
+
+
+class NeverKeepLightWoundsStrategy(Strategy):
+  '''
+  Strategy that never keeps LW, always takes SW.
+  '''
+  def recommend(self, character, event, context):
+    if isinstance(event, events.WoundCheckSucceededEvent):
+      if event.subject == character:
+        logger.info('{} never keeps light wounds'.format(character.name()))
+        yield events.SeriousWoundsDamageEvent(event.attacker, character, 1)
 
 
 class WoundCheckStrategy(Strategy):
@@ -678,6 +720,17 @@ class WoundCheckStrategy(Strategy):
       expected_roll = context.mean_roll(new_rolled, new_kept) \
         + new_modifier + (5 * planned_ap)
       expected_sw = character.wound_check(expected_roll)
-    logger.debug('{} declaring {} VP for wound check'.format(character.name(), declared_vp))
+    logger.info('{} declaring {} VP for wound check'.format(character.name(), declared_vp))
     return declared_vp
-    
+
+ 
+class StingyWoundCheckStrategy(Strategy):
+  '''
+  Never spend VP on wound checks.
+  '''
+  def recommend(self, character, event, context):
+    if isinstance(event, events.LightWoundsDamageEvent):
+      if event.target == character:
+        logger.info('{} never spends VP on wound checks.'.format(character.name()))
+        yield events.WoundCheckDeclaredEvent(character, event.subject, event.damage)
+

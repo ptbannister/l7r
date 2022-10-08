@@ -129,7 +129,7 @@ class TakeSeriousWoundListener(Listener):
     if isinstance(event, events.TakeSeriousWoundEvent):
       if event.subject == character:
         character.reset_lw()
-        yield events.SeriousWoundsDamageEvent(character, event.attacker, event.damage)
+        yield events.SeriousWoundsDamageEvent(event.attacker, character, event.damage)
 
 
 class GainTemporaryVoidPointsListener(Listener):
@@ -188,7 +188,7 @@ class WoundCheckFailedListener(Listener):
       if event.subject == character:
         sw = character.wound_check(event.roll)
         character.reset_lw()
-        yield events.SeriousWoundsDamageEvent(character, event.attacker, sw)
+        yield events.SeriousWoundsDamageEvent(event.attacker, character, sw)
 
 
 class WoundCheckRolledListener(Listener):
