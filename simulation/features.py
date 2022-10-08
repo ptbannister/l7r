@@ -229,6 +229,7 @@ class SummaryFeatures(object):
     print('\tSW remaining mean: {}'.format(self._summary['test_sw_remaining_mean']))
     print('\tDamage roll mean: {}'.format(self._summary['test_damage_mean']))
     print('\tDamage roll stdev: {}'.format(self._summary['test_damage_stdev']))
+    print('\tVP remaining mean: {}'.format(self._summary['test_vp_remaining_mean']))
     print('\tVP spent mean: {}'.format(self._summary['test_vp_spent_mean']))
     print('\tVP spent on attacks mean: {}'.format(self._summary['test_vp_spent_attacks_mean']))
     print('\tVP spent on wound checks mean: {}'.format(self._summary['test_vp_spent_wound_checks_mean']))
@@ -241,6 +242,7 @@ class SummaryFeatures(object):
     print('\tSW remaining mean: {}'.format(self._summary['control_sw_remaining_mean']))
     print('\tDamage roll mean: {}'.format(self._summary['control_damage_mean']))
     print('\tDamage roll stdev: {}'.format(self._summary['control_damage_stdev']))
+    print('\tVP remaining mean: {}'.format(self._summary['control_vp_remaining_mean']))
     print('\tVP spent mean: {}'.format(self._summary['control_vp_spent_mean']))
     print('\tVP spent on attacks mean: {}'.format(self._summary['control_vp_spent_attacks_mean']))
     print('\tVP spent on wound checks mean: {}'.format(self._summary['control_vp_spent_wound_checks_mean']))
@@ -258,6 +260,7 @@ class SummaryFeatures(object):
       print('\t\tSW remaining mean: {}'.format(self._test_summary['test_sw_remaining_mean']))
       print('\t\tDamage roll mean: {}'.format(self._test_summary['test_damage_mean']))
       print('\t\tDamage roll stdev: {}'.format(self._test_summary['test_damage_stdev']))
+      print('\t\tVP remaining mean: {}'.format(self._summary['test_vp_remaining_mean']))
       print('\t\tVP spent mean: {}'.format(self._test_summary['test_vp_spent_mean']))
       print('\t\tVP spent on attacks mean: {}'.format(self._test_summary['test_vp_spent_attacks_mean']))
       print('\t\tVP spent on wound checks mean: {}'.format(self._test_summary['test_vp_spent_wound_checks_mean']))
@@ -269,6 +272,7 @@ class SummaryFeatures(object):
       print('\t\tSW remaining mean: {}'.format(self._test_summary['control_sw_remaining_mean']))
       print('\t\tDamage roll mean: {}'.format(self._test_summary['control_damage_mean']))
       print('\t\tDamage roll stdev: {}'.format(self._test_summary['control_damage_stdev']))
+      print('\t\tVP remaining mean: {}'.format(self._summary['control_vp_remaining_mean']))
       print('\t\tVP spent mean: {}'.format(self._test_summary['control_vp_spent_mean']))
       print('\t\tVP spent on attacks mean: {}'.format(self._test_summary['control_vp_spent_attacks_mean']))
       print('\t\tVP spent on wound checks mean: {}'.format(self._test_summary['control_vp_spent_wound_checks_mean']))
@@ -278,7 +282,7 @@ class SummaryFeatures(object):
     if self._control_victories > 0:
       # stats given control group victory 
       print('')
-      print('Features given test group victory:')
+      print('Features given control group victory:')
       print('\tAverage combat duration in rounds: {}'.format(self._control_summary['duration_rounds_mean']))
       print('\tAverage combat duration in phases: {}'.format(self._control_summary['duration_phases_mean']))
       print('\t')
@@ -286,6 +290,7 @@ class SummaryFeatures(object):
       print('\t\tSW remaining mean: {}'.format(self._control_summary['test_sw_remaining_mean']))
       print('\t\tDamage roll mean: {}'.format(self._control_summary['test_damage_mean']))
       print('\t\tDamage roll stdev: {}'.format(self._control_summary['test_damage_stdev']))
+      print('\t\tVP remaining mean: {}'.format(self._summary['test_vp_remaining_mean']))
       print('\t\tVP spent mean: {}'.format(self._control_summary['test_vp_spent_mean']))
       print('\t\tVP spent on attacks mean: {}'.format(self._control_summary['test_vp_spent_attacks_mean']))
       print('\t\tVP spent on wound checks mean: {}'.format(self._control_summary['test_vp_spent_wound_checks_mean']))
@@ -297,6 +302,7 @@ class SummaryFeatures(object):
       print('\t\tSW remaining mean: {}'.format(self._control_summary['control_sw_remaining_mean']))
       print('\t\tDamage roll mean: {}'.format(self._control_summary['control_damage_mean']))
       print('\t\tDamage roll stdev: {}'.format(self._control_summary['control_damage_stdev']))
+      print('\t\tVP remaining mean: {}'.format(self._summary['control_vp_remaining_mean']))
       print('\t\tVP spent mean: {}'.format(self._control_summary['control_vp_spent_mean']))
       print('\t\tVP spent on attacks mean: {}'.format(self._control_summary['control_vp_spent_attacks_mean']))
       print('\t\tVP spent on wound checks mean: {}'.format(self._control_summary['control_vp_spent_wound_checks_mean']))
@@ -384,6 +390,8 @@ class TrialFeatures(object):
       self.observe_lw(event, context)
     elif isinstance(event, events.SeriousWoundsDamageEvent):
       self.observe_sw(event, context)
+    elif isinstance(event, events.SpendActionEvent):
+      self.observe_action(event, context)
     elif isinstance(event, events.SpendAdventurePointsEvent):
       raise NotImplementedError('Collecting features for spend_ap events is not yet supported')
     elif isinstance(event, events.SpendVoidPointsEvent):
@@ -411,6 +419,12 @@ class TrialFeatures(object):
       # TODO: collect number of times character took SW after successful wound check
       # and what the LW total was at the time
       pass
+
+  def observe_action(self, event, context):
+    if event.subject in context.test_group():
+      self._data['test_actions_taken'] += 1
+    else:
+      self._data['control_actions_taken'] += 1
 
   def observe_attack(self, event, context):
     if event.action.subject() in context.test_group():
@@ -450,7 +464,7 @@ class TrialFeatures(object):
       elif event.skill == 'wound check':
         self._data['test_vp_spent_wound_checks'] += 1
     else:
-      self.data['control_vp_spent'] += 1
+      self._data['control_vp_spent'] += 1
       if event.skill in ATTACK_SKILLS:
         self._data['control_vp_spent_attacks'] += 1
       elif event.skill == 'wound check':
@@ -468,10 +482,12 @@ class TrialFeatures(object):
     self._winner = result
     self._data['winner'] = result
 
-  def complete(self):
-    self.complete_damage_rolls()  
+  def complete(self, context):
+    self.complete_damage_rolls(context)
+    self.complete_sw_remaining(context)
+    self.complete_vp_remaining(context)
  
-  def complete_damage_rolls(self):
+  def complete_damage_rolls(self, context):
     # get count, sum, and sum of squares for control damage rolls
     control_damage = self._data['control_damage_rolls']
     self._data['control_damage_rolls_sum'] = sum(control_damage)
@@ -484,6 +500,18 @@ class TrialFeatures(object):
     self._data['test_damage_rolls_sumsquares'] = sum([x * x for x in test_damage])
     self._data['test_damage_rolls_count'] = len(test_damage)
     self._data.pop('test_damage_rolls')
+
+  def complete_sw_remaining(self, context):
+    control_sw_remaining = sum([character.sw_remaining() for character in context.groups()[0]])
+    test_sw_remaining = sum([character.sw_remaining() for character in context.groups()[1]])
+    self._data['control_sw_remaining'] = control_sw_remaining
+    self._data['test_sw_remaining'] = test_sw_remaining
+
+  def complete_vp_remaining(self, context):
+    control_vp_remaining = sum([character.vp() for character in context.groups()[0]])
+    test_vp_remaining = sum([character.vp() for character in context.groups()[1]])
+    self._data['control_vp_remaining'] = control_vp_remaining
+    self._data['test_vp_remaining'] = test_vp_remaining
 
   def write(self, f):
     writer = csv.DictWriter(f, fieldnames=FIELDNAMES)

@@ -157,7 +157,7 @@ def main():
       engine.run()
       # collect and write features
       features = context.features()
-      context.features().complete()
+      context.features().complete(context)
       context.features().write(feature_file)
       # observe winner
       if features.winner() == 1:

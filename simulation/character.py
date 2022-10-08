@@ -92,12 +92,12 @@ class Character(object):
     # default strategies
     self._strategies = {
       'action': strategies.HoldOneActionStrategy(),
-      'attack': strategies.PlainAttackStrategy(),
+      'attack': strategies.UniversalAttackStrategy(),
       'attack_rolled': strategies.AttackRolledStrategy(),
       'light_wounds': strategies.KeepLightWoundsStrategy(),
-      'parry': strategies.NeverParryStrategy(),
+      'parry': strategies.ReluctantParryStrategy(),
       'parry_rolled': strategies.ParryRolledStrategy(),
-      'wound_check': strategies.StingyWoundCheckStrategy(),
+      'wound_check': strategies.WoundCheckStrategy(),
       'wound_check_rolled': strategies.WoundCheckRolledStrategy()
     }
     self._sw = 0
