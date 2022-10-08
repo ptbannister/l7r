@@ -23,9 +23,19 @@ ADVANCED_SKILLS = [
   'history',
   'iaijutsu',
   'interrogation',
+  'lunge',
   'manipulation',
   'parry',
   'underworld'
+]
+
+ATTACK_SKILLS = [
+  'attack',
+  'counterattack',
+  'double attack',
+  'feint',
+  'iaijutsu',
+  'lunge'
 ]
 
 BASIC_SKILLS = [

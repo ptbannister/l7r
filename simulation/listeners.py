@@ -177,7 +177,7 @@ class WoundCheckDeclaredListener(Listener):
       if event.subject == character:
         roll = character.roll_wound_check(event.damage, event.vp)
         if event.vp > 0:
-          yield events.SpendVoidPointsEvent(character, event.vp)
+          yield events.SpendVoidPointsEvent(character, 'wound check', event.vp)
         initial_roll = events.WoundCheckRolledEvent(character, event.attacker, event.damage, roll)
         yield from character.wound_check_rolled_strategy().recommend(character, initial_roll, context)
 

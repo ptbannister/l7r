@@ -100,7 +100,7 @@ class AkodoFifthDanStrategy(Strategy):
         max_vp = min(character.vp(), character.max_vp_per_roll())
         # TODO: implement a little more intelligence
         if max_vp > 0:
-          yield events.SpendVoidPointsEvent(character, max_vp)
+          yield events.SpendVoidPointsEvent(character, 'damage', max_vp)
           yield events.LightWoundsDamageEvent(character, event.subject, 10 * max_vp)
 
 
@@ -162,7 +162,7 @@ class AkodoWoundCheckRolledStrategy(Strategy):
           # spend chosen amount of VP
           new_roll = event.roll + (5 * chosen_spend)
           if (chosen_spend > 0):
-            yield events.SpendVoidPointsEvent(character, chosen_spend)
+            yield events.SpendVoidPointsEvent(character, 'wound check', chosen_spend)
           # yield adjusted wound check roll
           yield events.WoundCheckRolledEvent(character, event.attacker, event.damage, new_roll)
 

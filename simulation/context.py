@@ -125,6 +125,10 @@ class EngineContext(object):
     if character in self._still_moving:
       self._still_moving.remove(character)
 
+  def test_group(self):
+    # the test group is supposed to be the second group
+    return self._groups[1]
+
   def time(self):
     return (self._round, self._phase)
 
@@ -133,7 +137,7 @@ class EngineContext(object):
       self.stop_moving(event.subject)
     elif isinstance(event, events.DefeatEvent):
       self.stop_moving(event.subject)
-      # TODO: support more than two groups
+      # TODO: support aiuchi (both sides defeated)
       for i, group in enumerate(self._groups):
         fighting = False
         for character in group:

@@ -124,7 +124,7 @@ class TakeAttackActionEvent(TakeActionEvent):
   def _roll_attack(self,  context):
     attack_roll = self.action.roll_attack()
     if self.action.vp() > 0:
-      yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
+      yield SpendVoidPointsEvent(self.action.subject(), self.action.skill(), self.action.vp())
     initial_event = AttackRolledEvent(self.action, attack_roll)
     yield from self.action.subject().attack_rolled_strategy().recommend(self.action.subject(), initial_event, context)
 
@@ -161,7 +161,7 @@ class TakeParryActionEvent(TakeActionEvent):
     parry_roll = self.action.roll_parry()
     self.action.set_attack_parry_attempted()
     if self.action.vp() > 0:
-      yield SpendVoidPointsEvent(self.action.subject(), self.action.vp())
+      yield SpendVoidPointsEvent(self.action.subject(), self.action.skill(), self.action.vp())
     initial_event = ParryRolledEvent(self.action, parry_roll)
     yield from self.action.subject().parry_rolled_strategy().recommend(self.action.subject(), initial_event, context)
 
@@ -354,28 +354,31 @@ class SpendResourcesEvent(Event):
   Event for when a character spends resources that can be measured in an amount.
 
   The "subject" is the character spending resources.
+  The "skill" is the skill the resources are being spent on.
+  This may be something that is not really a skill, such as "wound check" or "damage".
   The "amount" is the amount of the resource being spent.
   '''
-  def __init__(self, name, subject, amount):
+  def __init__(self, name, subject, skill, amount):
     super().__init__(name)
     self.subject = subject
+    self.skill = skill
     self.amount = amount
 
 class SpendAdventurePointsEvent(SpendResourcesEvent):
-  def __init__(self, subject, amount):
-    super().__init__('spend_ap', subject, amount)
+  def __init__(self, subject, skill, amount):
+    super().__init__('spend_ap', subject, skill, amount)
 
 
 class SpendVoidPointsEvent(SpendResourcesEvent):
-  def __init__(self, subject, amount):
-    super().__init__('spend_vp', subject, amount)
+  def __init__(self, subject, skill, amount):
+    super().__init__('spend_vp', subject, skill, amount)
 
   
 class SpendFloatingBonusEvent(Event):
   '''
   Event for when a character spends a floating bonus.
-  Since floating bonuses are skill-specific, they aren't a good fit
-  for a SpendResourcesEvent.
+  Since floating bonuses are discrete and not measured in an "amount",
+  they aren't a good fit for a SpendResourcesEvent.
   '''
   def __init__(self, subject, skill, bonus):
     super().__init__('spend_floating_bonus')

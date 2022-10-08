@@ -579,7 +579,7 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
             # progress: spend resources and use the new roll
             for (skill, bonus) in self._chosen_bonuses:
               yield events.SpendFloatingBonusEvent(character, skill, bonus)
-            yield events.SpendAdventurePointsEvent(character, self._chosen_ap)
+            yield events.SpendAdventurePointsEvent(character, skill, self._chosen_ap)
             yield new_event
           else:
             # but the future refused to change

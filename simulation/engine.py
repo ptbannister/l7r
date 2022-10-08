@@ -21,6 +21,7 @@ class Engine(object):
   def event(self, event):
     logger.debug('Got {} event'.format(event.name))
     self.history().append(event)
+    self.context().features().observe_event(event, self.context())
     # status events might end the run
     if isinstance(event, events.StatusEvent):
       logger.debug('Evaluating status event')
@@ -78,7 +79,6 @@ class CombatEngine(Engine):
 
   def run_round(self):
     logger.info('Starting Round {}'.format(self.context().round()))
-    self.context().features().observe_round()
     self.event(events.NewRoundEvent(self.context().round()))
     if self.context().phase() != 0:
       raise RuntimeError('New round should begin in phase 0')
@@ -86,7 +86,6 @@ class CombatEngine(Engine):
     while True:
       logger.info('Starting Phase {}'.format(self.context().phase()))
       # start new phase
-      self.context().features().observe_phase()
       self.event(events.NewPhaseEvent(self.context().phase()))
       # play YourMoveEvent on characters who have actions
       # until they have all responded with HoldActionEvent
