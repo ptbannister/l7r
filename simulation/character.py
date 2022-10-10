@@ -10,14 +10,15 @@ import math
 import uuid
 
 from simulation import actions, listeners, strategies
+from simulation.action_factory import ActionFactory, DEFAULT_ACTION_FACTORY
 from simulation.knowledge import Knowledge
 from simulation.log import logger
-from simulation.modifiers import PARRY_OTHER_PENALTY
 from simulation.professions import Profession
 from simulation.roll import normalize_roll_params
 from simulation.roll_params import DEFAULT_ROLL_PARAMETER_PROVIDER, RollParameterProvider
 from simulation.roll_provider import DEFAULT_ROLL_PROVIDER, RollProvider
 from simulation.schools import School
+from simulation.strategies import Strategy
 from simulation.weapons import KATANA
 from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
 
@@ -35,6 +36,7 @@ class Character(object):
       'void': 2,
       'water': 2 }
     self._actions = []
+    self._action_factory = DEFAULT_ACTION_FACTORY
     self._advantages = []
     self._ap_base_skill = None
     self._ap_skills = []
@@ -43,12 +45,12 @@ class Character(object):
     self._discounts = {}
     self._extra_kept = {}
     self._extra_rolled = {}
-    self._floating_bonuses = {}
+    self._floating_bonuses = []
     self._group = None
     self._interrupt_skills = []
     self._interrupt_costs = {}
     self._knowledge = Knowledge()
-    self._modifiers = [ PARRY_OTHER_PENALTY ]
+    self._modifiers = []
     # default listeners
     action_taken_listener = listeners.TakeActionListener()
     self._listeners = {
@@ -113,6 +115,15 @@ class Character(object):
     Returns the actions this character has remaining for the round.
     '''
     return self._actions
+
+  def action_factory(self):
+    '''
+    action_factory() -> ActionFactory
+
+    Returns this character's action factory, which is used to generate attack, counterattack, and parry actions.
+    Delegating this to a factory helps us support special abilities.
+    '''
+    return self._action_factory
 
   def action_strategy(self):
     return self._strategies['action']
@@ -191,46 +202,41 @@ class Character(object):
   def event(self, event, context):
     if event.name in self._listeners.keys():
       logger.debug('{} handling {}'.format(self._name, event.name))
+      # play event on modifiers first
+      for modifier in self._modifiers:
+        modifier.handle(self, event, context)
+      # then play event on self
       yield from self._listeners[event.name].handle(self, event, context)
     else:
       logger.debug('{} ignoring {}'.format(self._name, event.name))
 
   def extra_kept(self, skill):
-    return self._extra_kept.get(self.strip_suffix(skill), 0)
+    return self._extra_kept.get(skill, 0)
 
   def extra_rolled(self, skill):
-    return self._extra_rolled.get(self.strip_suffix(skill), 0)
+    return self._extra_rolled.get(skill, 0)
 
   def floating_bonuses(self, skill):
     '''
-    floating_bonuses(skill) -> list of int
+    floating_bonuses(skill) -> list of FloatingBonus
       skill (str): skill or thing on which the bonuses may be spent
 
     Returns the list of "floating bonuses" that may be spend on a skill or action. 
     '''
-    result = []
-    result.extend(self._floating_bonuses.get(skill, []))
-    result.extend(self._floating_bonuses.get('any', []))
-    return result
+    return [bonus for bonus in self._floating_bonuses if bonus.is_applicable(skill)]
 
   def friends(self):
     return self.group()
 
-  def gain_floating_bonus(self, skill, bonus):
+  def gain_floating_bonus(self, floating_bonus):
     '''
-    gain_floating_bonus(skill, bonus)
-      skill (str): skill or thing that may receive the bonus
-      bonus (int): amount of the bonus
+    gain_floating_bonus(floating_bonus):
+      floating_bonus (FloatingBonus): a floating bonus
 
-    Gain a "floating bonus" that may be applied to the given skill
-    in the future.
-    If the bonus may be applied to anything, its skill should be 'any'.
-    If the bonus may be applied to any attack, its skill should be 'attack_any'.
+    Gain a "floating bonus" that may be applied to future skill rolls.
+    The floating bonus is an object that knows the skills on whcih it may be used.
     '''
-    if skill not in self._floating_bonuses.keys():
-      self._floating_bonuses[skill] = [bonus]
-    else:
-      self._floating_bonuses[skill].append(bonus)
+    self._floating_bonuses.append(bonus)
 
   def gain_tvp(self, n=1):
     '''
@@ -254,7 +260,7 @@ class Character(object):
 
     Returns the ring used to use the given skill.
     '''
-    return self._skill_rings.get(self.strip_suffix(skill), 0)
+    return self._skill_rings.get(skill, 0)
 
   def get_skill_roll_params(self, target, skill, vp=0):
     return self.roll_parameter_provider().get_skill_roll_params(self, target, skill, vp)
@@ -422,7 +428,7 @@ class Character(object):
 
     Returns the modifier (positive or negative) for using the given skill on a target.
     '''
-    applicable_modifiers = [mod.apply(self, target, skill) for mod in self._modifiers]
+    applicable_modifiers = [mod.apply(target, skill) for mod in self._modifiers]
     return sum(applicable_modifiers) if len(applicable_modifiers) > 0 else 0
 
   def name(self):
@@ -436,6 +442,9 @@ class Character(object):
 
   def profession(self):
     return self._profession
+
+  def remove_modifier(self, modifier):
+    self._modifiers.remove(modifier)
 
   def reset(self):
     self._actions = []
@@ -518,7 +527,7 @@ class Character(object):
     '''
     (rolled, kept, mod) = self.get_skill_roll_params(target, skill, vp)
     explode = not self.crippled()
-    roll = self.roll_provider().get_skill_roll(self.strip_suffix(skill), rolled, kept, explode) + mod
+    roll = self.roll_provider().get_skill_roll(skill, rolled, kept, explode) + mod
     logger.info('{} rolled {}: {}'.format(self._name, skill, roll))
     return roll
 
@@ -538,10 +547,19 @@ class Character(object):
   def school(self):
     return self._school
 
+  def set_action_factory(self, factory):
+    if not isinstance(factory, ActionFactory):
+      raise ValueError('Character action factory must be an ActionFactory')
+    self._action_factory = factory
+
   def set_action_strategy(self, strategy):
+    if not isinstance(strategy, Strategy):
+      raise ValueError('Character action strategy must be a Strategy')
     self._strategies['action'] = strategy
 
   def set_attack_strategy(self, strategy):
+    if not isinstance(strategy, Strategy):
+      raise ValueError('Character attack strategy must be a Strategy')
     self._strategies['attack'] = strategy
 
   def set_extra_rolled(self, skill, extra_rolled=1):
@@ -552,7 +570,10 @@ class Character(object):
 
     Set extra rolled dice for the given skill.
     '''
-    self._extra_rolled[skill] = extra_rolled
+    if skill in self._extra_rolled.keys():
+      self._extra_rolled[skill] += extra_rolled
+    else:
+      self._extra_rolled[skill] = extra_rolled
 
   def set_extra_kept(self, skill, extra_kept):
     '''
@@ -588,6 +609,8 @@ class Character(object):
     self._listeners[event_name] = listener
 
   def set_parry_strategy(self, strategy):
+    if not isinstance(strategy, Strategy):
+      raise ValueError('Character parry strategy must be a Strategy')
     self._strategies['parry'] = strategy
 
   def set_profession(self, profession):
@@ -662,12 +685,8 @@ class Character(object):
       skill (str): name of skill of interest
 
     Returns this character's rank in the given skill.
-
-    Skills may contain an underscore character and a suffix,
-    such as 'parry_other'. In this case, the underscore and suffix
-    are stripped before the lookup.
     '''
-    return self._skills.get(self.strip_suffix(skill), 0)
+    return self._skills.get(skill, 0)
 
   def skills(self):
     return self._skills
@@ -698,20 +717,14 @@ class Character(object):
         raise ValueError('{} does not have enough Adventure Points')
       self._ap_spent += n
 
-  def spend_floating_bonus(self, skill, bonus):
+  def spend_floating_bonus(self, bonus):
     '''
-    spend_floating_bonus(skill, bonus)
-      skill (str): skill or thing the bonus was used for
-      bonus (int): amount of bonus being spent
+    spend_floating_bonus(bonus)
+      bonus (FloatingBonus): floating bonus being spent
     
-    Spend a floating bonus for the given skill.
+    Spend a floating bonus.
     '''
-    if skill not in self._floating_bonuses.keys():
-      raise ValueError('{} does not have any floating bonusees for {}'.format(self.name(), skill))
-    elif bonus not in self._floating_bonuses[skill]:
-      raise ValueError('{} does not have a floating bonus of {} for {}'.format(self.name(), bonus, skill))
-    else:
-      self._floating_bonuses[skill].remove(bonus)
+    self._floating_bonuses.remove(bonus)
 
   def spend_vp(self, n):
     '''
@@ -732,12 +745,6 @@ class Character(object):
         still_unspent -= 1
       else:
         raise ValueError('Not enough Void Points')
-
-  def strip_suffix(self, word):
-    if word is not None and word.find('_') > 0:
-      return word[:word.find('_')]
-    else:
-      return word
 
   def sw(self):
     '''
@@ -779,7 +786,7 @@ class Character(object):
     self._sw += amount
 
   def tn_to_hit(self):
-    return (5 * (1 + self.skill('parry'))) + self.modifier(None, 'tn_to_hit')
+    return (5 * (1 + self.skill('parry'))) + self.modifier(None, 'tn to hit')
 
   def tvp(self):
     '''

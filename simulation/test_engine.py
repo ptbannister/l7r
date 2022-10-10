@@ -21,8 +21,8 @@ class TestCombatEngine(unittest.TestCase):
   def test_combat(self):
     akodo = Character('Akodo')
     bayushi = Character('Bayushi')
-    context = EngineContext([Group([akodo]), Group([bayushi])])
-    context.load_probability_data()
+    context = EngineContext([Group('Lion', akodo), Group('Scorpion', bayushi)])
+    context.initialize()
     engine = CombatEngine(context)
     engine.run()
 

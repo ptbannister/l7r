@@ -8,10 +8,11 @@
 
 from simulation import events
 from simulation.actions import FeintAction
+from simulation.action_factory import DefaultActionFactory
 from simulation.character import Character
+from simulation.floating_bonuses import AnyAttackFloatingBonus
 from simulation.listeners import Listener
 from simulation.log import logger
-from simulation.modifiers import FreeRaise
 from simulation.roll_params import DefaultRollParameterProvider, RollParameterProvider, normalize_roll_params
 from simulation.schools import BaseSchool
 from simulation.strategies import BaseAttackStrategy, Strategy, UniversalAttackStrategy
@@ -31,7 +32,7 @@ class BayushiBushiSchool(BaseSchool):
     character.set_listener('attack_succeeded', BayushiAttackSucceededListener())
 
   def apply_rank_three_ability(self, character):
-    character.set_strategy('attack', BAYUSHI_ATTACK_STRATEGY)
+    character.set_action_factory(BAYUSHI_ACTION_FACTORY)
 
   def apply_special_ability(self, character):
     character.set_roll_parameter_provider(BAYUSHI_ROLL_PARAMETER_PROVIDER)
@@ -39,8 +40,8 @@ class BayushiBushiSchool(BaseSchool):
   def extra_rolled(self):
     return ['double attack', 'iaijutsu', 'wound check']
 
-  def free_raises(self):
-    return { FreeRaise('double attack') }
+  def free_raise_skills(self):
+    return [ 'double attack' ]
 
   def name(self):
     return 'Bayushi Bushi School'
@@ -50,16 +51,6 @@ class BayushiBushiSchool(BaseSchool):
 
   def school_ring(self):
     return 'fire'
-
-
-class BayushiAttackStrategy(UniversalAttackStrategy):
-  def get_attack_action(self, subject, target, skill, vp=0):
-    if skill == 'feint':
-      return BayushiFeintAction(subject, target, vp)
-    else:
-      return super().get_attack_action(subject, target, skill, vp)
-
-BAYUSHI_ATTACK_STRATEGY = BayushiAttackStrategy()
 
 
 class BayushiRollParameterProvider(DefaultRollParameterProvider):
@@ -101,6 +92,16 @@ class BayushiFeintAction(FeintAction):
     return self._damage_roll
 
 
+class BayushiActionFactory(DefaultActionFactory):
+  def get_attack_action(self, subject, target, skill, vp=0):
+    if skill == 'feint':
+      return BayushiFeintAction(subject, target, vp)
+    else:
+      return super().get_attack_action(subject, target, skill, vp)
+
+BAYUSHI_ACTION_FACTORY = BayushiActionFactory()
+
+
 class BayushiAttackFailedListener(Listener):
   '''
   Listener to implement the Bayushi 4th Dan ability
@@ -110,7 +111,7 @@ class BayushiAttackFailedListener(Listener):
     if isinstance(event, events.AttackFailedEvent):
       if event.action.subject() == character:
         if event.action.skill() == 'feint':
-          character.gain_floating_bonus('attack_any', 5)
+          character.gain_floating_bonus(AnyAttackFloatingBonus(5))
     yield from ()
 
 
@@ -123,6 +124,6 @@ class BayushiAttackSucceededListener(Listener):
     if isinstance(event, events.AttackSucceededEvent):
       if event.action.subject() == character:
         if event.action.skill() == 'feint':
-          character.gain_floating_bonus('attack_any', 5)
+          character.gain_floating_bonus(AnyAttackFloatingBonus(5))
     yield from ()
 

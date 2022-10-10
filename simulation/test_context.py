@@ -60,9 +60,9 @@ class TestEngineContext(unittest.TestCase):
     with self.assertRaises(CombatEnded):
       context.update_status(event)
 
-  def test_load_probability(self):
+  def test_initialize(self):
     context = EngineContext([[Character(),], [Character(),]])
-    context.load_probability_data()
+    context.initialize()
     # P(1) on 1k1 should be 1.0
     self.assertEqual(1.00, context.p(1, 1, 1))
     # P(10) on 10k10 should be 1.0
@@ -70,7 +70,7 @@ class TestEngineContext(unittest.TestCase):
     
   def test_mean_rolls(self):
     context = EngineContext([[Character(),], [Character(),]])
-    context.load_probability_data()
+    context.initialize()
     for kept in range(1, 11):
       for rolled in range(kept, 11):
         context.mean_roll(rolled, kept)

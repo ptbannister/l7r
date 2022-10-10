@@ -7,8 +7,8 @@
 #
 
 from simulation import events
+from simulation.floating_bonuses import AnyAttackFloatingBonus
 from simulation.listeners import Listener
-from simulation.modifiers import FreeRaise
 from simulation.schools import BaseSchool
 from simulation.strategies import Strategy
 
@@ -34,8 +34,8 @@ class AkodoBushiSchool(BaseSchool):
   def extra_rolled(self):
     return ['double attack', 'feint', 'wound check']
 
-  def free_raises(self):
-    return { FreeRaise('wound check') }
+  def free_raise_skills(self):
+    return [ 'wound check' ]
 
   def name(self):
     return 'Akodo Bushi School'
@@ -113,7 +113,7 @@ class AkodoWoundCheckSucceededListener(Listener):
     if isinstance(event, events.WoundCheckSucceededEvent):
       if event.subject == character:
         bonus = ((event.roll - event.damage) // 5) * character.skill('attack')
-        character.gain_floating_bonus('attack_any', bonus)
+        character.gain_floating_bonus(AnyAttackFloatingBonus(bonus))
         # if the character may keep LW, consult the character's light wounds strategy
         yield from character.light_wounds_strategy().recommend(character, event, context)
 

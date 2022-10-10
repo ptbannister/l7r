@@ -87,7 +87,7 @@ class BaseAttackStrategy(Strategy):
         if other_character.is_fighting():
           # can I hit this character with this skill?
           proxy_target = TheoreticalCharacter(subject.knowledge(), other_character)
-          action = self.get_attack_action(subject, proxy_target, skill)
+          action = subject.action_factory().get_attack_action(subject, proxy_target, skill)
           (rolled, kept, modifier) = subject.get_skill_roll_params(other_character, skill)
           # TODO: use a threshold
           p_hit = context.p(action.tn() - modifier, rolled, kept)
@@ -100,18 +100,6 @@ class BaseAttackStrategy(Strategy):
       return targets[0][0]
     else:
       return None
-  
-  def get_attack_action(self, subject, target, skill, vp=0):
-    if skill == 'attack':
-      return actions.AttackAction(subject, target, skill, vp)
-    elif skill == 'counterattack':
-      return actions.AttackAction(subject, target, skill, vp)
-    elif skill == 'double attack':
-      return actions.DoubleAttackAction(subject, target, vp)
-    elif skill == 'feint':
-      return actions.FeintAction(subject, target, vp)
-    elif skill == 'lunge':
-      return actions.LungeAction(subject, target, vp)
 
   def get_expected_kept_damage_dice(self, subject, target, skill, context, ap, vp):
     '''
@@ -126,7 +114,7 @@ class BaseAttackStrategy(Strategy):
     Return the expected kept damage dice for an attack given the inputs.
     '''
     theoretical_target = TheoreticalCharacter(subject.knowledge(), target)
-    speculative_action = self.get_attack_action(subject, theoretical_target, skill, vp)
+    speculative_action = subject.action_factory().get_attack_action(subject, theoretical_target, skill, vp)
     # how many kept damage dice are expected?
     attack_rolled, attack_kept, attack_mod = subject.get_skill_roll_params(target, skill, vp)
     expected_attack_roll = context.mean_roll(attack_rolled, attack_kept) + attack_mod + (5 * ap)
@@ -196,7 +184,7 @@ class BaseAttackStrategy(Strategy):
     if (ap > 0) or (vp > 0):
       margin = expected_kept[(ap, vp)] - expected_kept[(0, 0)] 
       logger.debug('{} spending {} VP (expecting to spend {} AP) to try to get {} extra kept damage dice'.format(subject.name(), vp, ap, margin))
-    return self.get_attack_action(subject, target, skill, vp)
+    return subject.action_factory().get_attack_action(subject, target, skill, vp)
 
   def spend_action(self, character, skill, context):
     '''
@@ -254,7 +242,7 @@ class StingyPlainAttackStrategy(BaseAttackStrategy):
       if character.has_action(context):
         target = self.find_target(character, 'attack', context)
         if target is not None:
-          attack = self.get_attack(character, target, 'attack')
+          action = subject.action_factory().get_attack_action(subject, target, skill)
           logger.info('{} is attacking {}'.format(character.name(), target.name()))
           yield self.spend_action(character, 'attack', context)
           yield events.TakeAttackActionEvent(attack)
@@ -374,7 +362,7 @@ class AlwaysParryStrategy(BaseParryStrategy):
   '''
   def _recommend(self, character, event, context):
     logger.debug('{} always parries for friends'.format(character.name()))
-    parry = actions.ParryAction(character, event.action.subject(), event.action)
+    parry = character.action_factory().get_parry_action(character, event.action.subject(), event.action, 'parry')
     yield self.spend_action(character, 'parry', context)
     yield events.TakeParryActionEvent(parry)
 
@@ -416,7 +404,7 @@ class ReluctantParryStrategy(BaseParryStrategy):
           logger.debug('{} reluctantly parries because the attack would probably be fatal'.format(character.name()))
         elif probably_critical:
           logger.debug('{} reluctantly parries because the attack looks dangerous'.format(character.name()))
-        parry = actions.ParryAction(character, event.action.subject(), event.action)
+        parry = character.action_factory().get_parry_action(character, event.action.subject(), event.action, 'parry')
         yield self.spend_action(character, 'parry', context)
         yield events.TakeParryActionEvent(parry)
       else:
@@ -443,14 +431,9 @@ class SkillRolledStrategy(Strategy):
     '''
     raise NotImplementedError()
 
-  def get_bonus_skills(self, event):
+  def get_skill(self, event):
     '''
-    Returns the skills that could be used for floating bonuses for
-    this skill roll, in the order that they should be spent.
-
-    For example, for a Double Attack, the character should spend
-    floating bonuses for 'double attack' first, then 'attack_any',
-    then 'any'.
+    Returns the skill that can be used for floating bonuses for this skill roll.
     '''
     raise NotImplementedError()
 
@@ -470,19 +453,16 @@ class SkillRolledStrategy(Strategy):
         yield event
         return
       # use floating bonuses to try to make the TN
-      for skill in self.get_bonus_skills(event):
-        self.use_floating_bonuses(character, skill, margin)
-        margin = tn - event.action.skill_roll() - sum([t[1] for t in self._chosen_bonuses])
-        if margin <= 0:
-          break
+      self.use_floating_bonuses(character, self.get_skill(event), margin)
+      margin = tn - event.action.skill_roll() - sum([t[1] for t in self._chosen_bonuses])
       if margin > 0:
         # use adventure points to try to make the TN
         self.use_ap(character, event.action.skill(), margin)
         margin -= (5 * self._chosen_ap)
       if margin <= 0:
         # if we reached the TN, spend resources and update the event
-        for (skill, bonus) in self._chosen_bonuses:
-          yield events.SpendFloatingBonusEvent(character, skill, bonus)
+        for bonus in self._chosen_bonuses:
+          yield events.SpendFloatingBonusEvent(character, bonus)
         if self._chosen_ap > 0:
           yield events.SpendAdventurePointsEvent(character, skill, self._chosen_ap)
         new_roll = event.action.skill_roll() - sum([t[1] for t in self._chosen_bonuses]) - (5 * self._chosen_ap)
@@ -509,16 +489,16 @@ class SkillRolledStrategy(Strategy):
     available_bonuses.sort()
     while margin > 0 and len(available_bonuses) > 0:
       bonus = available_bonuses.pop(0)
-      self._chosen_bonuses.append((skill, bonus))
-      margin -= bonus
+      self._chosen_bonuses.append(bonus)
+      margin -= bonus.bonus()
 
 
 class AttackRolledStrategy(SkillRolledStrategy):
   def event_matches(self, character, event):
     return isinstance(event, events.AttackRolledEvent) and character == event.action.subject()
 
-  def get_bonus_skills(self, event):
-    return [event.action.skill(), 'attack_any', 'any']
+  def get_skill(self, event):
+    return event.action.skill()
 
   def get_tn(self, event):
     return event.action.tn()
@@ -528,8 +508,8 @@ class ParryRolledStrategy(SkillRolledStrategy):
   def event_matches(self, character, event):
     return isinstance(event, events.ParryRolledEvent) and character == event.action.subject()
 
-  def get_bonus_skills(self, event):
-    return [event.action.skill(), 'parry_any', 'any']
+  def get_skill(self, event):
+    return event.action.skill()
 
   def get_tn(self, event):
     return event.action.tn()
@@ -566,10 +546,6 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
           new_event = self.use_floating_bonuses(character, event, tolerable_sw, 'wound check')
           new_expected_sw = character.wound_check(new_event.roll)
           if new_expected_sw > tolerable_sw:
-            # use universal floating bonuses
-            new_event = self.use_floating_bonuses(character, new_event, tolerable_sw, 'any')
-          new_expected_sw = character.wound_check(new_event.roll)
-          if new_expected_sw > tolerable_sw:
             # use adventure points
             new_event = self.use_ap(character, new_event, tolerable_sw, 'wound check')
           new_expected_sw = character.wound_check(new_event.roll)
@@ -577,8 +553,8 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
           new_expected_sw = character.wound_check(new_event.roll)
           if new_expected_sw < expected_sw:
             # progress: spend resources and use the new roll
-            for (skill, bonus) in self._chosen_bonuses:
-              yield events.SpendFloatingBonusEvent(character, skill, bonus)
+            for bonus in self._chosen_bonuses:
+              yield events.SpendFloatingBonusEvent(character, bonus)
             yield events.SpendAdventurePointsEvent(character, skill, self._chosen_ap)
             yield new_event
           else:
@@ -611,8 +587,8 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
     new_roll = event.roll
     new_expected_sw = character.wound_check(new_roll)
     for bonus in available_bonuses:
-      self._chosen_bonuses.append((skill, bonus))
-      new_roll += bonus
+      self._chosen_bonuses.append(bonus)
+      new_roll += bonus.bonus()
       new_expected_sw = character.wound_check(new_roll)
       if new_expected_sw == tolerable_sw:
         break

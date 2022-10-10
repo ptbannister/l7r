@@ -21,19 +21,19 @@ class TestAttackAction(unittest.TestCase):
     # rig the attack roll to hit by 1
     # attack should get no extra damage dice
     attack = AttackAction(attacker, target)
-    attack._attack_roll = 31
+    attack.set_skill_roll(31)
     self.assertEqual(0, attack.calculate_extra_damage_dice())
     # rig the attack roll to hit by 5
     # expect one extra damage die
-    attack._attack_roll = 35
+    attack.set_skill_roll(35)
     self.assertEqual(1, attack.calculate_extra_damage_dice())
     # rig the attack roll to hit by 9
     # expect one extra damage die
-    attack._attack_roll = 39
+    attack.set_skill_roll(39)
     self.assertEqual(1, attack.calculate_extra_damage_dice())
     # rig the attack roll to hit by 21
     # expect four extra damage dice
-    attack._attack_roll = 51
+    attack.set_skill_roll(51)
     self.assertEqual(4, attack.calculate_extra_damage_dice())
     
   def test_calculate_extra_damage_dice_parried(self):
@@ -45,11 +45,11 @@ class TestAttackAction(unittest.TestCase):
     attack.set_parry_attempted()
     # rig the attack roll to hit by 1
     # attack should get no extra damage dice
-    attack._attack_roll = 31
+    attack.set_skill_roll(31)
     self.assertEqual(0, attack.calculate_extra_damage_dice())
     # rig the attack roll to hit by 21
     # expect four extra damage dice
-    attack._attack_roll = 51
+    attack.set_skill_roll(51)
     self.assertEqual(0, attack.calculate_extra_damage_dice())
   
   def test_hit(self):
@@ -62,7 +62,7 @@ class TestAttackAction(unittest.TestCase):
     # set attack roll to 31
     # attack should hit
     attack = AttackAction(attacker, target)
-    attack._attack_roll = 31
+    attack.set_skill_roll(31)
     self.assertTrue(attack.is_hit())
 
   def test_hit_parried(self):
@@ -74,7 +74,7 @@ class TestAttackAction(unittest.TestCase):
     # target's TN to hit should be 30
     # set attack roll to 31 so it would have been good enough to hit
     attack = AttackAction(attacker, target)
-    attack._attack_roll = 31
+    attack.set_skill_roll(31)
     self.assertTrue(attack.is_hit())
     # now set attack to be parried - it is no longer a hit
     attack.set_parried()
@@ -90,7 +90,7 @@ class TestAttackAction(unittest.TestCase):
     # set attack roll to 29
     # attack should miss
     attack = AttackAction(attacker, target)
-    attack._attack_roll = 29
+    attack.set_skill_roll(29)
     self.assertFalse(attack.is_hit())
 
 

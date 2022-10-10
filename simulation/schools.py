@@ -53,7 +53,7 @@ class School(ABC):
     pass
 
   @abstractmethod
-  def free_raises(self):
+  def free_raise_skills(self):
     pass
 
   @abstractmethod
@@ -73,7 +73,7 @@ class BaseSchool(School):
   def __init__(self):
     self._ap_base_skill = None
     self._ap_skills = []
-    self._free_raises = []
+    self._free_raises_skills = []
     self._skills = dict([(skill, 1) for skill in self.school_knacks()])
 
   def ap_base_skill(self):
@@ -88,23 +88,6 @@ class BaseSchool(School):
 
   def ap_skills(self):
     return self._ap_skills
-
-  def apply(self, character):
-    # TODO: rewrite this a bit
-    self.apply_special(character)
-    self.apply_extra_rolled(character)
-    self.apply_school_ring(character)
-    rank = min(self._skills.values())
-    for i in range(rank + 1):
-      self.apply_school_ability(character, rank)
-    if min(self._skills.values()) >= 2:
-      self.apply_free_raises(character)
-    if min(self._skills.values()) >= 3:
-      self.apply_third_dan(character)
-    if min(self._skills.values()) >= 4:
-      self.apply_fourth_dan(character)
-    if min(Self._skills.values()) == 5:
-      self.apply_fifth_dan(character)
 
   def apply_ap(self, character):
     if self.ap_base_skill() is not None:
@@ -126,8 +109,8 @@ class BaseSchool(School):
 
     Apply this school's Free Raises (the standard 2nd Dan ability).
     '''
-    for free_raise in self.free_raises():
-      character.add_modifier(free_raise)
+    for skill in self.free_raise_skills():
+      character.add_modifier(FreeRaise(character, skill))
 
   def apply_school_ability(self, character, rank):
     '''
@@ -200,11 +183,11 @@ class BaseSchool(School):
     '''
     raise NotImplementedError()
 
-  def free_raises(self):
+  def free_raise_skills(self):
     '''
-    free_raises() -> list of Modifiers
+    free_raise_skills() -> list of str
 
-    Implementations should return the Free Raises conferred by this school.
+    Implementations should return the list of skills that receive Free Raises from this school at 2nd Dan.
     '''
     raise NotImplementedError()
 

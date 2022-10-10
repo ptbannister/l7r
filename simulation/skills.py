@@ -10,7 +10,9 @@
 # purchasable skills, such as "wound check" and "damage".
 #
 # In this module, skills refers to skills that a character may buy
-# and use with the roll_skill function.
+# and use with the roll_skill function. "Non-skills" are the other
+# things often passed in the skill parameter that may not be used
+# for skill rolls.
 #
 
 ADVANCED_SKILLS = [
@@ -29,6 +31,7 @@ ADVANCED_SKILLS = [
   'underworld'
 ]
 
+
 ATTACK_SKILLS = [
   'attack',
   'counterattack',
@@ -37,6 +40,7 @@ ATTACK_SKILLS = [
   'iaijutsu',
   'lunge'
 ]
+
 
 BASIC_SKILLS = [
   'bragging',
@@ -52,6 +56,26 @@ BASIC_SKILLS = [
   'strategy',
   'tact'
 ]
+
+
+# these are not skills, but they are sometimes passed
+# as a "skill" parameter
+NON_SKILLS = [
+  'damage',
+  'tn to hit',
+  'wound check'
+]
+
+# all true skills
+SKILLS = []
+SKILLS.extend(BASIC_SKILLS)
+SKILLS.extend(ADVANCED_SKILLS)
+
+# skills plus "non skills"
+EXTENDED_SKILLS = []
+EXTENDED_SKILLS.extend(SKILLS)
+EXTENDED_SKILLS.extend(NON_SKILLS)
+
 
 ADVANCED_SKILL_COST = {
   1: 4,

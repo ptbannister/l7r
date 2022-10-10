@@ -12,14 +12,31 @@ class Group(MutableSet):
   Provides features to help characters tell friend from foe and to create group knowledge.
   '''
   def __init__(self, name, characters=[]):
-   self._characters = {}
+   # validate and set name
+   if not isinstance(name, str):
+     raise ValueError('Group name parameter must be a str')
    self._name = name
-   for character in characters:
+   # validate and set characters
+   self._characters = {}
+   characters_tmp = []
+   if isinstance(characters, Character):
+     characters_tmp.append(characters)
+   elif isinstance(characters, list):
+     for character in characters:
+       if not isinstance(character, Character):
+         raise ValueError('Group characters parameter must be a Character or a list of Characters')
+       characters_tmp.append(character)
+   else:
+     raise ValueError('Group characters parameter must be a Character or a list of Characters')
+   for character in characters_tmp:
      character.set_group(self)
      self._characters[character.name()] = character
+   # initialize knowledge
    self._knowledge = Knowledge()
 
   def add(self, character):
+    if not isinstance(character, Character):
+      raise ValueError('Can only add Character to Group')
     self._characters[character.name()] = character
 
   def clear(self):
@@ -54,7 +71,7 @@ class Group(MutableSet):
     if isinstance(character, Character):
       return character.name() in self._characters.keys()
     elif isinstance(character, str):
-      return character in self._characters.key()
+      return character in self._characters.keys()
     else:
       raise NotImplementedError('Cannot check if Group contains object of type {}', type(character))
 

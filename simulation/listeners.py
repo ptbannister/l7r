@@ -9,7 +9,7 @@
 
 from abc import ABC, abstractmethod
 
-from simulation import events
+from simulation import events, modifiers, modifier_listeners
 
 
 class Listener(ABC):
@@ -59,11 +59,11 @@ class AttackDeclaredListener(Listener):
       if character != event.action.subject():
         # TODO: implement something for predeclaring parries
         if event.action.skill() == 'lunge':
-          if event.action.subject not in character.group():
+          if event.action.subject() not in character.group():
             # gain expiring modifier for lunge
-            modifier = modifiers.Modifier(character, event.subject(), 'attack_any', 5)
-            attack_listener = modifiers.ExpireAfterNextAttackListener(modifier)
-            end_of_round_listener = modifiers.ExpireAfterEndOfRoundListener(modifier)
+            modifier = modifiers.AnyAttackModifier(character, event.subject(), 5)
+            attack_listener = modifier_listeners.ExpireAfterNextAttackByCharacterListener(modifier, event.action.subject())
+            end_of_round_listener = modifier_listeners.ExpireAtEndOfRoundListener(modifier)
             modifier.register_listener('attack_failed', attack_listener)
             modifier.register_listener('attack_succeeded', attack_listener)
             modifier.register_listener('end_of_round', end_of_round_listener)
@@ -159,7 +159,7 @@ class SpendFloatingBonusListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.SpendFloatingBonusEvent):
       if event.subject == character:
-        character.spend_floating_bonus(event.skill, event.bonus)
+        character.spend_floating_bonus(event.bonus)
         yield from ()
 
 

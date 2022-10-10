@@ -21,12 +21,12 @@ logger.addHandler(stream_handler)
 logger.setLevel(logging.DEBUG)
 
 
-class TestBayushiAttackStrategy(unittest.TestCase):
+class TestBayushiActionFactory(unittest.TestCase):
   def test_get_attack(self):
     bayushi = Character('Bayushi')
     target = Character('target')
-    strategy = bayushi_school.BayushiAttackStrategy()
-    action = strategy.get_attack_action(bayushi, target, 'attack')
+    factory = bayushi_school.BayushiActionFactory()
+    action = factory.get_attack_action(bayushi, target, 'attack')
     self.assertTrue(isinstance(action, actions.AttackAction))
     self.assertEqual(bayushi, action.subject())
     self.assertEqual(target, action.target())
@@ -35,8 +35,8 @@ class TestBayushiAttackStrategy(unittest.TestCase):
   def test_get_feint(self):
     bayushi = Character('Bayushi')
     target = Character('target')
-    strategy = bayushi_school.BayushiAttackStrategy()
-    action = strategy.get_attack_action(bayushi, target, 'feint')
+    factory = bayushi_school.BayushiActionFactory()
+    action = factory.get_attack_action(bayushi, target, 'feint')
     self.assertTrue(isinstance(action, bayushi_school.BayushiFeintAction))
     self.assertEqual(bayushi, action.subject())
     self.assertEqual(target, action.target())

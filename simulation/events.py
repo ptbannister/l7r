@@ -170,22 +170,6 @@ class TakeParryActionEvent(TakeActionEvent):
     return ParrySucceededEvent(self.action)
 
 
-class ShibaTakeParryEvent(TakeParryActionEvent):
-  def play(self, context):
-    yield self._declare_parry()
-    yield self._roll_parry(context)
-    if self.action.is_success():
-      yield self._succeeded()
-    else:
-      yield self._failed()
-    yield self._roll_damage()
-
-  def _roll_damage(self):
-    rolled = self._action.subject().skill('attack') * 2
-    damage_roll = self._action.subject().roll_damage(rolled, 1)
-    return LightWoundsDamageEvent(self._action.subject(), self._action.target(), damage_roll)
-
-
 class AttackDeclaredEvent(ActionEvent):
   def __init__(self, action):
     super().__init__('attack_declared', action)
@@ -380,9 +364,8 @@ class SpendFloatingBonusEvent(Event):
   Since floating bonuses are discrete and not measured in an "amount",
   they aren't a good fit for a SpendResourcesEvent.
   '''
-  def __init__(self, subject, skill, bonus):
+  def __init__(self, subject,bonus):
     super().__init__('spend_floating_bonus')
     self.subject = subject
-    self.skill = skill
     self.bonus = bonus
 

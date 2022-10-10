@@ -29,7 +29,7 @@ logger.setLevel(logging.DEBUG)
 class TestNewRoundListener(unittest.TestCase):
   def test_new_round(self):
     character = Character()
-    context = EngineContext([Group([character]), Group([Character()])])
+    context = EngineContext([Group('1', character), Group('2', Character())])
     # rig an initiative roll
     roll_provider = TestRollProvider()
     roll_provider.put_initiative_roll([1, 2])
@@ -45,7 +45,7 @@ class TestLightWoundsDamageListener(unittest.TestCase):
   def setUp(self):
     self.attacker = Character('attacker')
     self.target = Character('target')
-    self.context = EngineContext([Group([self.attacker]), Group([self.target])])
+    self.context = EngineContext([Group('attacker', self.attacker), Group('target', self.target)])
     self.context.initialize()
 
   def test_light_wounds(self):
@@ -77,7 +77,7 @@ class TestSeriousWoundsDamageListener(unittest.TestCase):
   def setUp(self):
     self.attacker = Character('attacker')
     self.target = Character('target')
-    self.context = EngineContext([Group([self.attacker]), Group([self.target])])
+    self.context = EngineContext([Group('attacker', self.attacker), Group('target', self.target)])
 
   def test_die(self):
     damage = 5
@@ -112,7 +112,7 @@ class TestTakeSeriousWoundListener(unittest.TestCase):
   def test_take_sw(self):
     attacker = Character('attacker')
     target = Character('target')
-    context = EngineContext([Group([attacker]), Group([target])])
+    context = EngineContext([Group('attacker', attacker), Group('target', target)])
     target.take_lw(9001)
     event = TakeSeriousWoundEvent(target, attacker, 1)
     listener = TakeSeriousWoundListener()
@@ -132,7 +132,7 @@ class TestWoundCheckDeclaredListener(unittest.TestCase):
     # set up character with rigged wound check
     attacker = Character('attacker')
     target = Character('target')
-    context = EngineContext([Group([attacker]), Group([target])])
+    context = EngineContext([Group('attacker', attacker), Group('target', target)])
     roll_provider = TestRollProvider()
     roll_provider.put_wound_check_roll(50)
     target.set_roll_provider(roll_provider)
@@ -150,9 +150,11 @@ class TestWoundCheckDeclaredListener(unittest.TestCase):
 
 class TestWoundCheckRolledListener(unittest.TestCase):
   def setUp(self):
-    self.attacker = Character('attacker')
-    self.target = Character('target')
-    self.context = EngineContext([Group([self.attacker]), Group([self.target])])
+    attacker = Character('attacker')
+    self.attacker = attacker
+    target = Character('target')
+    self.target = target
+    self.context = EngineContext([Group('attacker', attacker), Group('target', target)])
 
   def test_fail(self):
     damage = 20
@@ -184,7 +186,7 @@ class TestWoundCheckFailedListener(unittest.TestCase):
     attacker = Character('attacker')
     target = Character('target')
     target.take_lw(29)
-    context = EngineContext([Group([attacker]), Group([target])])
+    context = EngineContext([Group('attacker', attacker), Group('target', target)])
     damage = 20
     roll = 10
     event = WoundCheckFailedEvent(target, attacker, damage, roll)

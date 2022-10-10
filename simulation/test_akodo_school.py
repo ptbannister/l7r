@@ -23,62 +23,68 @@ logger.setLevel(logging.DEBUG)
 
 
 class TestAkodoAttackFailedListener(unittest.TestCase):
+  def setUp(self):
+    self.akodo = Character('Akodo')
+    self.bayushi = Character('Bayushi')
+    groups = [Group('Lion', self.akodo), Group('Scorpion', self.bayushi)]
+    self.context = EngineContext(groups)
+
   def test_feint_failed(self):
-    akodo = Character('Akodo')
-    bayushi = Character('Bayushi')
-    context = EngineContext([Group([akodo]), Group([bayushi])])
-    action = actions.FeintAction(akodo, bayushi)
+    action = actions.FeintAction(self.akodo, self.bayushi)
     event = events.AttackFailedEvent(action)
     listener = akodo_school.AkodoAttackFailedListener()
-    responses = list(listener.handle(akodo, event, context))
+    responses = list(listener.handle(self.akodo, event, self.context))
     self.assertEqual(1, len(responses))
     response = responses[0]
     self.assertTrue(isinstance(response, events.GainTemporaryVoidPointsEvent))
-    self.assertEqual(akodo, response.subject)
+    self.assertEqual(self.akodo, response.subject)
     self.assertEqual(1, response.amount)
 
 class TestAkodoAttackSucceededListener(unittest.TestCase):
+  def setUp(self):
+    self.akodo = Character('Akodo')
+    self.bayushi = Character('Bayushi')
+    groups = [Group('Lion', self.akodo), Group('Scorpion', self.bayushi)]
+    self.context = EngineContext(groups)
+
   def test_feint_succeeded(self):
-    akodo = Character('Akodo')
-    bayushi = Character('Bayushi')
-    context = EngineContext([Group([akodo]), Group([bayushi])])
-    action = actions.FeintAction(akodo, bayushi)
+    action = actions.FeintAction(self.akodo, self.bayushi)
     event = events.AttackSucceededEvent(action)
     listener = akodo_school.AkodoAttackSucceededListener()
-    responses = list(listener.handle(akodo, event, context))
+    responses = list(listener.handle(self.akodo, event, self.context))
     self.assertEqual(1, len(responses))
     response = responses[0]
     self.assertTrue(isinstance(response, events.GainTemporaryVoidPointsEvent))
-    self.assertEqual(akodo, response.subject)
+    self.assertEqual(self.akodo, response.subject)
     self.assertEqual(4, response.amount)
 
 class TestAkodoFifthDanStrategy(unittest.TestCase):
+  def setUp(self):
+    self.akodo = Character('Akodo')
+    self.bayushi = Character('Bayushi')
+    groups = [Group('Lion', self.akodo), Group('Scorpion', self.bayushi)]
+    self.context = EngineContext(groups)
+
   def test_inflict_lw(self):
-    akodo = Character('Akodo')
-    bayushi = Character('Bayushi')
-    context = EngineContext([Group([akodo]), Group([bayushi])])
-    event = events.LightWoundsDamageEvent(bayushi, akodo, 7)
+    event = events.LightWoundsDamageEvent(self.bayushi, self.akodo, 7)
     strategy = akodo_school.AkodoFifthDanStrategy()
-    responses = list(strategy.recommend(akodo, event, context))
+    responses = list(strategy.recommend(self.akodo, event, self.context))
     self.assertEqual(2, len(responses))
     first_event = responses[0]
     self.assertTrue(isinstance(first_event, events.SpendVoidPointsEvent))
-    self.assertEqual(akodo, first_event.subject)
+    self.assertEqual(self.akodo, first_event.subject)
     self.assertEqual(2, first_event.amount)
     second_event = responses[1]
     self.assertTrue(isinstance(second_event, events.LightWoundsDamageEvent))
-    self.assertEqual(akodo, second_event.subject)
-    self.assertEqual(bayushi, second_event.target)
+    self.assertEqual(self.akodo, second_event.subject)
+    self.assertEqual(self.bayushi, second_event.target)
     self.assertEqual(20, second_event.damage)
 
   def test_no_vp(self):
-    akodo = Character('Akodo')
-    bayushi = Character('Bayushi')
-    context = EngineContext([Group([akodo]), Group([bayushi])])
-    akodo.spend_vp(2)
-    bayushi = Character('Bayushi')
-    event = events.LightWoundsDamageEvent(bayushi, akodo, 7)
+    self.akodo.spend_vp(2)
+    self.bayushi = Character('Bayushi')
+    event = events.LightWoundsDamageEvent(self.bayushi, self.akodo, 7)
     strategy = akodo_school.AkodoFifthDanStrategy()
-    responses = list(strategy.recommend(akodo, event, context))
+    responses = list(strategy.recommend(self.akodo, event, self.context))
     self.assertEqual([], responses)
 
