@@ -102,7 +102,7 @@ disadvantages:
 - transparent
 - vain
 strategies:
-  action: AlwaysAttackStrategy
+  action: AlwaysAttackActionStrategy
   parry: NeverParryStrategy
 ```
 
@@ -237,7 +237,7 @@ strategies:
 ```
 
 Available action strategies are:
-* `AlwaysAttackStrategy`: always attack as soon as an action is available
+* `AlwaysAttackActionStrategy`: always attack as soon as an action is available
 * `HoldOneActionStrategy`: do not attack unless you have two available actions,
 until Phase 10
 

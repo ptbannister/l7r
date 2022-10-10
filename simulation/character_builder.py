@@ -164,7 +164,7 @@ class _BaseCharacterBuilder(object):
   def take_advantage(self, advantage):
     cost = Advantage(advantage).cost()
     self.spend_xp(cost)
-    self.character.take_advantage(advantage)
+    self.character().take_advantage(advantage)
     return self
 
   def take_disadvantage(self, disadvantage):
