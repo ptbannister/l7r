@@ -53,6 +53,14 @@ class YourMoveListener(Listener):
         yield from character.action_strategy().recommend(character, event, context)
 
 
+class AddModifierListener(Listener):
+  def handle(self, character, event, context):
+    if isinstance(event, events.AddModifierEvent):
+      if character == event.modifier.subject():
+        character.add_modifier(event.modifier)
+        yield from ()
+
+
 class AttackDeclaredListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.AttackDeclaredEvent):
@@ -67,8 +75,7 @@ class AttackDeclaredListener(Listener):
             modifier.register_listener('attack_failed', attack_listener)
             modifier.register_listener('attack_succeeded', attack_listener)
             modifier.register_listener('end_of_round', end_of_round_listener)
-            character.add_modifier(modifier)
-            yield from ()
+            yield events.AddModifierEvent(modifier)
           
 
 class AttackRolledListener(Listener):

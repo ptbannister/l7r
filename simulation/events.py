@@ -369,3 +369,19 @@ class SpendFloatingBonusEvent(Event):
     self.subject = subject
     self.bonus = bonus
 
+
+class ModifierEvent(Event):
+  '''
+  Event for when a character is affected by a Modifier.
+  '''
+  def __init__(self, name, modifier):
+    super().__init__(name)
+    self.modifier = modifier
+
+class AddModifierEvent(ModifierEvent):
+  '''
+  Event for when a character gains a modifier.
+  '''
+  def __init__(self, modifier):
+    super().__init__('add_modifier', modifier)
+

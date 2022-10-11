@@ -24,8 +24,13 @@ where "path-to-characters" is the name of a directory where you've saved
 character and group files, and "number-of-trials" is the number of trials
 you want to run for a simulation.
 
+If you include the argument `--log-level info` then you will get an event
+log in a file called "simulation.log" in your working directory. You may
+do `--log-level debug` instead for more verbose output, but the extra
+information is unlikely to be interesting unless you're investigating bugs.
 
-# Character and Group Files
+
+# Input: Character and Group Files
 
 You can create characters and assign them to groups by writing YAML format
 files.
@@ -142,6 +147,7 @@ Characters with a samurai school receive many benefits:
 The following schools are available:
 * Akodo Bushi School
 * Bayushi Bushi School
+* Shiba Bushi School
 
 
 #### Characters with Peasant Professions
@@ -182,11 +188,14 @@ Skills are required.
 
 The skills supported in the simulator are:
 * attack
-* counterattack
 * double attack
-* feint
-* iaijutsu
+* feint (although strategies to use it are lacking)
 * parry
+
+We plan to add support in the near future for:
+* counterattack
+* iaijutsu
+* lunge
 
 You may also put other valid L7R skills, but they are not
 used in the simulator at this time.
@@ -199,6 +208,7 @@ All of the advantages from the core rules are supported,
 but the only advantages that have any mechanical effect at
 this time are:
 * Great Destiny
+* Strength of the Earth
 
 
 ### Character Disadvantages
@@ -219,9 +229,9 @@ Strategies are the most important part of the simulator, and also the
 most difficult to write.
 
 You should be careful about overriding the strategies of a character
-with a school or profession! Most of the school and profession
-abilities only work because of a special strategy. Overriding their
-strategy may result in nerfing the character's school or profession
+with a school or profession! Certain schools have a custom strategies
+that take into account their special abilities. Overriding their
+strategies may result in nerfing the character's school or profession
 abilities.
 
 
@@ -320,4 +330,19 @@ more than 1 Serious Wound, spend as many VP as possible until the expected numbe
 Serious Wounds is reduced to 1.
 
 The default wound check strategy is `WoundCheckStrategy`.
+
+
+# Output
+
+The simulator outputs a CSV file in the output directory (set by the `-o` flag) that
+gives statistics captured from each trial run. The data in this file is used to
+generate a summary report that is printed to the command line after a run.
+
+The report gives the test group's win rate and some stats about the test and control
+group. It gives the same stats again "given test group victory" and "given control
+group victory", which means that the second and third reports are statistics for only
+the trials where the test group won or the control group won. This is intended to
+help determine what kinds of variables reinforce or undercut a certain strategy. For
+example, certain characters, schools, or strategies may be seriously undercut by
+a certain kind of unlucky roll.
 

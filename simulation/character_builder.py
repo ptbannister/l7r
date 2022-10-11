@@ -37,6 +37,7 @@ class CharacterBuilder(object):
 
   def with_name(self, name):
     self._name = name
+    return self
 
   def with_profession(self, profession):
     '''

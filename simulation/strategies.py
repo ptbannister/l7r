@@ -8,6 +8,7 @@ from simulation.knowledge import TheoreticalCharacter
 from simulation.log import logger
 from simulation.roll import normalize_roll_params
 
+
 class Strategy(ABC):
   '''
   Class that can choose between possible decisions to respond to an Event.
@@ -210,7 +211,7 @@ class BaseAttackStrategy(Strategy):
         attack = self.optimize_attack(character, target, skill, context)
         if attack is not None:
           logger.info('{} is attacking {} with {}'.format(character.name(), target.name(), skill))
-          return events.TakeAttackActionEvent(attack)
+          return character.take_action_event_factory().get_take_attack_action_event(attack)
 
   def recommend(self, character, event, context):
     raise NotImplementedError()
@@ -225,7 +226,7 @@ class PlainAttackStrategy(BaseAttackStrategy):
           attack = self.optimize_attack(character, target, 'attack', context)
           logger.info('{} is attacking {}'.format(character.name(), target.name()))
           yield self.spend_action(character, 'attack', context)
-          yield events.TakeAttackActionEvent(attack)
+          yield character.take_action_event_factory().get_take_attack_action_event(attack)
         else:
           yield events.HoldActionEvent(character)
       else:
@@ -245,7 +246,7 @@ class StingyPlainAttackStrategy(BaseAttackStrategy):
           action = subject.action_factory().get_attack_action(subject, target, skill)
           logger.info('{} is attacking {}'.format(character.name(), target.name()))
           yield self.spend_action(character, 'attack', context)
-          yield events.TakeAttackActionEvent(attack)
+          yield character.take_action_event_factory().get_take_attack_action_event(attack)
         else:
           yield events.HoldActionEvent(character)
       else:
@@ -364,7 +365,7 @@ class AlwaysParryStrategy(BaseParryStrategy):
     logger.debug('{} always parries for friends'.format(character.name()))
     parry = character.action_factory().get_parry_action(character, event.action.subject(), event.action, 'parry')
     yield self.spend_action(character, 'parry', context)
-    yield events.TakeParryActionEvent(parry)
+    yield character.take_action_event_factory().get_take_parry_event(parry)
 
 
 class NeverParryStrategy(Strategy):
@@ -406,7 +407,7 @@ class ReluctantParryStrategy(BaseParryStrategy):
           logger.debug('{} reluctantly parries because the attack looks dangerous'.format(character.name()))
         parry = character.action_factory().get_parry_action(character, event.action.subject(), event.action, 'parry')
         yield self.spend_action(character, 'parry', context)
-        yield events.TakeParryActionEvent(parry)
+        yield character.take_action_event_factory().get_take_parry_action_event(parry)
       else:
         logger.debug('{} will not parry a small attack'.format(character.name()))
 

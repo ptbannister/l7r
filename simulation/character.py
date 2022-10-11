@@ -19,6 +19,7 @@ from simulation.roll_params import DEFAULT_ROLL_PARAMETER_PROVIDER, RollParamete
 from simulation.roll_provider import DEFAULT_ROLL_PROVIDER, RollProvider
 from simulation.schools import School
 from simulation.strategies import Strategy
+from simulation.take_action_event_factory import DEFAULT_TAKE_ACTION_EVENT_FACTORY, TakeActionEventFactory
 from simulation.weapons import KATANA
 from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
 
@@ -54,6 +55,7 @@ class Character(object):
     # default listeners
     action_taken_listener = listeners.TakeActionListener()
     self._listeners = {
+      'add_modifier': listeners.AddModifierListener(),
       'attack_declared': listeners.AttackDeclaredListener(),
       'attack_rolled': listeners.AttackRolledListener(),
       'gain_tvp': listeners.GainTemporaryVoidPointsListener(),
@@ -103,6 +105,7 @@ class Character(object):
       'wound_check_rolled': strategies.WoundCheckRolledStrategy()
     }
     self._sw = 0
+    self._take_action_event_factory = DEFAULT_TAKE_ACTION_EVENT_FACTORY
     self._tvp = 0
     self._vp_spent = 0
     self._weapon = KATANA
@@ -398,7 +401,7 @@ class Character(object):
     Return the number of Serious Wounds this character can take
     before unconsciousness.
     '''
-    if 'strength of the earth' in self._advantages:
+    if 'great destiny' in self._advantages:
       bonus = 1
     elif 'permanent wound' in self._disadvantages:
       bonus = -1
@@ -583,7 +586,7 @@ class Character(object):
 
     Set extra kept dice for the given skill.
     '''
-    self._extra_kept[skill] = extra_rolled
+    self._extra_kept[skill] = extra_kept
 
   def set_group(self, group):
     self._group = group
@@ -674,6 +677,11 @@ class Character(object):
   def set_strategy(self, name, strategy):
     self._strategies[name] = strategy
 
+  def set_take_action_event_factory(self, factory):
+    if not isinstance(factory, TakeActionEventFactory):
+      raise ValueError('Character take action event factory must be a TakeActionEventFactory')
+    self._take_action_event_factory = factory
+
   def set_wound_check_provider(self, provider):
     if not isinstance(provider, WoundCheckProvider):
       raise ValueError('Provider is not a WoundCheckProvider')
@@ -763,8 +771,13 @@ class Character(object):
     '''
     return self.max_sw() - self.sw() 
 
+  def take_action_event_factory(self):
+    return self._take_action_event_factory
+
   def take_advantage(self, advantage):
     self._advantages.append(advantage)
+    if advantage == 'strength of the earth':
+      self.add_modifier(FreeRaise(self, 'wound check'))
 
   def take_disadvantage(self, disadvantage):
     self._disadvantages.append(disadvantage)

@@ -87,7 +87,7 @@ class DefaultRollParameterProvider(RollParameterProvider):
   def get_damage_roll_params(self, character, target, skill, attack_extra_rolled, vp=0):
     # calculate extra rolled dice
     ring = character.ring(character.get_skill_ring('damage'))
-    my_extra_rolled = character.extra_rolled('damage') + character.extra_rolled('damage_' + skill)
+    my_extra_rolled = character.extra_rolled('damage')
     rolled = ring + my_extra_rolled + attack_extra_rolled + character.weapon().rolled()
     # calculate extra kept dice
     my_extra_kept = character.extra_kept('damage') + character.extra_kept('damage_' + skill)
