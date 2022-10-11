@@ -10,6 +10,7 @@ import math
 import uuid
 
 from simulation import actions, listeners, strategies
+from simulation.modifiers import FreeRaise
 from simulation.action_factory import ActionFactory, DEFAULT_ACTION_FACTORY
 from simulation.knowledge import Knowledge
 from simulation.log import logger
