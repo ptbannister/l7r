@@ -12,6 +12,7 @@ from simulation.actions import AttackAction
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.events import AttackDeclaredEvent, NewPhaseEvent
+from simulation.groups import Group
 from simulation.roll_provider import TestRollProvider
 
 
@@ -22,6 +23,75 @@ class TestCharacter(unittest.TestCase):
     shiba.set_skill('parry', 5)
     self.assertEqual(10, akagi.tn_to_hit())
     self.assertEqual(30, shiba.tn_to_hit())
+
+  def test_has_action(self):
+    kakita = Character('Kakita')
+    kakita._actions = []
+    akodo = Character('Akodo')
+    akodo._actions = [2, 3, 4]
+    shinjo = Character('Shinjo')
+    shinjo._actions = [1, 1, 1, 1, 1]
+    groups = [Group('Hurry Up and Wait', [kakita, shinjo]), Group('Lion', akodo)]
+    context = EngineContext(groups, round=1, phase=1)
+    # akodo has actions but they are not current actions
+    self.assertFalse(akodo.has_action(context))
+    # kakita has no actions at all 
+    self.assertFalse(kakita.has_action(context))
+    # shinjo has lots of actions
+    self.assertTrue(shinjo.has_action(context))
+
+  def test_has_interrupt_action(self):
+    # set up characters
+    hida = Character('Hida')
+    hida._actions = [4]
+    hida.set_interrupt_cost('counterattack', 1)
+    kakita = Character('Kakita')
+    kakita._actions = [4]
+    mirumoto = Character('Mirumoto')
+    mirumoto._actions = [2, 3, 4, 5, 6, 7]
+    shiba = Character('Shiba')
+    shiba.set_interrupt_cost('parry', 1)
+    shiba._actions = [4]
+    # set up context
+    groups = [Group('Crab Stabs', [hida, kakita]), Group('Brass Men of the Shaolin Temple', [mirumoto, shiba])]
+    context = EngineContext(groups, round=1, phase=1)
+    # Hida has an interrupt action to counterattack but not to parry
+    self.assertTrue(hida.has_interrupt_action('counterattack', context))
+    self.assertFalse(hida.has_interrupt_action('parry', context))
+    # Kakita does not have an interrupt action
+    self.assertFalse(kakita.has_interrupt_action('counterattack', context))
+    self.assertFalse(kakita.has_interrupt_action('parry', context))
+    # Mirumoto has interrupt actions because he has many actions
+    self.assertTrue(mirumoto.has_interrupt_action('counterattack', context))
+    self.assertTrue(mirumoto.has_interrupt_action('parry', context))
+    # Shiba has an interrupt action to parry but not to counterattack
+    self.assertFalse(shiba.has_interrupt_action('counterattack', context))
+    self.assertTrue(shiba.has_interrupt_action('parry', context))
+
+  def test_interrupt_cost(self):
+    # set up characters
+    hida = Character('Hida')
+    hida._actions = [4]
+    hida.set_interrupt_cost('counterattack', 1)
+    kakita = Character('Kakita')
+    kakita._actions = [4]
+    mirumoto = Character('Mirumoto')
+    mirumoto._actions = [4]
+    shiba = Character('Shiba')
+    shiba.set_interrupt_cost('parry', 1)
+    shiba._actions = [4]
+    # set up context
+    groups = [Group('Crab Stabs', [hida, kakita]), Group('Brass Men of the Shaolin Temple', [mirumoto, shiba])]
+    context = EngineContext(groups, round=1, phase=1)
+    # Hida's interrupt cost is 1 to counterattack, 2 to parry
+    self.assertEqual(1, hida.interrupt_cost('counterattack', context))
+    self.assertEqual(2, hida.interrupt_cost('parry', context))
+    # Kakita's interrupt cost is 2 actions for counterattack and parry.
+    self.assertEqual(2, kakita.interrupt_cost('counterattack', context))
+    self.assertEqual(2, kakita.interrupt_cost('parry', context))
+    # Shiba's interrupt cost is 2 actions for counterattack, 1 for parry.
+    self.assertEqual(2, shiba.interrupt_cost('counterattack', context))
+    self.assertEqual(1, shiba.interrupt_cost('parry', context))
 
   def test_roll_skill(self):
     roll_provider = TestRollProvider()

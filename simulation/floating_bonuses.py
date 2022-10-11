@@ -35,6 +35,20 @@ class FloatingBonus(object):
   def is_applicable(self, skill):
     return skill in self._skills
 
+  def __eq__(self, other):
+    if self is other:
+      return True
+    if not isinstance(other, FloatingBonus):
+      return False
+    return self.bonus() == other.bonus() and self._skills == other._skills
+
+  def __lt__(self, other):
+    if not isinstance(other, FloatingBonus):
+      raise NotImplementedError('Cannot compare FloatingBonus to another type of object')
+    if self is other:
+      return False
+    return self.bonus() < other.bonus()
+
 
 class AnyAttackFloatingBonus(FloatingBonus):
   '''

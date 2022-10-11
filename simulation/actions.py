@@ -107,15 +107,23 @@ class AttackAction(Action):
     return self.target().tn_to_hit()
 
 
+class CounterattackAction(AttackAction):
+  def __init__(self, subject, target, attack, vp=0):
+    super().__init__(subject, target, 'counterattack', vp)
+    self._original_attack = attack
+
+  def attack(self):
+    return self._original_attack
+
+  def tn(self):
+    penalty = 0 if self.attack().target() == self.subject() else 5 * self.attack().subject().skill('attack')
+    return self.target().tn_to_hit() + penalty 
+    
+
+
 class DoubleAttackAction(AttackAction):
   def __init__(self, subject, target, vp=0):
     super().__init__(subject, target, 'double attack', vp)
-    self._damage_roll = None
-    self._parries_declared = []
-    self._parries_declined = []
-    self._parries_predeclared = []
-    self._parried = False
-    self._parry_attempted = False
 
   def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
     if skill_roll is None:
@@ -167,6 +175,9 @@ class ParryAction(Action):
     super().__init__(subject, target, 'parry', vp)
     self._attack = attack
     self._predeclared = predeclared
+
+  def attack(self):
+    return self._attack
 
   def is_success(self):
     return self.skill_roll() >= self.tn()

@@ -48,7 +48,7 @@ class Character(object):
     self._extra_rolled = {}
     self._floating_bonuses = []
     self._group = None
-    self._interrupt_skills = []
+    self._interrupt_skills = ['counterattack', 'parry']
     self._interrupt_costs = {}
     self._knowledge = Knowledge()
     self._modifiers = []
@@ -143,6 +143,12 @@ class Character(object):
       self._discounts[item] += discount
     else:
       self._discounts[item] = discount
+
+  def add_interrupt_skill(self, skill):
+    if not isinstance(skill, str):
+      raise ValueError('add_interrupt_skill skill argument must be str')
+    if skill not in self._interrupt_skills:
+      self._interrupt_skills.append(skill)
 
   def add_modifier(self, modifier):
     '''
@@ -239,7 +245,7 @@ class Character(object):
     Gain a "floating bonus" that may be applied to future skill rolls.
     The floating bonus is an object that knows the skills on whcih it may be used.
     '''
-    self._floating_bonuses.append(bonus)
+    self._floating_bonuses.append(floating_bonus)
 
   def gain_tvp(self, n=1):
     '''
@@ -248,7 +254,7 @@ class Character(object):
 
     Gain the specified number of Temporary Void Points.
     '''
-    self.tvp += n
+    self._tvp += n
 
   def get_damage_roll_params(self, target, skill, attack_extra_rolled, vp=0):
     return self.roll_parameter_provider().get_damage_roll_params(self, target, skill, attack_extra_rolled, vp)
@@ -296,9 +302,20 @@ class Character(object):
     Return whether this character could do an interrupt action in the current phase.
     '''
     if skill in self._interrupt_skills:
-      if self._interrupt_costs.get(skill, 2) <= len(self.actions()):
+      if self.interrupt_cost(skill, context) <= len(self.actions()):
         return True
     return False
+
+  def interrupt_cost(self, skill, context):
+    '''
+    interrupt_cost(skill, context) -> int
+      skill (str): skill to be used
+      context (EngineContext): context to provide timing
+
+    Return the number of actions that must be spent to interrupt
+    using the given skill.
+    '''
+    return self._interrupt_costs.get(skill, 2)
 
   def initiative_priority(self, max_actions):
     '''
@@ -452,9 +469,13 @@ class Character(object):
   def reset(self):
     self._actions = []
     self._ap_spent = 0
+    self._floating_bonuses.clear()
     self._knowledge.clear()
     self._lw = 0
     self._lw_history.clear()
+    for modifier in self._modifiers:
+      if len(modifier._listeners) > 0:
+        self._modifiers.remove(modifier)
     self._sw = 0
     self._tvp = 0
     self._vp_spent = 0

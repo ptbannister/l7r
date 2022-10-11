@@ -65,6 +65,8 @@ class DefaultActionFactory(ActionFactory):
       return actions.FeintAction(subject, target, vp)
     elif skill == 'lunge':
       return actions.LungeAction(subject, target, vp)
+    else:
+      raise ValueError('Invalid attack skill: {}'.format(skill))
 
   def get_counterattack_action(self, subject, target, attack, skill, vp=0):
     return actions.CounterattackAction(subject, target, attack, skill, vp)

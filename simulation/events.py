@@ -6,6 +6,8 @@
 # Events for the L7R combat simulator.
 #
 
+from simulation.log import logger
+
 
 class Event(object):
   '''
@@ -119,6 +121,7 @@ class TakeAttackActionEvent(TakeActionEvent):
     return self.action.direct_damage()
 
   def _failed(self):
+    logger.info('{} failed to attack {} with {}'.format(self.action.subject().name(), self.action.target().name(), self.action.skill()))
     return AttackFailedEvent(self.action)
 
   def _roll_attack(self,  context):
@@ -133,6 +136,7 @@ class TakeAttackActionEvent(TakeActionEvent):
     return LightWoundsDamageEvent(self.action.subject(), self.action.target(), damage_roll)
 
   def _succeeded(self):
+    logger.info('{} successfully attacked {} with {}'.format(self.action.subject().name(), self.action.target().name(), self.action.skill()))
     return AttackSucceededEvent(self.action)
 
 
@@ -155,6 +159,7 @@ class TakeParryActionEvent(TakeActionEvent):
     return declaration
 
   def _failed(self):
+    logger.info('{} failed to parry {}'.format(self.action.subject().name(), self.action.target().name()))
     return ParryFailedEvent(self.action)
 
   def _roll_parry(self, context):
@@ -166,6 +171,7 @@ class TakeParryActionEvent(TakeActionEvent):
     yield from self.action.subject().parry_rolled_strategy().recommend(self.action.subject(), initial_event, context)
 
   def _succeeded(self):
+    logger.info('{} successfully parried {}'.format(self.action.subject().name(), self.action.target().name()))
     self.action.set_attack_parried()
     return ParrySucceededEvent(self.action)
 
