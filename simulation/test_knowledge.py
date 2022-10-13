@@ -159,6 +159,25 @@ class TestKnowledge(unittest.TestCase):
     self.assertEqual(3, knowledge.wounds(akagi))
 
 
+class TestTheoreticalCharacter(unittest.TestCase):
+  def test_tn_to_hit(self):
+    target = Character('target')
+    target.set_skill('parry', 5)
+    knowledge = Knowledge()
+    knowledge.observe_tn_to_hit(target, 30)
+    theoretical_target = TheoreticalCharacter(target)
+    self.assertEqual(30, theoretical_target.tn_to_hit())
+
+  def test_modifiers(self):
+    subject = Character('subject')
+    target = Character('target')
+    target.set_skill('parry', 5)
+    knowledge.observe_tn_to_hit(target, 30)
+    modifier = Modifier(target, None, 'tn to hit', -5)
+    listener = ExpireAfterNextAttackListener(modifier)
+    modifier.register_listener(listener)
+    target.add_modifier(Modifier
+
 if (__name__ == '__main__'):
   unittest.main()
 

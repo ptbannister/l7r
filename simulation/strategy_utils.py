@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+
+#
+# strategy_utils.py
+#
+# Utility classes to help strategies make decisions.
+#
+
+from simulation.knowledge import TheoreticalCharacter
+from simulation.log import logger
+
+
+class ExpectedAttackRoll(object):
+  '''
+  Container class to hold an expected attack roll given
+  resource expenditure parameters and a lot of other
+  context.
+  '''
+  def __init__(self, roll, vp, ap, p):
+    self.roll = roll
+    self.ap = ap
+    self.vp = vp
+    self.p = p
+
+  def value(self, unoptimized_roll):
+    return self.roll - unoptimized_roll
+
+
+class AttackOptimizer(object):
+  '''
+  Class that helps optimize spending resources on an attack roll
+  by calculating the probability of success when spending different
+  amounts of VP and other available resources.
+
+  This class should be used to optimize attack rolls when the goal
+  is to hit a TN, and there isn't benefit from exceeding the TN.
+
+  The Akodo Bushi School's Feint is a good example of an attack
+  where the only purpose is to hit the TN.
+  '''
+  def __init__(self, subject, target, skill, context, max_vp=None, max_ap=None):
+    self.subject = subject
+    self.target = target
+    self.theoretical_target = TheoreticalCharacter(subject.knowledge(), target)
+    self.skill = skill
+    self.context = context
+    self.explode = not self.subject.crippled()
+    # set this information later
+    self.original_max_ap = max_ap
+    self.original_max_vp = max_vp
+    self.speculative_action = None
+    self.tn = 0
+    self.expected_rolls = []
+    self.initialize()
+
+  def get_action(self, vp):
+    return self.subject.action_factory() \
+      .get_attack_action(self.subject, self.target, self.skill, vp)
+
+  def initialize(self):
+    # determine possible expenditures of ap and vp
+    self.max_ap = self.original_max_ap
+    self.max_vp = self.original_max_vp
+    if self.max_ap is None:
+      self.max_ap = min(self.subject.max_ap_per_roll(), self.subject.ap())
+    if self.max_vp is None:
+      self.max_vp = min(self.subject.max_vp_per_roll(), self.subject.vp())
+    # determine expected tn
+    self.speculative_action = self.subject.action_factory() \
+      .get_attack_action(self.subject, self.theoretical_target, self.skill)
+    self.tn = self.speculative_action.tn()
+    # consider using available floating bonuses, if any
+    bonus = sum([b.bonus() for b in self.subject.floating_bonuses(self.skill)])
+    # determine expected value of possible vp spends
+    for vp in range(self.max_vp + 1):
+      (rolled, kept, mod) = self.subject.get_skill_roll_params(self.target, self.skill, vp)
+      roll = self.context.mean_roll(rolled, kept) + mod + bonus
+      for ap in range(self.max_ap +  1):
+        adjusted_roll = roll + (5 * ap)
+        adjusted_tn = self.tn - (5 * ap) - bonus
+        p = self.context.p(adjusted_tn, rolled, kept, explode=self.explode)
+        logger.debug('P({}|({},{})) = {}'.format(adjusted_tn, vp, ap, p))
+        self.expected_rolls.append(ExpectedAttackRoll(adjusted_roll, vp, ap, p))
+    # sort expected rolls in ascending order
+    self.expected_rolls.sort(key=lambda x: x.roll)
+
+  def optimize(self, threshold=0):
+    '''
+    optimize(threshold=0) -> AttackAction or None
+      threshold (float): threshold for probability of hitting desired
+    
+    Returns an AttackAction that will use enough VP to succeed with the
+    provided threshold, or None if the threshold can't be achieved.
+    '''
+    recommendation = None
+    for r in self.expected_rolls:
+      if r.p >= threshold:
+        recommendation = (r.vp, r.ap)
+        break
+    if recommendation is not None: 
+      return self.get_action(recommendation[0])
+    else:
+      return None
+
+
+class DamageOptimizer(AttackOptimizer):
+  '''
+  Utility class to optimize an attack to get extra kept damage dice
+  after reaching the desired threshold for probability of success.
+
+  This class should be used to decide when to spend resources to get
+  a better damage roll.
+  '''
+  def initialize(self):
+    super().initialize()
+    self.expected_kept_damage = {}
+    for r in self.expected_rolls:
+      extra_rolled = self.speculative_action \
+        .calculate_extra_damage_dice(r.roll, self.tn)
+      (rolled, kept, bonus) = self.subject.get_damage_roll_params(self.target, \
+        self.skill, extra_rolled)
+      self.expected_kept_damage[(r.vp, r.ap)] = kept
+
+  def optimize(self, threshold=0):
+    '''
+    optimize(threshold=0) -> AttackAction or None
+      threshold (float): threshold for probability of hitting desired
+    
+    Returns the tuple of (vp, ap) that will get the most kept damage
+    dice, that will also succeed at the attack with the provided
+    threshold, or None if the threshold can't be achieved.
+
+    Returns an AttackAction that will use enough VP to keep the most
+    damage dice and also succeed at the attack with the provided threshold,
+    or None if the threshold can't be achieved.
+    '''
+    recommendation = None
+    recommendation_expected_roll = None
+    # check expected kept damage dice at each expenditure
+    # until an extra kept die is achieved
+    prev_kept = 0
+    for r in self.expected_rolls:
+      if r.p < threshold:
+        # ignore rolls that don't reach the desired threshold 
+        continue
+      (vp, ap) = (r.vp, r.ap)
+      kept = self.expected_kept_damage[(vp, ap)]
+      if kept > prev_kept:
+        # after reaching the threshold, only spend extra resources
+        # to get extra kept damage dice
+        recommendation = (vp, ap)
+        recommendation_expected_roll = r
+        prev_kept = kept
+      if kept >= 6:
+        # don't spend resources after six kept dice
+        # the marginal benefit drops off after six
+        break
+    # reject recommendation if probability of success is under threshold
+    if recommendation is not None:
+      p = recommendation_expected_roll.p
+      if p < threshold:
+        recommendation = None
+    # return recommendation or None
+    if recommendation is None:
+      return None
+    else:
+      return self.get_action(recommendation[0])
+
+
+class TargetFinder(object):
+  '''
+  Utility class to identify targets to attack.
+  '''
+  def find_enemies(self, subject, context):
+    '''
+    find_enemies(subject, context) -> list of Character
+      subject (Character): character who is making a list of enemies
+      context (EngineContext): context
+
+    Returns a list of the characters who are still fighting
+    who are enemies of the subject.
+    '''
+    enemies = []
+    for other_character in context.characters():
+      if other_character not in subject.group():
+        if other_character.is_fighting():
+          enemies.append(other_character)
+    return enemies
+
+  def find_easiest_target(self, subject, skill, context):
+    '''
+    find_easiest_target(subject, skill, context) -> Character
+      subject (Character): character who would be attacking
+      skill (str): skill the subject will use to attack
+      context (EngineContext): context
+
+    Returns the enemy where the subject has the best chance
+    of attacking successfully with the given skill.
+    '''
+    targets = []
+    explode = not subject.crippled()
+    for other_character in self.find_enemies(subject, context):
+      # can I hit this character with this skill?
+      proxy_target = TheoreticalCharacter(subject.knowledge(), other_character)
+      action = subject.action_factory().get_attack_action(subject, proxy_target, skill)
+      (rolled, kept, modifier) = subject.get_skill_roll_params(other_character, skill)
+      p_hit = context.p(action.tn() - modifier, rolled, kept, explode=explode)
+      targets.append((other_character, p_hit))
+    # sort targets in order of probability of hitting
+    # TODO: prefer certain targets because they are closer to defeat, or they are more dangerous, etc
+    targets.sort(key=lambda t: t[1], reverse=True)
+    # return the easiest target to hit
+    if len(targets) > 0:
+      return targets[0][0]
+    else:
+      return None
+
+  def find_most_dangerous_target(self, subject, skill, context):
+    '''
+    find_most_dangerous_target(subject, skill, context) -> Character
+      subject (Character): character who would be attacking
+      skill (str): skill the subject will use to attack
+      context (EngineContext): context
+
+    Returns the enemy who has inflicted the most damage.
+    '''
+    targets = [c for c in self.find_enemies(subject, context)]
+    targets.sort(key=lambda x: self.subject.knowledge().average_damage_roll(x), reverse=True)
+    if len(targets) > 0:
+      return targets[0]
+    else:
+      return None
+
+
+class EasiestTargetFinder(TargetFinder):
+  def find_target(self, subject, skill, context):
+    return self.find_easiest_target(subject, skill, context)
+
+
+class MostDangerousTargetFinder(TargetFinder):
+  def find_target(self, subject, skill, context):
+    return self.find_most_dangerous_target(subject, skill, context)
+

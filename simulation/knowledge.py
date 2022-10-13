@@ -10,6 +10,7 @@ class Knowledge(object):
     self._actions_this_round = {}
     self._attack_rolls = {}
     self._damage_rolls = {}
+    self._modifiers = {}
     self._parry_rolls = {}
     self._debuffs = {}
     self._tn_to_hit = {}
@@ -71,26 +72,14 @@ class Knowledge(object):
       return 18
 
   def clear(self):
-    self._actions_per_round = {}
-    self._actions_this_round = {}
-    self._attack_rolls = {}
-    self._damage_rolls = {}
-    self._parry_rolls = {}
-    self._tn_to_hit = {}
-    self._wounds = {}
-
-  def debuff(self, character, skill):
-    '''
-    debuff(character, skill) -> int
-
-    Returns the debuff penalty applied to some character for
-    a skill or other thing (such as 'tn to be hit').
-    '''
-    name = character.name()
-    if name in self._debuffs.keys():
-      return self._debuffs[name].get(skill, 0)
-    else:
-      return 0
+    self._actions_per_round.clear()
+    self._actions_this_round.clear()
+    self._attack_rolls.clear()
+    self._damage_rolls.clear()
+    self._modifiers.clear()
+    self._parry_rolls.clear()
+    self._tn_to_hit.clear()
+    self._wounds.clear()
 
   def end_of_round(self):
     '''
@@ -103,6 +92,19 @@ class Knowledge(object):
       prev_n = self._actions_per_round.get(name, 0)
       self._actions_per_round[name] = max(prev_n, n)
       self._actions_this_round[name] = 0
+
+  def modifier(self, character, target, skill):
+    '''
+    modifier(character, target, skill) -> int
+
+    Returns the modifier penalty applied to some character for
+    a skill or other thing (such as 'tn to be hit').
+    '''
+    name = character.name()
+    if name in self._modifiers.keys():
+      return sum([m.apply(target, skill) for m in self._modifiers[name]])
+    else:
+      return 0
 
   def observe_action(self, character):
     '''
@@ -151,32 +153,29 @@ class Knowledge(object):
     else:
       self._damage_rolls[name] = [damage]
 
-  def observe_debuff(self, character, skill, penalty):
+  def observe_modifier_added(self, character, modifier):
     '''
-    observe_debuff(character, skill,  penalty)
-      character (Character): character of interest
-      skill (str): skill or other thing being penalized
-      penalty (int): amount of the penalty
+    observe_modifier_added(character, modifier)
+      character (Character): character receiving the modifier
+      modifier (Modifier): modifier being added to character
 
-    Observe a character taking a debuff to something.
+    Observe a character getting an expiring modifier.
     '''
     name = character.name()
-    if name not in self._debuffs.keys():
-      self._debuffs[name] = {}
-    if skill not in self._debuffs[name].keys():
-      self._debuffs[name][skill] = penalty
+    if name not in self._modifiers.keys():
+      self._modifiers[name] = [modifier]
     else:
-      self._debuffs[name][skill] += penalty
+      self._modifiers[name].append(modifier)
 
-  def observe_debuff_removed(self, character, skill):
+  def observe_modifier_removed(self, character, modifier):
     '''
-    observe_debuff_removed(character, skill)
-      character (Character): character of interest
-      skill (str): skill or other thing losing a penalty
+    observe_modifier_removed(character, modifier)
+      character (Character): character losing the modifier
+      modifier (Modifier): modifier being removed from the character
 
-    Observe a debuff being removed from a character.
+    Observe a modifier being removed from a character.
     '''
-    self._debuffs[character.name()].remove(skill)
+    self._modifiers[character.name()].remove(modifier)
 
   def observe_tn_to_hit(self, character, tn):
     '''
@@ -187,8 +186,9 @@ class Knowledge(object):
     Observe a character's TN to be hit.
     '''
     name = character.name()
+    adjustment = self.modifier(character, None, 'tn to hit')
     if name not in self._tn_to_hit.keys():
-      self._tn_to_hit[name] = tn
+      self._tn_to_hit[name] = tn - adjustment
 
   def observe_wounds(self, character, damage):
     '''
@@ -211,8 +211,7 @@ class Knowledge(object):
     
     Return the best known TN to hit a character.
     '''
-    penalty = self.debuff(target, 'tn_to_hit')
-    return self._tn_to_hit.get(target.name(), 20) - penalty
+    return self._tn_to_hit.get(target.name(), 20)
 
   def weapon(self, character):
     return character.weapon()
@@ -241,7 +240,7 @@ class TheoreticalCharacter(object):
     return 3
 
   def tn_to_hit(self):
-    return self._knowledge.tn_to_hit(self._character)
+    return self._knowledge.tn_to_hit(self._character) + self._knowledge.modifier(self._character, None, 'tn to hit')
 
   def weapon(self):
     return self_knowledge.weapon(self._character)

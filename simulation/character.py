@@ -10,16 +10,18 @@ import math
 import uuid
 
 from simulation import actions, listeners, strategies
-from simulation.modifiers import FreeRaise
+from simulation.attack_optimizer_factory import AttackOptimizerFactory, DEFAULT_ATTACK_OPTIMIZER_FACTORY
 from simulation.action_factory import ActionFactory, DEFAULT_ACTION_FACTORY
 from simulation.knowledge import Knowledge
 from simulation.log import logger
+from simulation.modifiers import FreeRaise
 from simulation.professions import Profession
 from simulation.roll import normalize_roll_params
 from simulation.roll_params import DEFAULT_ROLL_PARAMETER_PROVIDER, RollParameterProvider
 from simulation.roll_provider import DEFAULT_ROLL_PROVIDER, RollProvider
 from simulation.schools import School
 from simulation.strategies import Strategy
+from simulation.strategy_utils import EasiestTargetFinder, TargetFinder
 from simulation.take_action_event_factory import DEFAULT_TAKE_ACTION_EVENT_FACTORY, TakeActionEventFactory
 from simulation.weapons import KATANA
 from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
@@ -29,20 +31,31 @@ RING_NAMES = ['air', 'earth', 'fire', 'water', 'void']
 
 class Character(object):
 
-  def __init__(self, name=uuid.uuid4().hex):
-    self._name = name
+  def __init__(self, name=None):
+    # initialize a character ID
+    self._character_id = uuid.uuid4().hex
+    # initialize name
+    if name is None:
+      self._name = self._character_id
+    elif not isinstance(name, str):
+      raise ValueError('Character name must be str')
+    else:
+      self._name = name
+    # initialize rings
     self._rings = {
       'air': 2,
       'earth': 2,
       'fire': 2,
       'void': 2,
       'water': 2 }
+    # everything else
     self._actions = []
     self._action_factory = DEFAULT_ACTION_FACTORY
     self._advantages = []
     self._ap_base_skill = None
     self._ap_skills = []
     self._ap_spent = 0
+    self._attack_optimizer_factory = DEFAULT_ATTACK_OPTIMIZER_FACTORY
     self._disadvantages = []
     self._discounts = {}
     self._extra_kept = {}
@@ -62,6 +75,7 @@ class Character(object):
       'gain_tvp': listeners.GainTemporaryVoidPointsListener(),
       'lw_damage': listeners.LightWoundsDamageListener(),
       'new_round': listeners.NewRoundListener(),
+      'remove_modifier': listeners.RemoveModifierListener(),
       'spend_action': listeners.SpendActionListener(),
       'spend_ap': listeners.SpendAdventurePointsListener(),
       'spend_floating_bonus': listeners.SpendFloatingBonusListener(),
@@ -107,6 +121,7 @@ class Character(object):
     }
     self._sw = 0
     self._take_action_event_factory = DEFAULT_TAKE_ACTION_EVENT_FACTORY
+    self._target_finder = EasiestTargetFinder()
     self._tvp = 0
     self._vp_spent = 0
     self._weapon = KATANA
@@ -180,6 +195,9 @@ class Character(object):
     '''
     return self._ap_base_skill
 
+  def attack_optimizer_factory(self):
+    return self._attack_optimizer_factory
+
   def attack_rolled_strategy(self):
     return self._strategies['attack_rolled']
 
@@ -195,6 +213,9 @@ class Character(object):
     (Third Dan Free Raises) on the given skill.
     '''
     return skill in self._ap_skills
+
+  def character_id(self):
+    return self._character_id
 
   def crippled(self):
     '''
@@ -214,7 +235,7 @@ class Character(object):
       logger.debug('{} handling {}'.format(self._name, event.name))
       # play event on modifiers first
       for modifier in self._modifiers:
-        modifier.handle(self, event, context)
+        yield from modifier.handle(self, event, context)
       # then play event on self
       yield from self._listeners[event.name].handle(self, event, context)
     else:
@@ -587,6 +608,19 @@ class Character(object):
       raise ValueError('Character attack strategy must be a Strategy')
     self._strategies['attack'] = strategy
 
+  def set_actions(self, actions):
+    if not isinstance(actions, list):
+      raise ValueError('Character set_actions requires list of ints')
+    for action in actions:
+      if not isinstance(action, int):
+        raise ValueError('Character set_actions requires list of ints')
+    self._actions = actions
+
+  def set_attack_optimizer_factory(self, factory):
+    if not isinstance(factory, AttackOptimizerFactory):
+      raise ValueError('set_attack_optimizer_factory requires AttackOptimizerFactory')
+    self._attack_optimizer_factory = factory
+
   def set_extra_rolled(self, skill, extra_rolled=1):
     '''
     set_extra_rolled(skill, extra_rolled)
@@ -819,6 +853,9 @@ class Character(object):
   def take_sw(self, amount):
     logger.info('{} takes {} Serious Wounds'.format(self._name, amount))
     self._sw += amount
+
+  def target_finder(self):
+    return self._target_finder
 
   def tn_to_hit(self):
     return (5 * (1 + self.skill('parry'))) + self.modifier(None, 'tn to hit')

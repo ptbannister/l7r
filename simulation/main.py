@@ -11,6 +11,7 @@ import argparse as ap
 import logging
 import os
 import shutil
+import sys
 
 from simulation.bayushi_school import BayushiBushiSchool
 from simulation.character import Character

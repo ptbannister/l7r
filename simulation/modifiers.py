@@ -58,7 +58,7 @@ class Modifier(object):
 
   def handle(self, character, event, context):
     if event.name in self._listeners.keys():
-      self._listeners[event.name].handle(character, event, context)
+      yield from self._listeners[event.name].handle(character, event, self, context)
 
   def adjustment(self):
     return self._adjustment

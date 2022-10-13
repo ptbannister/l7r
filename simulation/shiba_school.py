@@ -82,10 +82,10 @@ class ShibaParrySucceededListener(Listener):
     if isinstance(event, ParrySucceededEvent):
       penalty = -1 * (event.action.skill_roll() - event.action.attack().skill_roll())
       modifier = Modifier(event.action.target(), None, 'tn to hit', penalty)
-      listener = ExpireAfterNextAttackListener(modifier)
+      listener = ExpireAfterNextAttackListener()
       modifier.register_listener('attack_failed', listener)
       modifier.register_listener('attack_succeeded', listener)
-      yield AddModifierEvent(modifier)
+      yield AddModifierEvent(event.action.target(), modifier)
 
 
 class ShibaTakeActionEventFactory(DefaultTakeActionEventFactory):

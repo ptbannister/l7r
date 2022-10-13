@@ -56,9 +56,21 @@ class YourMoveListener(Listener):
 class AddModifierListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.AddModifierEvent):
-      if character == event.modifier.subject():
+      if character == event.subject:
         character.add_modifier(event.modifier)
-        yield from ()
+      else:
+        character.knowledge().observe_modifier_added(event.subject, event.modifier)
+      yield from ()
+
+
+class RemoveModifierListener(Listener):
+  def handle(self, character, event, context):
+    if isinstance(event, events.AddModifierEvent):
+      if character == event.subject:
+        character.remove_modifier(event.modifier)
+      else:
+        character.knowledge().observe_modifier_removed(event.subject, event.modifier)
+      yield from ()
 
 
 class AttackDeclaredListener(Listener):

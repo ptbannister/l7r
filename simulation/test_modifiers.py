@@ -14,6 +14,7 @@ from simulation.context import EngineContext
 from simulation.groups import Group
 from simulation.listeners import Listener
 from simulation.modifiers import FreeRaise, Modifier
+from simulation.modifier_listeners import ModifierListener
 
 
 class TestCustomModifier(unittest.TestCase):
@@ -38,22 +39,23 @@ class TestCustomModifier(unittest.TestCase):
     self.assertEqual(5, modifier.apply(self.third_character, 'attack'))
 
 
-class ExplodeOnAttackListener(Listener):
+class ExplodeOnAttackListener(ModifierListener):
   '''
   For testing purposes only: a listener that causes a character
   to take a million serious wounds if they successfully attack.
   '''
-  def handle(self, character, event, context):
+  def handle(self, character, event, modifier, context):
     if isinstance(event, events.AttackSucceededEvent):
       if character == event.action.subject():
         character.take_sw(1000000)
+        yield from ()
 
 
 class TestModifierEvents(unittest.TestCase):
   def setUp(self):
     self.subject = Character('subject')
     self.target = Character('target')
-    groups = [Group('subject', [self.subject]), Group('target', [self.target])]
+    groups = [Group('subject', self.subject), Group('target', self.target)]
     self.context = EngineContext(groups)
 
   def test_listen_to_events(self):
@@ -63,14 +65,14 @@ class TestModifierEvents(unittest.TestCase):
     # play an irrelevant event on the listener
     irrelevant_attack = actions.AttackAction(self.target, self.subject, 'attack')
     irrelevant_attack_event = events.AttackSucceededEvent(irrelevant_attack)
-    modifier.handle(self.subject, irrelevant_attack_event, self.context)
+    responses = [response for response in modifier.handle(self.subject, irrelevant_attack_event, self.context)]
     # should have no effect
     self.assertEqual(0, self.subject.sw())
     self.assertEqual(0, self.target.sw())
     # play a relevant event on the listener
     relevant_attack = actions.AttackAction(self.subject, self.target, 'attack')
     relevant_attack_event = events.AttackSucceededEvent(relevant_attack)
-    modifier.handle(self.subject, relevant_attack_event, self.context)
+    responses = [response for response in modifier.handle(self.subject, relevant_attack_event, self.context)]
     # attacker should explode
     self.assertEqual(1000000, self.subject.sw())
     self.assertEqual(0, self.target.sw())

@@ -51,7 +51,8 @@ class AlwaysAttackActionStrategy(Strategy):
       # try to attack if action available
       # TODO: evaluate whether to interrupt
       if character.has_action(context):
-        yield from character.attack_strategy().recommend(character, event, context)
+        yield from character.attack_strategy() \
+          .recommend(character, event, context)
       else:
         yield events.NoActionEvent(character)
 
@@ -63,7 +64,8 @@ class HoldOneActionStrategy(Strategy):
       if character.has_action(context):
         available_actions = [action for action in character.actions() if action <= context.phase()]
         if len(available_actions) > 1 or context.phase() == 10:
-          yield from character.attack_strategy().recommend(character, event, context)
+          yield from character.attack_strategy() \
+            .recommend(character, event, context)
         else:
           logger.debug('{} is holding an action'.format(character.name()))
           yield events.HoldActionEvent(character)
@@ -72,142 +74,6 @@ class HoldOneActionStrategy(Strategy):
 
 
 class BaseAttackStrategy(Strategy):
-  def find_target(self, subject, skill, context):
-    '''
-    find_target(subject, skill, context) -> Character
-       subject (Character): character who is finding a target to attack
-       skill (str): attack skill being used
-       context (EngineContext): context
-  
-    Returns a Character who is a good target to attack, or returns None if no good target is found.
-    '''
-    targets = []
-    explode = not subject.crippled()
-    for other_character in context.characters():
-      # don't try to fight yourself or your buddies
-      if other_character not in subject.group():
-        # don't stab the corpses
-        if other_character.is_fighting():
-          # can I hit this character with this skill?
-          proxy_target = TheoreticalCharacter(subject.knowledge(), other_character)
-          action = subject.action_factory().get_attack_action(subject, proxy_target, skill)
-          (rolled, kept, modifier) = subject.get_skill_roll_params(other_character, skill)
-          # TODO: use a parameterized threshold to ignore targets that are unrealistic to attack
-          p_hit = context.p(action.tn() - modifier, rolled, kept, explode=explode)
-          targets.append((other_character, p_hit))
-    # sort targets in order of probability of hitting
-    # TODO: prefer certain targets because they are closer to defeat, or they are more dangerous, etc
-    targets.sort(key=lambda t: t[1], reverse=True)
-    # return the easiest target to hit
-    if len(targets) > 0:
-      return targets[0][0]
-    else:
-      return None
-
-  def get_expected_kept_damage_dice(self, subject, target, skill, context, ap, vp):
-    '''
-    get_expected_damage_params(subject, target, skill, context, ap, vp) -> int
-      subject (Character): character who would be the attacker
-      target (Character): character who would be the target
-      skill (str): name of the skill to be used to attack
-      context (EngineContext): context
-      ap (int): number of Adventure Points to spend on this attack
-      vp (int): number of Void Points to spend on this attack
-  
-    Return the expected kept damage dice for an attack given the inputs.
-    '''
-    explode = not subject.crippled()
-    theoretical_target = TheoreticalCharacter(subject.knowledge(), target)
-    speculative_action = subject.action_factory().get_attack_action(subject, theoretical_target, skill, vp)
-    # how many kept damage dice are expected?
-    attack_rolled, attack_kept, attack_mod = subject.get_skill_roll_params(target, skill, vp)
-    expected_attack_roll = context.mean_roll(attack_rolled, attack_kept, explode=explode) + attack_mod + (5 * ap)
-    expected_extra_rolled = speculative_action.calculate_extra_damage_dice(expected_attack_roll, subject.knowledge().tn_to_hit(target))
-    damage_rolled, damage_kept, damage_bonus = subject.get_damage_roll_params(target, skill, expected_extra_rolled)
-    return damage_kept
-  
-  def optimize_attack(self, subject, target, skill, threshold, context):
-    '''
-    optimize_attack(subject, target, skill, threshold, context) -> AttackAction
-  
-    Returns an AttackAction optimized to spend VP for more damage.
-  
-    Optimizing an attack is about getting more damage for the minimum expenditure of resources.
-    Attacks get an extra rolled damage die for every increment of 5 by which they exceed the TN to hit.
-    A base damage roll, with no extra rolled dice, normally keeps 2 dice.
-  
-    It helps to understand the curve of average damage rolls:
-     6k2: 18 (Base damage for characters with 2 Fire)
-     7k2: 19 (Base damage for 3 Fire)
-     8k2: 21 (Base damage for 4 Fire)
-     9k2: 22 (Base damage for 5 Fire)
-    10k2: 23 (Base damage for 6 Fire)
-    10k3: 31
-    10k4: 38
-    10k5: 44
-    10k6: 49
-    10k7: 53
-    10k8: 56
-    10k9: 59
-    10k10: 60
-  
-    The marginal benefit of extra rolled damage dice is a bell curve.
-    The big margins come between 10k3 and 10k6.
-  
-    This function is designed to find an acceptable expenditure of resources
-    to reach extra kept damage dice if possible.
-    '''
-    ap, vp = 0, 0
-    # establish how many ap and vp we can and want to spend
-    # TODO: write AdventurePointStrategy and VoidPointStrategy
-    max_ap_spend = min(subject.ap(), 2)
-    possible_ap_spends = [ap_spend for ap_spend in range(subject.ap() + 1)]
-    # character should be conservative with vp on attacks, unless they are tvp
-    # mostly need to save vp for wound checks
-    # it's too easy for a parry to wipe out the gains of vp spent on attacks
-    max_vp_spend = min(1, subject.vp())
-    max_vp_spend = max(max_vp_spend, subject.tvp())
-    possible_vp_spends = [vp_spend for vp_spend in range(max_vp_spend + 1)]
-    resource_spends = [spend for spend in itertools.product(possible_ap_spends, possible_vp_spends)]
-    # calculate expected gains for different combinations of resources
-    expected_kept = {}
-    for (ap_spend, vp_spend) in resource_spends:
-      expected_kept[(ap_spend, vp_spend)] = self.get_expected_kept_damage_dice(subject, target, skill, context, ap_spend, vp_spend)
-    # climb resource expenditures for extra kept dice
-    prev_kept = 2
-    for vp_spend in range(max_vp_spend + 1):
-      for ap_spend in range(max_ap_spend + 1):
-        new_kept = expected_kept[(ap_spend, vp_spend)]
-        if new_kept - prev_kept > 0:
-          ap = ap_spend
-          vp = vp_spend
-          prev_kept = new_kept
-        if new_kept == 6:
-          # marginal benefit recedes after 6
-          break
-    if not self.satisfies_threshold(subject, target, skill, threshold, context, vp, ap):
-      logger.debug('{} rejecting attacking {} with {} because probability of success is unrealistic'.format(subject.name(), target.name(), skill))
-      return None
-    if (ap > 0) or (vp > 0):
-      margin = expected_kept[(ap, vp)] - expected_kept[(0, 0)]
-      logger.debug('{} spending {} VP (expecting to spend {} AP) to try to get {} extra kept damage dice'.format(subject.name(), vp, ap, margin))
-    return subject.action_factory().get_attack_action(subject, target, skill, vp)
-
-  def satisfies_threshold(self, subject, target, skill, threshold, context, vp, ap):
-    '''
-    satisfies_threshold(subject, target, skill, context, vp, ap) -> bool
-
-    Return whether a proposed optimized attack meets a threshold for probability of hitting.
-    Used to reject attacks that are unrealistic.
-    '''
-    explode = not subject.crippled()
-    theoretical_target = TheoreticalCharacter(subject.knowledge(), target)
-    speculative_action = subject.action_factory().get_attack_action(subject, theoretical_target, skill, vp)
-    attack_rolled, attack_kept, attack_mod = subject.get_skill_roll_params(target, skill, vp)
-    tn = speculative_action.tn() - attack_mod
-    p_tn = context.p(tn, attack_rolled, attack_kept)
-    return p_tn >= threshold
-
   def spend_action(self, character, skill, context):
     '''
     spend_action(character, skill, context) -> SpendActionEvent
@@ -227,12 +93,16 @@ class BaseAttackStrategy(Strategy):
     find a target and optimize an attack using the given skill.
     '''
     if character.skill(skill) > 0:
-      target = self.find_target(character, skill, context)
+      target = character.target_finder().find_target(character, skill, context)
       if target is not None:
-        attack = self.optimize_attack(character, target, skill, threshold, context)
+        attack = character.attack_optimizer_factory() \
+          .get_optimizer(character, target, skill, context) \
+          .optimize(threshold)
         if attack is not None:
-          logger.info('{} is attacking {} with {}'.format(character.name(), target.name(), skill))
-          return character.take_action_event_factory().get_take_attack_action_event(attack)
+          logger.info('{} is attacking {} with {}' \
+            .format(character.name(), target.name(), skill))
+          return character.take_action_event_factory() \
+            .get_take_attack_action_event(attack)
 
   def recommend(self, character, event, context):
     raise NotImplementedError()
@@ -242,12 +112,11 @@ class PlainAttackStrategy(BaseAttackStrategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.YourMoveEvent):
       if character.has_action(context):
-        target = self.find_target(character, 'attack', context)
-        if target is not None:
-          attack = self.optimize_attack(character, target, 'attack', 0, context)
+        action_event = self.try_skill(character, 'attack', 0.5, context)
+        if action_event is not None:
           logger.info('{} is attacking {}'.format(character.name(), target.name()))
           yield from self.spend_action(character, 'attack', context)
-          yield character.take_action_event_factory().get_take_attack_action_event(attack)
+          yield action_event
         else:
           yield events.HoldActionEvent(character)
       else:
@@ -262,12 +131,15 @@ class StingyPlainAttackStrategy(BaseAttackStrategy):
     if isinstance(event, events.YourMoveEvent):
       # TODO: implement intelligence around interrupts
       if character.has_action(context):
-        target = self.find_target(character, 'attack', context)
+        target = character.target_finder() \
+          .find_target(character, 'attack', context)
         if target is not None:
-          action = subject.action_factory().get_attack_action(subject, target, skill)
+          action = subject.action_factory() \
+            .get_attack_action(subject, target, skill)
           logger.info('{} is attacking {}'.format(character.name(), target.name()))
           yield from self.spend_action(character, 'attack', context)
-          yield character.take_action_event_factory().get_take_attack_action_event(attack)
+          yield character.take_action_event_factory() \
+            .get_take_attack_action_event(attack)
         else:
           yield events.HoldActionEvent(character)
       else:
@@ -287,14 +159,16 @@ class UniversalAttackStrategy(BaseAttackStrategy):
           return
         # TODO: consider a lunge (probably need a LungeStrategy)
         if character.vp() == 0 and len(character.actions()) > 1:
-          # if this character is out of VP and has more than one action in this round, a feint might be worth it
-          feint_event = self.try_skill(character, 'feint', 0.6, context)
-          if feint_event is not None:
-            yield from self.spend_action(character, 'feint', context)
-            yield feint_event
-            return
+          # if this character is out of VP and has more than one action in this round, a feint might be worth iti
+          target = character.target_finder().find_target(character, 'feint', context)
+          if target is not None:
+            feint_event = self.try_skill(character, 'feint', 0.7, context)
+            if feint_event is not None:
+              yield from self.spend_action(character, 'feint', context)
+              yield feint_event
+              return
         # try a plain attack
-        attack_event = self.try_skill(character, 'attack', 0, context)
+        attack_event = self.try_skill(character, 'attack', 0.5, context)
         if attack_event is not None:
           yield from self.spend_action(character, 'attack', context)
           yield attack_event

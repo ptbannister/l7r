@@ -123,7 +123,9 @@ class DefaultProbabilityProvider(ProbabilityProvider):
     '''
     roll_str = '{}k{}'.format(rolled, kept)
     max_x = len(self._probabilities[explode][roll_str]) - 1
-    if x > max_x:
+    if x <=0:
+      return 1.0
+    elif x > max_x:
       return self._probabilities[explode][roll_str][max_x]
     else:
       return self._probabilities[explode][roll_str][x]
