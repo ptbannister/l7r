@@ -25,7 +25,7 @@ class DefaultWoundCheckProvider(WoundCheckProvider):
     cause the character to take Serious Wounds when used. To
     inflict Serious Wounds, use the take_sw function.
     '''
-    if roll <= lw:
+    if roll < lw:
       return 1 + ((lw - roll) // 10)
     else:
       return 0

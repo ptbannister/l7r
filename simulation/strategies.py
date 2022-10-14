@@ -80,10 +80,23 @@ class BaseAttackStrategy(Strategy):
 
     Spend an available action to take an attack.
     '''
-    # spend the newest available action
-    # older actions are usually more valuable
-    chosen_phase = max([phase for phase in character.actions() if phase <= context.phase()])
-    yield events.SpendActionEvent(character, chosen_phase)
+    if character.has_action(context):
+      # spend the newest available action
+      # older actions are usually more valuable
+      chosen_phase = max([phase for phase in character.actions() if phase <= context.phase()])
+      yield events.SpendActionEvent(character, chosen_phase)
+    elif character.has_interrupt_action(skill, context):
+      # interrupt
+      cost = character.interrupt_cost(skill, context)
+      spent = 0
+      while spent < cost:
+        chosen_phase = max(character.actions())
+        yield events.SpendActionEvent(character, chosen_phase)
+        spent += 1
+    else:
+      # somehow character is unable to attack
+      # this should have been caught sooner
+      raise NotEnoughActions()
  
   def try_skill(self, character, skill, threshold, context):
     '''
@@ -114,7 +127,7 @@ class PlainAttackStrategy(BaseAttackStrategy):
       if character.has_action(context):
         action_event = self.try_skill(character, 'attack', 0.5, context)
         if action_event is not None:
-          logger.info('{} is attacking {}'.format(character.name(), target.name()))
+          logger.info('{} is attacking {}'.format(character.name(), action_event.action.target().name()))
           yield from self.spend_action(character, 'attack', context)
           yield action_event
         else:
@@ -568,50 +581,12 @@ class WoundCheckStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.LightWoundsDamageEvent):
       if event.target == character:
-        spend_vp = 0
-        declared_vp = self._declare_vp(character, event, context)
-        yield events.WoundCheckDeclaredEvent(character, event.subject, event.damage, declared_vp)
+        # calculate maximum tolerable SW
+        max_sw = min(1, character.sw_remaining() - 1)
+        optimizer = character.wound_check_optimizer_factory().get_wound_check_optimizer(character, event, context)
+        yield optimizer.declare(max_sw, 0.6)
 
-  def _declare_vp(self, character, event, context):
-    # get roll params
-    (rolled, kept, modifier) = character.get_wound_check_roll_params()
-    # initialize climbing parameters
-    declared_vp = 0
-    planned_ap = 0
-    max_vp = min(character.max_vp_per_roll(), character.vp())
-    max_ap = min(character.max_ap_per_roll(), character.ap())
-    new_rolled = rolled
-    new_kept = kept
-    new_modifier = modifier
-    # how many SW are expected?
-    # TODO: be more conservative and calculate the worst roll within 1 stdev of the mean
-    expected_roll = context.mean_roll(rolled, kept) + modifier
-    expected_sw = character.wound_check(expected_roll)
-    # tolerable_sw is normally 1
-    # but if 1 SW from defeat, tolerable SW is 0
-    tolerable_sw = min(character.sw_remaining() - 1, 1)
-    while expected_sw > tolerable_sw:
-      if declared_vp == max_vp:
-        # stop trying to spend VP if maxed out
-        break
-      elif new_kept == 10:
-        # stop trying to spend VP if already keeping 10 dice
-        break
-      declared_vp += 1
-      if planned_ap < (2 * declared_vp) and planned_ap < max_ap:
-        # try to spend 2 AP per VP
-        planned_ap += min(2, max_ap - planned_ap)
-      (new_rolled, new_kept, modifier) = normalize_roll_params(
-        new_rolled + declared_vp,
-        new_kept + declared_vp,
-        new_modifier)
-      expected_roll = context.mean_roll(new_rolled, new_kept) \
-        + new_modifier + (5 * planned_ap)
-      expected_sw = character.wound_check(expected_roll)
-    logger.info('{} declaring {} VP for wound check'.format(character.name(), declared_vp))
-    return declared_vp
 
- 
 class StingyWoundCheckStrategy(Strategy):
   '''
   Never spend VP on wound checks.

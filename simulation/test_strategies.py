@@ -14,6 +14,7 @@ from simulation import events
 from simulation.actions import AttackAction, DoubleAttackAction
 from simulation.character import Character
 from simulation.context import EngineContext
+from simulation.exceptions import NotEnoughActions
 from simulation.groups import Group
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
@@ -29,92 +30,64 @@ logger.setLevel(logging.DEBUG)
 class TestBaseAttackStrategy(unittest.TestCase):
   def setUp(self):
     # set up characters
-    attacker = Character('attacker')
-    attacker._actions = [1,]
-    attacker.set_ring('fire', 3)
-    attacker.set_skill('attack', 3)
-    attacker.set_extra_rolled('attack', 1)
-    target = Character('target')
-    target._actions = [2,]
-    target.set_skill('parry', 4)
-    # give attacker knowledge of target's TN to be hit
-    attacker.knowledge().observe_tn_to_hit(target, 25)
-    # set up groups
-    groups = [Group('attacker', attacker), Group('target', target)]
-    # set up context
-    context = EngineContext(groups, round=1, phase=1) 
-    context.initialize()
-    # set objects on test class
-    self.attacker = attacker
-    self.target = target
-    self.context = context
-    
-  def test_get_expected_kept_damage_dice(self):
-    # set up strategy
-    strategy = BaseAttackStrategy()
-    # use attack strategy to calculate expected damage
-    # base skill roll params are 7k3, expected attack roll is 26, expected damage roll is 7k2
-    self.assertEqual(2, strategy.get_expected_kept_damage_dice(self.attacker, self.target, 'attack', self.context, 0, 0))
-    # spend 1 vp
-    # skill roll params are 8k4, expected attack roll is 34, expected damage roll is 8k2
-    self.assertEqual(2, strategy.get_expected_kept_damage_dice(self.attacker, self.target, 'attack', self.context, 0, 1))
-    # spend 2 vp
-    # skill roll params are 9k5, expected attack roll is 41, expected damage roll is 10k2
-    self.assertEqual(2, strategy.get_expected_kept_damage_dice(self.attacker, self.target, 'attack', self.context, 0, 2))
-    # spend 2 vp, 1 ap
-    # skill roll params are 9k5+5, expected attack roll is 46, expected damage roll is 10k3
-    self.assertEqual(3, strategy.get_expected_kept_damage_dice(self.attacker, self.target, 'attack', self.context, 1, 2))
-    # spend 2 vp, 2 ap
-    # skill roll params are 9k5+10, expected attack roll is 51, expected damage roll is 10k4
-    self.assertEqual(4, strategy.get_expected_kept_damage_dice(self.attacker, self.target, 'attack', self.context, 2, 2))
-    # try a high-fire character
-    akodo = Character('Akodo')
-    akodo._actions = [0,1,2,3,4]
-    akodo.set_ring('fire', 5)
-    akodo.set_skill('attack', 4)
-    akodo.set_extra_rolled('attack', 1)
-    akodo.knowledge().observe_tn_to_hit(self.target, 25)
-    # base skill roll params are 10k5, expected attack roll is 44, expected damage roll is 10k4
-    self.assertEqual(4, strategy.get_expected_kept_damage_dice(akodo, self.target, 'attack', self.context, 0, 0))
-    # spend 1 vp, 0 ap
-    # skill roll params are 10k7, expected attack roll is 53, expected damage roll is 10k6
-    self.assertEqual(6, strategy.get_expected_kept_damage_dice(akodo, self.target, 'attack', self.context, 0, 1))
-    # spend 0 vp, 1 ap
-    # skill roll params are 10k5+5, expected attack roll is 49, expected damage roll is 10k5
-    self.assertEqual(5, strategy.get_expected_kept_damage_dice(akodo, self.target, 'attack', self.context, 1, 0))
-
-  def test_optimize_attack(self):
-    # set up characters
     weak_attacker = Character('weak attacker')
-    weak_attacker._actions = [1,]
+    weak_attacker.set_actions([1])
     weak_attacker.set_ring('fire', 3)
     weak_attacker.set_skill('attack', 3)
     weak_attacker.set_extra_rolled('attack', 1)
     strong_attacker = Character('strong attacker')
-    strong_attacker._actions = [1,]
+    strong_attacker.set_actions([1])
     strong_attacker.set_ring('fire', 5)
     strong_attacker.set_skill('attack', 4)
     strong_attacker.set_extra_rolled('attack', 1)
+    target = Character('target')
+    target.set_actions([2])
+    target.set_skill('parry', 4)
     # give attackers knowledge of target's TN to be hit
-    weak_attacker.knowledge().observe_tn_to_hit(self.target, 25)
-    strong_attacker.knowledge().observe_tn_to_hit(self.target, 25)
+    weak_attacker.knowledge().observe_tn_to_hit(target, 25)
+    strong_attacker.knowledge().observe_tn_to_hit(target, 25)
     # set up groups
-    groups = [Group('attackers', [weak_attacker, strong_attacker]), Group('target', self.target)]
+    groups = [Group('attackers', [weak_attacker, strong_attacker]), Group('target', target)]
     # set up context
-    context = EngineContext(groups, round=1, phase=1) 
+    context = EngineContext(groups, round=1, phase=1)
     context.initialize()
-    # use attack strategy to optimize attack
-    strategy = PlainAttackStrategy()
-    attack = strategy.optimize_attack(weak_attacker, self.target, 'attack', context)
-    # weak attacker should not spend vp
-    self.assertFalse(attack is None)
-    self.assertEqual(self.target, attack.target())
-    self.assertEqual(0, attack.vp())
-    # strong attacker should spend 1 vp
-    attack = strategy.optimize_attack(strong_attacker, self.target, 'attack', context)
-    self.assertFalse(attack is None)
-    self.assertEqual(self.target, attack.target())
-    self.assertEqual(1, attack.vp())
+    # set instances
+    self.weak_attacker = weak_attacker
+    self.strong_attacker = strong_attacker
+    self.target = target
+    self.context = context
+
+  def test_spend_action(self):
+    strategy = BaseAttackStrategy()
+    # spend available action
+    responses = [response for response in strategy.spend_action(self.strong_attacker, 'attack', self.context)]
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, events.SpendActionEvent))
+    self.assertEqual(1, response.phase)
+
+  def test_spend_action_unavailable(self):
+    # set charcter's action to phase 2
+    self.strong_attacker.set_actions([2])
+    strategy = BaseAttackStrategy()
+    # try to act in phase 1, it should fail
+    with self.assertRaises(NotEnoughActions):
+      responses = [response for response in strategy.spend_action(self.strong_attacker, 'attack', self.context)]
+
+  def test_try_skill(self):
+    strategy = BaseAttackStrategy()
+    # try attack with weak attacker
+    # weak attacker should not spend VP
+    action_event = strategy.try_skill(self.weak_attacker, 'attack', 0.5, self.context)
+    self.assertFalse(action_event is None)
+    self.assertEqual(self.target, action_event.action.target())
+    self.assertEqual(0, action_event.action.vp())
+    # try attack with strong attacker
+    # should spend 1 VP
+    action_event = strategy.try_skill(self.strong_attacker, 'attack', 0.5, self.context)
+    self.assertFalse(action_event is None)
+    self.assertEqual(self.target, action_event.action.target())
+    self.assertEqual(1, action_event.action.vp())
 
 
 class TestAttackStrategy(unittest.TestCase):

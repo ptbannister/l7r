@@ -21,9 +21,11 @@ from simulation.roll_params import DEFAULT_ROLL_PARAMETER_PROVIDER, RollParamete
 from simulation.roll_provider import DEFAULT_ROLL_PROVIDER, RollProvider
 from simulation.schools import School
 from simulation.strategies import Strategy
-from simulation.strategy_utils import EasiestTargetFinder, TargetFinder
 from simulation.take_action_event_factory import DEFAULT_TAKE_ACTION_EVENT_FACTORY, TakeActionEventFactory
+from simulation.target_finders import EasiestTargetFinder, TargetFinder
 from simulation.weapons import KATANA
+from simulation.wound_check_optimizers import WoundCheckOptimizer
+from simulation.wound_check_optimizer_factory import DEFAULT_WOUND_CHECK_OPTIMIZER_FACTORY, WoundCheckOptimizerFactory
 from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
 
 
@@ -125,6 +127,7 @@ class Character(object):
     self._tvp = 0
     self._vp_spent = 0
     self._weapon = KATANA
+    self._wound_check_optimizer_factory = DEFAULT_WOUND_CHECK_OPTIMIZER_FACTORY
     self._wound_check_provider = DEFAULT_WOUND_CHECK_PROVIDER
 
   def actions(self):
@@ -587,7 +590,7 @@ class Character(object):
     '''
     (rolled, kept, mod) = self.get_wound_check_roll_params(vp)
     roll = self.roll_provider().get_wound_check_roll(rolled, kept) + mod
-    logger.info('{} rolled wound check: {}'.format(self._name, roll))
+    logger.info('{} rolled wound check {} against {} LW'.format(self._name, roll, damage))
     return roll
 
   def school(self):
@@ -738,6 +741,11 @@ class Character(object):
       raise ValueError('Character take action event factory must be a TakeActionEventFactory')
     self._take_action_event_factory = factory
 
+  def set_wound_check_optimizer_factory(self, factory):
+    if not isinstance(factory, WoundCheckOptimizerFactory):
+      raise ValueError('set_wound_check_optimizer_factory requires WoundCheckOptimizerFactory')
+    self._wound_check_optimizer_factory = factory
+
   def set_wound_check_provider(self, provider):
     if not isinstance(provider, WoundCheckProvider):
       raise ValueError('Provider is not a WoundCheckProvider')
@@ -846,7 +854,7 @@ class Character(object):
     Add the given amount of Light Wounds to this character's Light
     Wound total.
     '''
-    logger.info('{} takes {} Light Wounds'.format(self._name, amount))
+    logger.info('{} takes {} Light Wounds (new total: {})'.format(self._name, amount, amount + self.lw()))
     self._lw += amount
     self._lw_history.append(amount)
 
@@ -884,6 +892,9 @@ class Character(object):
     if lw is None:
       lw = self.lw()
     return self.wound_check_provider().wound_check(roll, lw)
+
+  def wound_check_optimizer_factory(self):
+    return self._wound_check_optimizer_factory
 
   def wound_check_rolled_strategy(self):
     return self._strategies['wound_check_rolled']

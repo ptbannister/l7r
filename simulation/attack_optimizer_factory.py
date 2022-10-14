@@ -8,7 +8,7 @@
 
 from abc import ABC, abstractmethod
 
-from simulation.strategy_utils import AttackOptimizer, DamageOptimizer
+from simulation.attack_optimizers import AttackOptimizer, DamageOptimizer
 
 
 class AttackOptimizerFactory(ABC):
