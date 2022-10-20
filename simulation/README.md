@@ -82,6 +82,9 @@ It may also have the optional sections:
 * disadvantages
 * strategies
 
+Characters with peasant professions should also have the optional section:
+* abilities
+
 An example character file looks like this:
 ```
 name: Taro
@@ -109,6 +112,43 @@ disadvantages:
 strategies:
   action: AlwaysAttackActionStrategy
   parry: NeverParryStrategy
+```
+
+A peasant character file looks like this:
+```
+name: Kikuchiyo
+xp: 9001
+rings:
+  air: 2
+  earth: 3
+  fire: 4
+  water: 3
+  void: 3
+skills:
+  attack: 4
+  parry: 3
+abilities:
+  crippled bonus: 2
+  damage bonus: 1
+  failed parry damage bonus: 2
+  initiative bonus: 2
+  missed attack bonus: 1
+  rolled damage bonus: 1
+advantages:
+ - fierce
+ - great destiny
+ - lucky
+ - quick healer
+disadvantages:
+ - contrary
+ - dark secret
+ - emotional
+ - poor
+ - proud
+ - short temper
+ - thoughtless
+ - transparent
+ - unkempt
 ```
 
 ### Character Name
@@ -156,7 +196,14 @@ Characters with a profession have to buy their first ranks of Attack and Parry,
 and do not receive the free ring raise to 3. However, they gain profession
 abilities.
 
-Professions are not yet supported.
+Starting characters with professions take one ability at character creation.
+Characters with earned XP take one additional ability per 15 XP earned. Each
+ability may be taken at most twice, except Priest abilities, which may only
+be taken once.
+
+Currently we only support Wave Man abilities.
+
+See below for an explanation of abilities and how to take them.
 
 
 #### Characters without School or Profession
@@ -199,6 +246,63 @@ We plan to add support in the near future for:
 
 You may also put other valid L7R skills, but they are not
 used in the simulator at this time.
+
+
+### Character Abilities
+
+Characters with peasant professions may take abilites, as
+explained above.
+
+Avaialble abilities are:
+* crippled bonus
+* damage penalty (not supported)
+* failed parry damage bonus
+* initiative bonus
+* missed attack bonus
+* parry penalty
+* rolled damage bonus
+* weapon damage bonus
+* wound check bonus
+* wound check penalty (not supported)
+
+Explanation of the abilities:
+
+**crippled bonus:** you may reroll tens on a single die when
+crippled.
+
+**damage penalty:** when someone is keeping at least one extra die
+of damage from exceeding their attack roll TN, subtract 5 from the
+damage.
+
+**failed parry damage bonus**: when someone unsuccessfully tries to
+parry an attack, you may roll 2 of the extra damage dice that you
+would have rolled had they not attempted to parry.
+
+**initiative bonus:** roll one extra unkept die on initiative.
+
+**missed attack bonus:** when you make an attack roll that would
+miss, raise it by 5. Any parry attempt against an attack that
+would hit because of this ability automatically succeeds.
+
+**parry penalty:** raise the TN of someone trying to parry one of
+your attacks by 5.
+
+**rolled damage bonus:** round your damage rolls up to the nearest
+multiple of 5. If the roll is already a multiple of 5, then raise
+it by 3.
+
+**weapon damage bonus:** when using a weapon that deals less than
+4k2 damage, add an extra rolled damage die to the weapon's base
+damage, to a maximum of 4k2 base damage. Also, subtract 2 from your
+armor damage reduction penalty.
+(The damage reduction part of this ability is not yet supported,
+since damage reduction is not implemented.)
+
+**wound check bonus:** roll two extra unkept dice on wound checks.
+
+**wound check penalty:** raise the TN of someone making a Wound
+Check from damage you dealt to them by 5. If they fail, they take
+Serious Wounds as if the TN had not been raised.
 
 
 ### Character Advantages

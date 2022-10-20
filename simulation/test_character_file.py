@@ -10,6 +10,7 @@ import io
 import os
 import unittest
 
+from simulation import professions
 from simulation.akodo_school import AkodoBushiSchool
 from simulation.bayushi_school import BayushiBushiSchool
 from simulation.character import Character
@@ -33,9 +34,9 @@ class TestCharacterReader(unittest.TestCase):
     self.assertEqual(5, character.ring('fire'))
     self.assertEqual(6, character.ring('water'))
     self.assertEqual(5, character.ring('void'))
-    self.assertEqual(5, character.skill('double attack'))
     # assert expected skills
     self.assertEqual(4, character.skill('attack'))
+    self.assertEqual(5, character.skill('double attack'))
     self.assertEqual(5, character.skill('feint'))
     self.assertEqual(5, character.skill('iaijutsu'))
     self.assertEqual(5, character.skill('parry'))
@@ -55,14 +56,40 @@ class TestCharacterReader(unittest.TestCase):
     self.assertEqual(6, character.ring('fire'))
     self.assertEqual(5, character.ring('water'))
     self.assertEqual(5, character.ring('void'))
-    self.assertEqual(5, character.skill('double attack'))
     # assert expected skills
     self.assertEqual(4, character.skill('attack'))
+    self.assertEqual(5, character.skill('double attack'))
     self.assertEqual(5, character.skill('feint'))
     self.assertEqual(5, character.skill('iaijutsu'))
     self.assertEqual(5, character.skill('parry'))
     # assert expected school
     self.assertTrue(isinstance(character.school(), BayushiBushiSchool))
+
+  def test_read_mighty_kyoude(self):
+    character = None
+    path = os.path.join(script_dirpath, 'data/mighty_kyoude.yaml')
+    with open(path, 'r') as f:
+      character = CharacterReader().read(f)
+    # name
+    self.assertEqual('Mighty Kyō\'ude', character.name())
+    # assert expected rings
+    self.assertEqual(3, character.ring('air'))
+    self.assertEqual(5, character.ring('earth'))
+    self.assertEqual(5, character.ring('fire'))
+    self.assertEqual(5, character.ring('water'))
+    self.assertEqual(5, character.ring('void'))
+    # assert expected skills
+    self.assertEqual(5, character.skill('attack'))
+    self.assertEqual(5, character.skill('parry'))
+    # assert expected abilities
+    self.assertEqual(2, character.profession().ability(professions.CRIPPLED_BONUS))
+    self.assertEqual(2, character.profession().ability(professions.FAILED_PARRY_DAMAGE_BONUS))
+    self.assertEqual(2, character.profession().ability(professions.INITIATIVE_BONUS))
+    self.assertEqual(2, character.profession().ability(professions.MISSED_ATTACK_BONUS))
+    self.assertEqual(2, character.profession().ability(professions.PARRY_PENALTY))
+    self.assertEqual(2, character.profession().ability(professions.ROLLED_DAMAGE_BONUS))
+    self.assertEqual(2, character.profession().ability(professions.WEAPON_DAMAGE_BONUS))
+    self.assertEqual(2, character.profession().ability(professions.WOUND_CHECK_BONUS))
 
 
 class TestGenericCharacterWriter(unittest.TestCase):
@@ -99,6 +126,7 @@ class TestGenericCharacterWriter(unittest.TestCase):
     self.assertEqual(13, writer.calculate_skill_cost(character, 'sincerity', 5))
     with self.assertRaises(ValueError):
       writer.calculate_skill_cost(character, 'sincerity', 6)
+
 
 class TestSchoolCharacterWriter(unittest.TestCase):
   def test_calculate_ring_cost(self):

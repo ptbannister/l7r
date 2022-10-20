@@ -82,7 +82,7 @@ class CharacterReader(object):
     if 'school' in data.keys() and 'profession' in data.keys():
       raise IOError('Invalid Character (may not have both a profession and a school')
     elif 'profession' in data.keys():
-      builder = builder.with_profession(data['profession'])
+      builder = builder.with_profession()
     elif 'school' in data.keys():
       school = get_school(data['school'])
       builder = builder.with_school(school)
@@ -94,6 +94,7 @@ class CharacterReader(object):
     builder = self._buy_skills(data, builder)
     builder = self._buy_rings(data, builder)
     builder = self._set_strategies(data, builder)
+    builder = self._take_abilities(data, builder)
     return builder.build()
 
   def _buy_rings(self, data, builder):
@@ -124,6 +125,19 @@ class CharacterReader(object):
       for (event, strategy_name) in data['strategies'].items():
         strategy = get_strategy(strategy_name)
         builder.set_strategy(event, strategy)
+    return builder
+
+  def _take_abilities(self, data, builder):
+    if 'abilities' in data.keys():
+      abilityd = data['abilities']
+      for name in abilityd.keys():
+        if not isinstance(name, str):
+          raise ValueError('Profession ability name must be str')
+        level = int(abilityd[name])
+        if level < 0 or level > 2:
+          raise ValueError('Profession ability level requires 0 <= level <= 2')
+        for i in range(level):
+          builder.take_ability(name)
     return builder
 
   def _take_advantages(self, data, builder):

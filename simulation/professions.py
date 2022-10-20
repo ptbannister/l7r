@@ -15,18 +15,30 @@ from simulation.roll_params import DefaultRollParameterProvider, normalize_roll_
 from simulation.roll_provider import DefaultRollProvider
 
 
+# supported ability names
+CRIPPLED_BONUS = 'crippled bonus'
+DAMAGE_PENALTY = 'damage penalty'
+FAILED_PARRY_DAMAGE_BONUS = 'failed parry damage bonus'
+INITIATIVE_BONUS = 'initiative bonus'
+MISSED_ATTACK_BONUS = 'missed attack bonus'
+PARRY_PENALTY = 'parry penalty'
+ROLLED_DAMAGE_BONUS = 'rolled damage bonus'
+WEAPON_DAMAGE_BONUS = 'weapon damage bonus'
+WOUND_CHECK_BONUS = 'wound check bonus'
+WOUND_CHECK_PENALTY = 'wound check penalty'
+
 # list of supported ability names
 ABILITY_NAMES = [
-  'missed_attack_bonus',
-  'parry_penalty',
-  'weapon_damage_bonus',
-  'rolled_damage_bonus',
-  'crippled_bonus',
-  'initiative_bonus',
-  'wound_check_bonus',
-  'damage_penalty',
-  'failed_parry_damage_bonus',
-  'wound_check_penalty'
+  CRIPPLED_BONUS,
+  DAMAGE_PENALTY,
+  FAILED_PARRY_DAMAGE_BONUS,
+  INITIATIVE_BONUS,
+  MISSED_ATTACK_BONUS,
+  PARRY_PENALTY,
+  ROLLED_DAMAGE_BONUS,
+  WEAPON_DAMAGE_BONUS,
+  WOUND_CHECK_BONUS,
+  WOUND_CHECK_PENALTY
 ]
 
 
@@ -106,25 +118,25 @@ def get_profession_ability(name):
   '''
   if not isinstance(name, str):
     raise ValueError('get_profession_ability requires str')
-  if name == 'crippled_bonus':
+  if name == CRIPPLED_BONUS:
     return CrippledBonusAbility()
-  elif name == 'damage_penalty':
+  elif name == DAMAGE_PENALTY:
     return DamagePenaltyAbility()
-  elif name == 'failed_parry_damage_bonus':
+  elif name == FAILED_PARRY_DAMAGE_BONUS:
     return FailedParryDamageBonusAbility()
-  elif name == 'initiative_bonus':
+  elif name == INITIATIVE_BONUS:
     return InitiativeBonusAbility()
-  elif name == 'missed_attack_bonus':
+  elif name == MISSED_ATTACK_BONUS:
     return MissedAttackBonusAbility()
-  elif name == 'parry_penalty':
+  elif name == PARRY_PENALTY:
     return ParryPenaltyAbility()
-  elif name == 'rolled_damage_bonus':
+  elif name == ROLLED_DAMAGE_BONUS:
     return RolledDamageBonusAbility()
-  elif name == 'weapon_damage_bonus':
+  elif name == WEAPON_DAMAGE_BONUS:
     return RolledDamageBonusAbility()
-  elif name == 'wound_check_bonus':
+  elif name == WOUND_CHECK_BONUS:
     return WoundCheckBonusAbility()
-  elif name == 'wound_check_penalty':
+  elif name == WOUND_CHECK_PENALTY:
     return WoundCheckPenaltyAbility()
   else:
     raise ValueError('{} is not a valid profession ability'.format(name))
@@ -132,16 +144,16 @@ def get_profession_ability(name):
 
 class CrippledBonusAbility(ProfessionAbility):
   '''
-  Represents the "crippled_bonus" Wave Man profession ability:
+  Represents the "crippled bonus" Wave Man profession ability:
   "You may reroll 10s on a single die when crippled."
   '''
   def apply(self, character, profession):
-    character.set_roll_provider(profession)
+    character.set_roll_provider(WaveManRollProvider(profession))
 
 
 class DamagePenaltyAbility(ProfessionAbility):
   '''
-  Represents the "damage_penalty" Wave Man profession ability:
+  Represents the "damage penalty" Wave Man profession ability:
   "When someone is keeping at least one extra die of damage from
   exceeding their attack roll TN, subtract 5 from the damage."
   '''
@@ -153,7 +165,7 @@ class DamagePenaltyAbility(ProfessionAbility):
 
 class FailedParryDamageBonusAbility(ProfessionAbility):
   '''
-  Represents the "failed_parry_damage_bonus" Wave Man profession
+  Represents the "failed parry damage bonus" Wave Man profession
   ability:
   "When someone unsuccessfully tries to parry an attack, you may
   roll two of the extra damage dice that you would have rolled
@@ -165,7 +177,7 @@ class FailedParryDamageBonusAbility(ProfessionAbility):
 
 class InitiativeBonusAbility(ProfessionAbility):
   '''
-  Represents the "initiative_bonus" Wave Man profession ability:
+  Represents the "initiative bonus" Wave Man profession ability:
   "Roll one extra unkept die on initiative."
   '''
   def apply(self, character, profession):
@@ -174,7 +186,7 @@ class InitiativeBonusAbility(ProfessionAbility):
 
 class MissedAttackBonusAbility(ProfessionAbility):
   '''
-  Represents the "missed_attack_bonus" Wave Man profession ability:
+  Represents the "missed attack bonus" Wave Man profession ability:
   "When you make an attack roll that would miss, raise it by 5. Any
   parry attempt against an attack that receives a free raise in this
   manner automatically succeeds."
@@ -186,7 +198,7 @@ class MissedAttackBonusAbility(ProfessionAbility):
 
 class ParryPenaltyAbility(ProfessionAbility):
   '''
-  Represents the "parry_penalty" Wave Man profession ability:
+  Represents the "parry penalty" Wave Man profession ability:
   "Raise the TN of someone trying to parry one of your attacks by 5."
   '''
   def apply(self, character, profession):
@@ -196,7 +208,7 @@ class ParryPenaltyAbility(ProfessionAbility):
 
 class RolledDamageBonusAbility(ProfessionAbility):
   '''
-  Represents the "rolled_damage_bonus" Wave Man profession ability:
+  Represents the "rolled damage bonus" Wave Man profession ability:
   "Round your damage rolls up to the nearest multiple of 5. If the
   roll is already a multiple of 5, then raise it by 3."
   '''
@@ -207,7 +219,7 @@ class RolledDamageBonusAbility(ProfessionAbility):
 
 class WeaponDamageBonusAbility(ProfessionAbility):
   '''
-  Represents the "weapon_damage_bonus" Wave Man profession ability:
+  Represents the "weapon damage bonus" Wave Man profession ability:
   "When using a weapon that deals less than 4k2 damage, add an extra
   rolled damage die to the weapon's base damage, to a maximum of 4k2
   base damage. Also, subtract 2 from your armor damage reduction
@@ -221,7 +233,7 @@ class WeaponDamageBonusAbility(ProfessionAbility):
 
 class WoundCheckBonusAbility(ProfessionAbility):
   '''
-  Represents the "wound_check_bonus" Wave Man profession ability:
+  Represents the "wound check bonus" Wave Man profession ability:
   "Roll two extra unkept dice on wound checks."
   '''
   def apply(self, character, profession):
@@ -230,7 +242,7 @@ class WoundCheckBonusAbility(ProfessionAbility):
 
 class WoundCheckPenaltyAbility(ProfessionAbility):
   '''
-  Represents the "wound_check_penalty" Wave Man profession ability:
+  Represents the "wound check penalty" Wave Man profession ability:
   "Raise the TN of someone making a wound check from damage you
   dealt to them by 5. If they fail they take serious wounds as if
   the TN had not been raised."
@@ -280,7 +292,7 @@ class WaveManAttackAction(AttackAction):
       # failed parries usually cancel extra rolled damage dice
       # failed_parry_damage_bonus ability preserves some of
       # the extra rolled dice
-      return min(extra_rolled, self.ability('failed_parry_damage_bonus') * 2)
+      return min(extra_rolled, self.ability(FAILED_PARRY_DAMAGE_BONUS) * 2)
     else:
       return extra_rolled
 
@@ -291,14 +303,14 @@ class WaveManAttackAction(AttackAction):
       return 0
     else:
       # apply the parry penalty ability
-      penalty = self.ability('parry_penalty') * 5
+      penalty = self.ability(PARRY_PENALTY) * 5
       return self.skill_roll() + penalty
 
   def roll_attack(self):
     roll = self.subject().roll_skill(self.target(), self.skill(), self.vp())
     # apply missed_attack_bonus ability
     if roll < self.tn():
-      for i in range(self.ability('missed_attack_bonus')):
+      for i in range(self.ability(MISSED_ATTACK_BONUS)):
         if roll < self.tn():
           roll += 5
           self.set_used_missed_attack_bonus()
@@ -309,7 +321,7 @@ class WaveManAttackAction(AttackAction):
     extra_rolled = self.calculate_extra_damage_dice()
     roll = self.subject().roll_damage(self.target(), self.skill(), extra_rolled, self.vp())
     # apply damage_bonus ability
-    for i in range(self.ability('rolled_damage_bonus')):
+    for i in range(self.ability(ROLLED_DAMAGE_BONUS)):
       if roll % 5 == 0:
         roll += 3
       else:
@@ -322,7 +334,7 @@ class WaveManAttackAction(AttackAction):
     set_used_missed_attack_bonus()
 
     Sets the boolean flag to indicate that this attack used the
-    missed_attack_bonus ability to hit.
+    "missed attack bonus" ability to hit.
     '''
     self._used_missed_attack_bonus = True
 
@@ -330,7 +342,7 @@ class WaveManAttackAction(AttackAction):
     '''
     used_missed_attack_bonus() -> bool
 
-    Returns whether the missed_attack_bonus ability was used
+    Returns whether the "missed attack bonus" ability was used
     to make this attack hit.
     '''
     return self._used_missed_attack_bonus
@@ -353,7 +365,7 @@ class WaveManActionFactory(DefaultActionFactory):
 class WaveManRoll(BaseRoll):
   '''
   Roll that implements the Wave Man profession ability
-  "crippled_bonus":
+  "crippled bonus":
   "You may reroll 10s on a single die when crippled."
   '''
   def __init__(self, rolled, kept, faces=10, explode=True, die_provider=None, always_explode=0):
@@ -379,7 +391,7 @@ class WaveManRoll(BaseRoll):
 class WaveManRollParameterProvider(DefaultRollParameterProvider):
   '''
   RollParameterProvider that implements the Wave Man profession
-  ability "weapon_damage_bonus":
+  ability "weapon damage bonus":
   "When using a weapon that deals less than 4k2 damage, add an extra
   rolled damage die to the weapon's base damage, to a maximum of 4k2
   base damage. Also, subtract 2 from your armor damage reduction
@@ -388,7 +400,7 @@ class WaveManRollParameterProvider(DefaultRollParameterProvider):
   def get_damage_roll_params(self, character, target, skill, attack_extra_rolled, vp=0):
     # calculate weapon dice
     weapon_rolled = character.weapon().rolled()
-    ability_level = character.profession().ability('weapon_damage_bonus')
+    ability_level = character.profession().ability(WEAPON_DAMAGE_BONUS)
     if weapon_rolled < 4:
       weapon_rolled = min(4, weapon_rolled + ability_level)
     # calculate extra rolled dice
@@ -406,7 +418,7 @@ class WaveManRollParameterProvider(DefaultRollParameterProvider):
 class WaveManRollProvider(DefaultRollProvider):
   '''
   RollProvider that implements the Wave Man profession ability
-  "crippled_bonus" to reroll some 10s when crippled.
+  "crippled bonus" to reroll some 10s when crippled.
   '''
   def __init__(self, profession, die_provider=None):
     super().__init__(die_provider)
@@ -427,6 +439,6 @@ class WaveManRollProvider(DefaultRollProvider):
     
     Return a skill roll using the specified number of rolled and kept dice.
     '''
-    always_explode = self.ability('crippled_bonus')
+    always_explode = self.ability('crippled bonus')
     return WaveManRoll(rolled, kept, die_provider=self.die_provider(), explode=explode, always_explode=always_explode).roll()
 

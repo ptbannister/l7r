@@ -190,6 +190,7 @@ class _ProfessionCharacterBuilder(_BaseCharacterBuilder):
   def __init__(self, name=None, xp=100):
     super().__init__(name, xp)
     self._profession = Profession()
+    self.character().set_profession(self._profession)
 
   def profession(self):
     '''
