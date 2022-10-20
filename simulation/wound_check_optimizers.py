@@ -103,7 +103,6 @@ class DefaultWoundCheckOptimizer(object):
       sw = self.subject.wound_check(roll)
       if sw < prev_sw:
         self.sw_to_roll[sw] = roll
-        logger.debug('{} would take {} sw with a wound check roll of {}'.format(self.subject.name(), sw, roll))
         prev_sw = sw
       if sw == 0:
         break
@@ -131,7 +130,6 @@ class DefaultWoundCheckOptimizer(object):
       for ap in range(self.max_ap + 1):
         adjusted_tn = tn - (5 * ap) - mod
         p_tn = self.context.p(adjusted_tn, rolled, kept)
-        logger.debug('P({}|{}k{}) = {}'.format(adjusted_tn, rolled, kept, p_tn))
         self.p_for_resources.append(ProbabilityForResources(p_tn, vp, ap))
       if kept == 10:
         # do not spend additional vp after keeping 10 dice
@@ -147,4 +145,65 @@ class DefaultWoundCheckOptimizer(object):
           .format(self.subject.name(), vp, ap, max_sw, result.p))
         break
     return WoundCheckDeclaredEvent(self.subject, self.event.subject, self.event.damage, vp)
+
+
+class KeepLightWoundsOptimizer(ABC):
+  '''
+  Class that helps make decisions about keeping Light Wounds after
+  a successful Wound Check.
+  '''
+  @abstractmethod
+  def should_keep(self, max_sw, threshold):
+    '''
+    keep(max_sw, threshold) -> bool
+      max_sw (int): maximum number of SW this character is willing to risk
+      threshold (float): minimum probability desired of taking no more
+        than the given max_sw.
+
+    Returns whether this character should keep their current LW
+    or take a Serious Wound instead.
+    '''
+    pass
+
+
+class DefaultKeepLightWoundsOptimizer(KeepLightWoundsOptimizer):
+  def __init__(self, subject, context):
+    self.subject = subject
+    self.context = context
+
+  def should_keep(self, max_sw, threshold):
+    # how much damage do we expect to take in the future?
+    # TODO: revisit whether this is a good prediction of
+    # future damage
+    expected_damage = 0
+    if len(self.subject.lw_history()) == 0:
+      expected_damage = self.context.mean_roll(7, 2)
+    else:
+      expected_damage = int(sum(self.subject.lw_history()) / len(self.subject.lw_history()))
+    future_damage = self.subject.lw() + expected_damage
+    # what TN is needed to take no more than max_sw?
+    sw = 100
+    prev_sw = sw
+    roll = 0
+    sw_to_roll = {}
+    while sw > 0:
+      sw = self.subject.wound_check(roll, lw=future_damage)
+      if sw < prev_sw:
+        sw_to_roll[sw] = roll
+        prev_sw = sw
+      if sw == 0:
+        break
+      roll += 1
+    if max_sw not in sw_to_roll.keys():
+      # if max_sw isn't in the sw_to_roll dictionary,
+      # then we should be safe to keep
+      return True
+    tn = sw_to_roll[max_sw]
+    # plan to use any available floating bonuses
+    bonus = sum([b.bonus() for b in self.subject.floating_bonuses('wound check')])
+    tn -= bonus
+    # what is the probability of making the TN?
+    (rolled, kept, modifier) = self.subject.get_wound_check_roll_params()
+    p_tn = self.context.p(tn - modifier, rolled, kept)
+    return p_tn >= threshold
 

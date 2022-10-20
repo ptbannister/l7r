@@ -64,6 +64,8 @@ class AttackOptimizer(object):
       self.max_ap = min(self.subject.max_ap_per_roll(), self.subject.ap())
     if self.max_vp is None:
       self.max_vp = min(self.subject.max_vp_per_roll(), self.subject.vp())
+    self.max_ap = min(self.max_ap, self.subject.ap())
+    self.max_vp = min(self.max_vp, self.subject.vp())
     # determine expected tn
     self.speculative_action = self.subject.action_factory() \
       .get_attack_action(self.subject, self.theoretical_target, self.skill)
@@ -159,8 +161,8 @@ class DamageOptimizer(AttackOptimizer):
       if p < threshold:
         recommendation = None
     # return recommendation or None
-    if recommendation is None:
-      return None
-    else:
+    if recommendation is not None:
       return self.get_action(recommendation[0])
+    else:
+      return None
 

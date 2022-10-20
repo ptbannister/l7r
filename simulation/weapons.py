@@ -17,9 +17,20 @@ class Weapon(object):
     return self._rolled
 
 
+CLUB = Weapon('club', 2, 2)
+
+GONGFU = Weapon('gongfu', 0, 3)
+
 KATANA = Weapon('katana', 4, 2)
+SWORD = KATANA
+
+TANTO = Weapon('tanto', 2, 2)
+KNIFE = TANTO
 
 UNARMED = Weapon('unarmed', 0, 2)
 
-GONGFU = Weapon('gongfu', 0, 3)
+WAKIZASHI = Weapon('wakizashi', 3, 2)
+
+YARI = Weapon('yari', 3, 2)
+SPEAR = YARI
 

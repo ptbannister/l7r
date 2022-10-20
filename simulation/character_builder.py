@@ -14,7 +14,7 @@ import yaml
 from simulation.advantages import Advantage
 from simulation.character import Character
 from simulation.disadvantages import Disadvantage
-from simulation.professions import Profession
+from simulation.professions import Profession, get_profession_ability
 from simulation.skills import Skill
 from simulation.strategies import Strategy
 
@@ -30,25 +30,22 @@ class CharacterBuilder(object):
     self._xp = xp
 
   def generic(self):
-    if self._name:
-      return _BaseCharacterBuilder(self.xp(), self._name)
-    else:
-      return _BaseCharacterBuilder(self.xp())
+    return _BaseCharacterBuilder(name=self.name(), xp=self.xp())
+
+  def name(self):
+    return self._name
 
   def with_name(self, name):
     self._name = name
     return self
 
-  def with_profession(self, profession):
+  def with_profession(self):
     '''
-    with_profession(profession) -> ProfessionCharacterBuilder
+    with_profession() -> ProfessionCharacterBuilder
 
-    Build a character with a non-samurai profession.
+    Build a peasant character who can take profession abilities.
     '''
-    if self._name:
-      return _ProfessionCharacterBuilder(profession, self.xp(), self._name)
-    else:
-      return _ProfessionCharacterBuilder(profession, self.xp())
+    return _ProfessionCharacterBuilder(name=self.name(), xp=self.xp())
 
   def with_school(self, school):
     '''
@@ -56,10 +53,7 @@ class CharacterBuilder(object):
 
     Build a character with a samurai school.
     '''
-    if self._name:
-      return _SchoolCharacterBuilder(school, self.xp(), self._name)
-    else:
-      return _SchoolCharacterBuilder(school, self.xp())
+    return _SchoolCharacterBuilder(school, name=self.name(), xp=self.xp())
 
   def with_xp(self, xp):
     '''
@@ -84,11 +78,16 @@ class _BaseCharacterBuilder(object):
   '''
   Provides basic functions for building a character.
   '''
-  def __init__(self, xp=100, name=uuid.uuid4().hex):
+  def __init__(self, name=None, xp=100):
+    if name is None:
+      self.name = uuid.uuid4().hex
+    else:
+      if not isinstance(name, str):
+        raise ValueError('CharacterBuilder name must be str')
+      self._name = name
     self._character = Character(name)
     self._discounts = {}
     self._max_rings = {}
-    self._name = name
     self._xp = xp
     self._xp_spent = 0
 
@@ -188,17 +187,39 @@ class _ProfessionCharacterBuilder(_BaseCharacterBuilder):
   '''
   Builder for a character with a peasant profession.
   '''
-  def __init__(self, profession, xp=100, name=uuid.uuid4().hex):
-    super().__init__(xp)
-    self._profession = profession
+  def __init__(self, name=None, xp=100):
+    super().__init__(name, xp)
+    self._profession = Profession()
+
+  def profession(self):
+    '''
+    profession() -> Profession
+
+    Returns the Profession instance for this character.
+    '''
+    return self._profession
+
+  def take_ability(self, name):
+    '''
+    take_ability(name) -> _ProfessionCharacterBuilder
+      name (str): name of ability to take
+
+    Take a level in the named ability.
+    '''
+    abilities_available = ((self.xp() - 100) // 15) + 1
+    if len(self.profession()) >= abilities_available:
+      raise RuntimeError('May not take any more abilities')
+    self.profession().take_ability(name)
+    get_profession_ability(name).apply(self.character(), self.profession())
+    return self
 
 
 class _SchoolCharacterBuilder(_BaseCharacterBuilder):
   '''
   Builder for a character with a samurai school.
   '''
-  def __init__(self, school, xp=100, name=uuid.uuid4().hex):
-    super().__init__(xp, name)
+  def __init__(self, school, name=None, xp=100):
+    super().__init__(name, xp)
     self._school = school
     self._school_rank = 1
     self.initialize_school()

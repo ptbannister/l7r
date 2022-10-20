@@ -176,7 +176,8 @@ class TestTheoreticalCharacter(unittest.TestCase):
     modifier = Modifier(target, None, 'tn to hit', -5)
     listener = ExpireAfterNextAttackListener(modifier)
     modifier.register_listener(listener)
-    target.add_modifier(Modifier
+    target.add_modifier(modifier)
+    # TODO: finish this test
 
 if (__name__ == '__main__'):
   unittest.main()

@@ -67,6 +67,9 @@ class AttackAction(Action):
     else:
       return (skill_roll - self.tn()) // 5
 
+  def damage_roll(self):
+    return self._damage_roll
+
   def direct_damage(self):
     return None
 
@@ -87,6 +90,9 @@ class AttackAction(Action):
 
   def parries_predeclared(self):
     return self._parries_predeclared
+
+  def parry_tn(self):
+    return self.skill_roll()
 
   def roll_attack(self):
     self.set_skill_roll(self.subject().roll_skill(self.target(), self.skill(), self.vp()))
@@ -201,5 +207,5 @@ class ParryAction(Action):
     self._attack.set_parry_attempted()
 
   def tn(self):
-    return self._attack.skill_roll()
+    return self._attack.parry_tn()
 

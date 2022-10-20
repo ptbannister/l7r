@@ -2,7 +2,7 @@
 
 #
 # school_factory.py
-# Author: Patrick Bannister (ptbanni@gmail.com)
+# Author: Patrick Bannister (ptbannister@gmail.com)
 # Factory function to get character Schools for L7R combat simulator from the name of the school.
 #
 

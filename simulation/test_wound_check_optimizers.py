@@ -15,7 +15,7 @@ from simulation.context import EngineContext
 from simulation.events import LightWoundsDamageEvent, WoundCheckDeclaredEvent, WoundCheckRolledEvent
 from simulation.groups import Group
 from simulation.log import logger
-from simulation.wound_check_optimizers import DefaultWoundCheckOptimizer
+from simulation.wound_check_optimizers import DefaultWoundCheckOptimizer, DefaultKeepLightWoundsOptimizer
 
 # set up logging
 stream_handler = logging.StreamHandler(sys.stdout)
@@ -111,4 +111,34 @@ class TestDefaultWoundCheckOptimizer(unittest.TestCase):
     self.assertEqual(response.subject, self.akodo)
     self.assertEqual(response.attacker, self.akagi)
     self.assertEqual(1, response.vp)
-    
+   
+
+class TestKeepLightWoundsOptimizer(unittest.TestCase):
+  def test_two_water(self):
+    #
+    # test case with a character with 2 Water
+    # characters like this can't keep light wounds
+    character = Character('Glass Joe')
+    character.take_lw(17)
+    attacker = Character('Jake the Snake')
+    groups = [Group('subject', character), Group('attacker', attacker)]
+    context = EngineContext(groups)
+    context.initialize()
+    optimizer = DefaultKeepLightWoundsOptimizer(character, context)
+    self.assertFalse(optimizer.should_keep(1, 0.6))
+
+  def test_four_water(self):
+    #
+    # test case with a character with 4 Water
+    # P(25|5k4) = 0.64
+    # Should be willing to keep LW after taking 6 LW
+    character = Character('Steel Josef')
+    character.set_ring('water', 4)
+    character.take_lw(6)
+    attacker = Character('Jake the Snake')
+    groups = [Group('subject', character), Group('attacker', attacker)]
+    context = EngineContext(groups)
+    context.initialize()
+    optimizer = DefaultKeepLightWoundsOptimizer(character, context)
+    self.assertTrue(optimizer.should_keep(1, 0.6))
+

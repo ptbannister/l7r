@@ -220,6 +220,121 @@ this time are:
 * Permanent Wound
 
 
+### Advice for Building a Character
+
+Combat usually happens only once or twice per adventure, so a
+character will need social and knowledge skills to be fun to play!
+Sincerity and tact are essential for every character, and other
+skills are important depending on what kind of things you want to
+be good at.
+
+You should absolutely buy Attack and Parry so your TN to be hit is
+higher.
+* 2 Attack, 3 Parry: enemies with 2 Fire will miss you half the
+time, but enemies with 3 Fire will usually hit. High Fire enemies
+have a good chance of getting extra kept dice of damage against you.
+This costs 14 XP for samurai characters and 22 XP for peasants.
+* 3 Attack, 4 Parry: enemies with 2 Fire usually miss you, and
+enemies with 3 Fire miss you about half the time. This is the
+cheapest way to survive most combats at low levels! Costs 28 XP
+for samurai characters, 36 XP for peasants.
+* 4 Attack, 5 Parry: unrealistic for low XP characters, but
+important for high XP characters. Enemies have a hard time hitting
+you with less than 4 Fire without using VP or abilities. Costs
+46 XP for samurai characters, 54 XP for peasants.
+
+
+After raising your attack and parry, you should think about raising
+some of your Rings. It costs 60-75 XP to raise every ring to 3, so
+until high XP levels, most characters have to leave a couple of rings
+at 2. The question is what is important to you.
+
+
+**Air**
+Air is used for social rolls and parrying attacks. This ring is
+important if you're playing a parry school, or if you care about
+your character doing well at social skills such as lying, bragging,
+intimidation, interrogation, or winning arguments.
+
+
+**Earth**
+Earth determines how many Serious Wounds you can take before you
+are crippled and then dead. You will have to invest in Earth as you
+gain XP and face more dangerous enemies. However, it is commonly a
+dump stat for low and mid level characters.
+
+
+**Fire**
+Fire is used for attacking and damage, and also for sneaking. This
+is the most important ring if you want to do a lot of damage in
+combat.
+
+Here is what you can expect from different Fire rings:
+* 2 Fire: your attack roll is 20 less than half the time. You have
+a hard time hitting enemies with as little as 3 Parry. If you hit,
+you usually do 15-20 damage.
+* 3 Fire: your attack roll is 25 about half the time, so you usually
+hit enemies with 3 Parry or less, but enemies with 4 or 5 Parry are
+still hard for you to hit. You usually get 15 to 23 damage.
+* 4 Fire: your attack roll is 30 more than half the time, so you
+usually hit any enemy. If you lunge or get a lucky attack roll, you
+can get to three kept damage dice and do 25-35 damage, but your
+usual attacks get 17-27 damage.
+* 5 Fire: your usual attack roll is 35-50, so the question is no
+longer whether you hit, but just how hard you hit! You often get
+extra kept damage dice and do 30 to 38 damage.
+* 6 Fire: only possible for samurai characters with Fire schools.
+Your attack roll is 50 or higher more than half the time, and you
+usually keep extra damage dice and do 35-45 damage.
+
+
+**Water**
+This powerful ring is used for knowledge skills and Wound Checks.
+Characters with higher Water can take more hits before they take
+a Serious Wound.
+
+The rule for Wound Checks is that if you succeed, you may choose to
+keep your Light Wounds, and your Wound Check TN will be higher on
+the next hit, or you may take 1 Serious Wound and reset your Light
+Wounds to zero. And if you fail, you take 1 Serious Wound
+automatically, plus an additional Serious Wound for each increment
+of 10 by which you missed the TN.
+
+This rule means that characters should be making risky Wound Checks
+where they are likely to fail by 9 or less, so that they can stretch
+out their Serious Wounds.
+
+With all that in mind, here is what you can expect from different
+Water rings:
+* 2 Water: you take at least 1 SW from every hit. You are in great
+danger if your enemies get lucky damage rolls - you can easily take
+2-3 SW from big hits.
+* 3 Water: you usually succeed at Wound Checks against normal hits,
+and you can consider keeping the LW from a low damage roll if you
+can save VP for your next Wound Check. This only results in 2-3 SW
+about 10% of the time. Strong enemies can still do 2-3 SW to you in
+a single hit if they get a lucky damage roll and you get an average
+or below average Wound Check roll.
+* 4 Water: you can usually stretch out your LW and take 1 SW
+every other hit. Sometimes this will result in 2 SW from the second
+hit, but in that case you just break even, so it's a good risk.
+Strong characters can still threaten multiple SW with a good damage
+roll.
+* 5 Water: similar to 4 Water, but you are usually able to take
+just 1 SW even from a good damage roll by a strong character.
+* 6 Water: you can take three hits from weak characters before you
+take a Serious Wound, and if you have VP, you can consider keeping
+LW from a hit by a strong character.
+
+
+**Void**
+Void determines the number of actions you can take each round. This
+is crucially important for characters who want to be good at duels,
+and also tends to be important for characters with Parry schools, if
+they want to have enough actions to parry attacks and also throw
+some attacks back at their enemies.
+
+
 ### Character Strategies
 
 Strategies are used to determine character behavior. You may override

@@ -2,7 +2,7 @@
 
 #
 # shiba_school.py
-# Author: Patrick Bannister (ptbanni@gmail.com)
+# Author: Patrick Bannister (ptbannister@gmail.com)
 # Implement Shiba Bushi School.
 #
 

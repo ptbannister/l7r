@@ -13,6 +13,10 @@ from simulation.roll import InitiativeRoll, Roll
 
 class RollProvider(ABC):
   @abstractmethod
+  def die_provider(self):
+    pass
+
+  @abstractmethod
   def get_damage_roll(self, rolled, kept):
     pass
 
@@ -28,8 +32,18 @@ class RollProvider(ABC):
   def get_wound_check_roll(self):
     pass
 
+  @abstractmethod
+  def set_die_provider(self, die_provider):
+    pass
+
 
 class DefaultRollProvider(RollProvider):
+  def __init__(self, die_provider=None):
+    self._die_provider = die_provider
+
+  def die_provider(self):
+    return self._die_provider
+
   def get_damage_roll(self, rolled, kept):
     '''
     get_damage_roll(rolled, kept) -> int
@@ -38,7 +52,7 @@ class DefaultRollProvider(RollProvider):
     
     Return a damage roll using the specified number of rolled and kept dice.
     '''
-    return Roll(rolled, kept).roll()
+    return Roll(rolled, kept, die_provider=self.die_provider()).roll()
 
   def get_initiative_roll(self, rolled, kept):
     '''
@@ -49,7 +63,7 @@ class DefaultRollProvider(RollProvider):
     
     Return a skill roll using the specified number of rolled and kept dice.
     '''
-    return InitiativeRoll(rolled, kept).roll()
+    return InitiativeRoll(rolled, kept, die_provider=self.die_provider()).roll()
 
   def get_skill_roll(self, skill, rolled, kept, explode=True):
     '''
@@ -61,7 +75,7 @@ class DefaultRollProvider(RollProvider):
     
     Return a skill roll using the specified number of rolled and kept dice.
     '''
-    return Roll(rolled, kept, explode=explode).roll()
+    return Roll(rolled, kept, die_provider=self.die_provider(), explode=explode).roll()
 
   def get_wound_check_roll(self, rolled, kept):
     '''
@@ -71,7 +85,12 @@ class DefaultRollProvider(RollProvider):
     
     Return a Wound Check roll using the specified number of rolled and kept dice.
     '''
-    return Roll(rolled, kept).roll()
+    return Roll(rolled, kept, die_provider=self.die_provider()).roll()
+
+  def set_die_provider(self, die_provider):
+    if not isinstance(die_provider, DieProvider):
+      raise ValueError('set_die_provider requires DieProvider')
+    self._die_provider = die_provider
 
 
 DEFAULT_ROLL_PROVIDER = DefaultRollProvider()
@@ -82,7 +101,6 @@ class TestRollProvider(RollProvider):
   TestRollProvider
   Class to provide predictable rolls for use in testing.
   '''
-
   def __init__(self):
     self._queues = {
       'damage': [],
@@ -94,6 +112,9 @@ class TestRollProvider(RollProvider):
       'initiative': [],
       'wound_check': []
     }
+
+  def die_provider(self):
+    return None
 
   def get_damage_roll(self, rolled, kept):
     if len(self._queues['damage']) == 0:
@@ -152,4 +173,7 @@ class TestRollProvider(RollProvider):
 
   def put_wound_check_roll(self, result):
     self._queues['wound_check'].append(result)
+
+  def set_die_provider(self, die_provider):
+    raise NotImplementedError()
 

@@ -98,9 +98,6 @@ class Skill(object):
   def __init__(self, name):
     self._name = name
 
-  def is_advanced(self):
-    raise NotImplementedError()
-
   def cost(self, rank, original_rank=0):
     raise NotImplementedError()
 

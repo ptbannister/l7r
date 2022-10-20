@@ -2,7 +2,7 @@
 
 #
 # strategy_factory.py
-# Author: Patrick Bannister (ptbanni@gmail.com)
+# Author: Patrick Bannister (ptbannister@gmail.com)
 # Factory to get strategies by name.
 # This is a convenience provided to the character builder.
 #

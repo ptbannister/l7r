@@ -112,8 +112,8 @@ class BaseAttackStrategy(Strategy):
           .get_optimizer(character, target, skill, context) \
           .optimize(threshold)
         if attack is not None:
-          logger.info('{} is attacking {} with {}' \
-            .format(character.name(), target.name(), skill))
+          logger.info('{} is attacking {} with {} and spending {} VP' \
+            .format(character.name(), target.name(), skill, attack.vp()))
           return character.take_action_event_factory() \
             .get_take_attack_action_event(attack)
 
@@ -125,9 +125,16 @@ class PlainAttackStrategy(BaseAttackStrategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.YourMoveEvent):
       if character.has_action(context):
-        action_event = self.try_skill(character, 'attack', 0.5, context)
+        # attempt to optimize for a good attack
+        action_event = self.try_skill(character, 'attack', 0.7, context)
         if action_event is not None:
-          logger.info('{} is attacking {}'.format(character.name(), action_event.action.target().name()))
+          yield from self.spend_action(character, 'attack', context)
+          yield action_event
+          return
+        # fell through: chance of success is low
+        # try an attack anyway even if it's desperate
+        action_event = self.try_skill(character, 'attack', 0.01, context)
+        if action_event is not None:
           yield from self.spend_action(character, 'attack', context)
           yield action_event
         else:
@@ -181,7 +188,13 @@ class UniversalAttackStrategy(BaseAttackStrategy):
               yield feint_event
               return
         # try a plain attack
-        attack_event = self.try_skill(character, 'attack', 0.5, context)
+        attack_event = self.try_skill(character, 'attack', 0.7, context)
+        if attack_event is not None:
+          yield from self.spend_action(character, 'attack', context)
+          yield attack_event
+          return
+        # try a plain attack even if it's desperate
+        attack_event = self.try_skill(character, 'attack', 0.01, context)
         if attack_event is not None:
           yield from self.spend_action(character, 'attack', context)
           yield attack_event
@@ -289,7 +302,7 @@ class AlwaysParryStrategy(BaseParryStrategy):
     logger.debug('{} always parries for friends'.format(character.name()))
     parry = character.action_factory().get_parry_action(character, event.action.subject(), event.action, 'parry')
     yield from self.spend_action(character, 'parry', context)
-    yield character.take_action_event_factory().get_take_parry_event(parry)
+    yield character.take_action_event_factory().get_take_parry_action_event(parry)
 
 
 class NeverParryStrategy(Strategy):
@@ -540,7 +553,7 @@ class KeepLightWoundsStrategy(Strategy):
       if event.subject == character:
         if event.damage > event.roll:
           raise RuntimeError('KeepLightWoundsStrategy should not be consulted for a failed wound check')
-        # keep LW to avoid unconsciousness
+        # keep LW to avoid defeat
         if character.sw_remaining() == 1:
           logger.info('{} keeping light wounds to avoid defeat.'.format(character.name()))
           return

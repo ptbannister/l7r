@@ -23,7 +23,7 @@ from simulation.schools import School
 from simulation.strategies import Strategy
 from simulation.take_action_event_factory import DEFAULT_TAKE_ACTION_EVENT_FACTORY, TakeActionEventFactory
 from simulation.target_finders import EasiestTargetFinder, TargetFinder
-from simulation.weapons import KATANA
+from simulation.weapons import KATANA, Weapon
 from simulation.wound_check_optimizers import WoundCheckOptimizer
 from simulation.wound_check_optimizer_factory import DEFAULT_WOUND_CHECK_OPTIMIZER_FACTORY, WoundCheckOptimizerFactory
 from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
@@ -740,6 +740,11 @@ class Character(object):
     if not isinstance(factory, TakeActionEventFactory):
       raise ValueError('Character take action event factory must be a TakeActionEventFactory')
     self._take_action_event_factory = factory
+
+  def set_weapon(self, weapon):
+    if not isinstance(weapon, Weapon):
+      raise ValueError('set_weapon requires Weapon')
+    self._weapon = weapon
 
   def set_wound_check_optimizer_factory(self, factory):
     if not isinstance(factory, WoundCheckOptimizerFactory):
