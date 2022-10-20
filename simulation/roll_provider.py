@@ -2,7 +2,7 @@
 
 #
 # roll_provider.py
-# Author: Patrick Bannister
+#
 # Alternate roll providers for L7R combat simulations.
 #
 

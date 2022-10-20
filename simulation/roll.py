@@ -2,7 +2,7 @@
 
 #
 # roll.py
-# Author: Patrick Bannister
+#
 # Class to roll dice using L7R homebrew rules.
 #
 

@@ -4,6 +4,7 @@
 # context.py
 #
 # Context class for L7R combat simulator.
+#
 # The context class is passed around to provide contextual
 # information about timing and characters, to collect features
 # for later analysis, and to provide data that is best initialized

@@ -2,7 +2,6 @@
 
 #
 # actions.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # Classes for combat actions in the L7R combat simulator.
 #

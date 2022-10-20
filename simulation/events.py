@@ -2,7 +2,7 @@
 
 #
 # events.py
-# Author: Patrick Bannister
+#
 # Events for the L7R combat simulator.
 #
 

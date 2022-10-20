@@ -2,7 +2,6 @@
 
 #
 # listeners.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # Implement event listeners for L7R combat simulator.
 #

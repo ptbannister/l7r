@@ -2,7 +2,7 @@
 
 #
 # test_modifiers.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Unit tests for modifiers module.
 #
 

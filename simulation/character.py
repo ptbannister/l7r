@@ -2,7 +2,7 @@
 
 #
 # character.py
-# Author: Patrick Bannister
+#
 # Class to represent a character in L7R combat simulations.
 #
 

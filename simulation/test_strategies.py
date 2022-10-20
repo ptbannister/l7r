@@ -2,7 +2,7 @@
 
 #
 # test_strategies.py
-# Author: Patrick Bannister
+#
 # Unit tests for L7R combat simulator Strategy classes
 #
 

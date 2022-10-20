@@ -2,7 +2,7 @@
 
 #
 # schools.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Character Schools for L7R combat simulator.
 #
 

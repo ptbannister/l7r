@@ -2,7 +2,6 @@
 
 #
 # character_file.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # Character file format for L7R combat simulator.
 # Characters may be represented as a YAML file.

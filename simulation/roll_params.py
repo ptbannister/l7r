@@ -2,7 +2,6 @@
 
 #
 # roll_params.py
-# Author: Patrick Bannister
 #
 # Class to calculate a character's roll parameters in L7R.
 # "Roll parameters" is the tuple of (rolled, kept, modifier)

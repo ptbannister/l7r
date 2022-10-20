@@ -2,7 +2,7 @@
 
 #
 # test_character_file.py
-# Author: Patrick Bannister
+#
 # Unit tests for L7R combat simulator character file IO module
 #
 

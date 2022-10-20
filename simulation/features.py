@@ -2,7 +2,7 @@
 
 #
 # features.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 #
 # Observe and analyze features of an L7R simulation run.
 #

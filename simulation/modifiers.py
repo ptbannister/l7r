@@ -2,7 +2,7 @@
 
 #
 # modifiers.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Implement modifiers (flat bonuses or penalties to rolls) that can expire in response to events.
 #
 

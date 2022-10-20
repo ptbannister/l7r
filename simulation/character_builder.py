@@ -2,7 +2,6 @@
 
 #
 # character_builder.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # Character builder for L7R combat simulator.
 #

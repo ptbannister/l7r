@@ -2,7 +2,6 @@
 
 #
 # floating_bonuses.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # A "floating bonus" is a bonus that a character may spend after
 # making a roll to improve the roll.

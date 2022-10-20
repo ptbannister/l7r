@@ -2,7 +2,7 @@
 
 #
 # test_knowledge.py
-# Author: Patrick Bannister
+#
 # Unit tests for L7R combat simulator knowledge module
 #
 

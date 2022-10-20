@@ -2,7 +2,7 @@
 
 #
 # test_actions.py
-# Author: Patrick Bannister
+#
 # Unit tests for L7R combat simulator actions module
 #
 

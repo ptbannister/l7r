@@ -2,7 +2,7 @@
 
 #
 # take_action_event_factory.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Factory to get TakeActionEvents.
 # This is used to deal with schools that have custom actions that break the usual rules of how actions work.
 #

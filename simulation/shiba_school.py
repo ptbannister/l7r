@@ -3,7 +3,7 @@
 #
 # shiba_school.py
 # Author: Patrick Bannister (ptbannister@gmail.com)
-# Implement Shiba Bushi School.
+#
 #
 
 from simulation.actions import ParryAction

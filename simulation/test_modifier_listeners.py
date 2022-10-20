@@ -2,7 +2,7 @@
 
 #
 # test_modifier_listeners.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Unit tests for modifier_listeners module.
 #
 

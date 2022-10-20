@@ -2,7 +2,7 @@
 
 #
 # test_roll_provider.py
-# Author: Patrick Bannister
+#
 # Unit tests for L7R combat simulator roll_provider module
 #
 

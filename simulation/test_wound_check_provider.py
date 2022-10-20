@@ -2,7 +2,7 @@
 
 #
 # test_wound_check_provider.py
-# Author: Patrick Bannister
+#
 # Unit tests for L7R combat simulator wound check provider module
 #
 

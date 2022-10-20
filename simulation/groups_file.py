@@ -2,7 +2,6 @@
 
 #
 # groups_file.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # Group file format for the L7R combat simulator.
 # A single YAML file gives the groups and the names of the characters in the group.

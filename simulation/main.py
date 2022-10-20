@@ -2,7 +2,6 @@
 
 #
 # main.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # Driver for L7R combat simulator.
 #

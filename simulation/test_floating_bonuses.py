@@ -2,7 +2,7 @@
 
 #
 # test_floating_bonuses.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Unit tests for floating_bonuses module.
 #
 

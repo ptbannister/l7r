@@ -2,7 +2,6 @@
 
 #
 # modifier_listeners.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 #
 # A class that can respond to events to expire modifiers.
 # These are a completely separate object from Listener.

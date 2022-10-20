@@ -2,7 +2,7 @@
 
 #
 # professions.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Professions and profession abilities for the L7R combat simulator
 #
 

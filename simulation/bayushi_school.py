@@ -2,7 +2,6 @@
 
 #
 # bayushi_school.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
 # Implement Bayushi Bushi School.
 #
 

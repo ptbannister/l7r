@@ -2,7 +2,7 @@
 
 #
 # akodo_school.py
-# Author: Patrick Bannister (ptbannister@gmail.com)
+#
 # Implement Akodo Bushi School.
 #
 

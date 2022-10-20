@@ -2,7 +2,7 @@
 
 #
 # test_listeners.py
-# Author: Patrick Bannister
+#
 # Unit tests for L7R combat simulator Listener classes
 #
 
