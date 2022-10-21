@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+
+#
+# weapons.py
+#
+# Character weapons for the L7R combat simulator.
+# Different weapons have different base damage.
+#
 
 from abc import ABC, abstractmethod
 
