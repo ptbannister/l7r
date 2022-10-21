@@ -255,7 +255,7 @@ explained above.
 
 Avaialble abilities are:
 * crippled bonus
-* damage penalty (not supported)
+* damage penalty
 * failed parry damage bonus
 * initiative bonus
 * missed attack bonus
@@ -263,7 +263,7 @@ Avaialble abilities are:
 * rolled damage bonus
 * weapon damage bonus
 * wound check bonus
-* wound check penalty (not supported)
+* wound check penalty
 
 Explanation of the abilities:
 
