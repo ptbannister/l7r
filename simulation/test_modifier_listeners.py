@@ -17,7 +17,7 @@ from simulation.groups import Group
 from simulation.listeners import Listener
 from simulation.log import logger
 from simulation.modifiers import Modifier
-from simulation.modifier_listeners import ExpireAfterNextAttackListener, ExpireAfterNextAttackByCharacterListener, ModifierListener
+from simulation.modifier_listeners import ExpireAfterNextAttackListener, ExpireAfterNextAttackByCharacterListener, ExpireAfterNextDamageByCharacterListener, ModifierListener
 
 # set up logging
 stream_handler = logging.StreamHandler(sys.stdout)
@@ -145,4 +145,31 @@ class TestExpireAfterNextAttackByCharacterListener(unittest.TestCase):
     shiba_attack_failed = events.AttackSucceededEvent(shiba_attack)
     responses = [response for response in modifier.handle(self.matsu, shiba_attack_failed, self.context)]
     self.assertEqual(0, len(responses))
+
+class TestExpireAfterNextDamageByCharacterListener(unittest.TestCase):
+  def test_expire_after_light_wounds(self):
+    # set up characters and context
+    kakita = Character('Kakita')
+    kakita.set_ring('fire', 5)
+    wave_man = Character('Wave Man')
+    groups = [Group('Frat Boys', kakita), Group('Plague', wave_man)]
+    context = EngineContext(groups)
+    modifier = Modifier(kakita, wave_man, 'damage', -5)
+    listener = ExpireAfterNextDamageByCharacterListener(kakita, wave_man)
+    modifier.register_listener('lw_damage', listener)
+    kakita.add_modifier(modifier)
+    # Get Kakita's damage roll params
+    # There should be a -5 penalty
+    (rolled, kept, mod) = kakita.get_damage_roll_params(wave_man, 'attack', 1)
+    self.assertEqual(10, rolled)
+    self.assertEqual(2, kept)
+    self.assertEqual(-5, mod)
+    # play LightWoundsDamageEvent on Kakita
+    event = events.LightWoundsDamageEvent(kakita, wave_man, 19)
+    responses = [response for response in modifier.handle(kakita, event, context)]
+    # should be an expiration event
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, events.RemoveModifierEvent))
+    self.assertEqual(modifier, response.modifier)
 

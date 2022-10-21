@@ -11,8 +11,10 @@ import sys
 import unittest
 
 from simulation import professions
+from simulation.actions import AttackAction
 from simulation.character import Character
 from simulation.context import EngineContext
+from simulation.events import AddModifierEvent, AttackSucceededEvent, LightWoundsDamageEvent
 from simulation.groups import Group
 from simulation.log import logger
 from simulation.roll import TestDice
@@ -235,6 +237,73 @@ class TestWaveManAttackAction(unittest.TestCase):
     attack.roll_damage()
     # damage should be increased by +3 and then bumped to nearest five
     self.assertEqual(20, attack.damage_roll())
+
+
+class TestWaveManAttackSucceededListener(unittest.TestCase):
+  def setUp(self):
+    attacker = Character('attacker')
+    attacker.set_ring('fire', 5)
+    attacker.set_skill('attack', 4)
+    wave_man = Character('Wave Man')
+    wave_man.set_skill('parry', 4)
+    wave_man.set_profession(professions.Profession())
+    wave_man.set_listener('attack_succeeded', professions.WAVE_MAN_ATTACK_SUCCEEDED_LISTENER)
+    # context
+    groups = [Group('Wave Man', wave_man), Group('Internationals', attacker)]
+    context = EngineContext(groups)
+    # set instances
+    self.attacker = attacker
+    self.wave_man = wave_man
+    self.context = context
+
+  def test_level_zero(self):
+    # attack succeeded event
+    attack = AttackAction(self.attacker, self.wave_man)
+    attack.set_skill_roll(35)
+    attack.set_damage_roll(27)
+    attack_succeeded = AttackSucceededEvent(attack)
+    # play attack succeeded event on Wave Man
+    responses = [response for response in self.wave_man.event(attack_succeeded, self.context)]
+    self.assertEqual(0, len(responses))
+
+  def test_level_one(self):
+    self.wave_man.profession().take_ability(professions.DAMAGE_PENALTY)
+    # attack succeeded event
+    attack = AttackAction(self.attacker, self.wave_man)
+    attack.set_skill_roll(35)
+    attack.set_damage_roll(27)
+    attack_succeeded = AttackSucceededEvent(attack)
+    # play attack succeeded event on Wave Man
+    responses = [response for response in self.wave_man.event(attack_succeeded, self.context)]
+    # response should be a -5 modifier on damage from the attacker on the wave man
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, AddModifierEvent))
+    self.assertEqual(self.attacker, response.subject)
+    self.assertEqual(self.attacker, response.modifier.subject())
+    self.assertEqual(self.wave_man, response.modifier.target())
+    self.assertTrue('damage' in response.modifier.skills())
+    self.assertEqual(-5, response.modifier.adjustment())
+
+  def test_level_two(self):
+    self.wave_man.profession().take_ability(professions.DAMAGE_PENALTY)
+    self.wave_man.profession().take_ability(professions.DAMAGE_PENALTY)
+    # attack succeeded event
+    attack = AttackAction(self.attacker, self.wave_man)
+    attack.set_skill_roll(35)
+    attack.set_damage_roll(27)
+    attack_succeeded = AttackSucceededEvent(attack)
+    # play attack succeeded event on Wave Man
+    responses = [response for response in self.wave_man.event(attack_succeeded, self.context)]
+    # response should be a -5 modifier on damage from the attacker on the wave man
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, AddModifierEvent))
+    self.assertEqual(self.attacker, response.subject)
+    self.assertEqual(self.attacker, response.modifier.subject())
+    self.assertEqual(self.wave_man, response.modifier.target())
+    self.assertTrue('damage' in response.modifier.skills())
+    self.assertEqual(-10, response.modifier.adjustment())
 
 
 class TestWaveManRoll(unittest.TestCase):
@@ -501,4 +570,50 @@ class TestWaveManRollProvider(unittest.TestCase):
     test_dice.extend([1, 1, 3, 5, 7, 10, 10, 10, 1, 2, 3, 4])
     roll = self.character.roll_skill(self.target, 'attack')
     self.assertEqual(40, roll)
+
+
+class TestWaveManTakeAttackActionEvent(unittest.TestCase):
+  def setUp(self):
+    character = Character('Wave Man')
+    character.set_profession(professions.Profession())
+    self.character = character
+    # rig the character's damage roll
+    roll_provider = TestRollProvider()
+    roll_provider.put_skill_roll('damage', 17)
+    self.character.set_roll_provider(roll_provider)
+    # set up a target
+    self.target = Character('target')
+    
+  def test_level_zero(self):
+    # set up an attack
+    attack = professions.WaveManAttackAction(self.character, self.target)
+    attack.set_skill_roll(30)
+    # set up take attack action event
+    take_attack_event = professions.WaveManTakeAttackActionEvent(attack)
+    damage_event = take_attack_event._roll_damage()
+    self.assertEqual(17, damage_event.damage)
+    self.assertEqual(17, damage_event.wound_check_tn)
+
+  def test_level_one(self):
+    self.character.profession().take_ability(professions.WOUND_CHECK_PENALTY)
+    # set up an attack
+    attack = professions.WaveManAttackAction(self.character, self.target)
+    attack.set_skill_roll(30)
+    # set up take attack action event
+    take_attack_event = professions.WaveManTakeAttackActionEvent(attack)
+    damage_event = take_attack_event._roll_damage()
+    self.assertEqual(17, damage_event.damage)
+    self.assertEqual(22, damage_event.wound_check_tn)
+
+  def test_level_two(self):
+    self.character.profession().take_ability(professions.WOUND_CHECK_PENALTY)
+    self.character.profession().take_ability(professions.WOUND_CHECK_PENALTY)
+    # set up an attack
+    attack = professions.WaveManAttackAction(self.character, self.target)
+    attack.set_skill_roll(30)
+    # set up take attack action event
+    take_attack_event = professions.WaveManTakeAttackActionEvent(attack)
+    damage_event = take_attack_event._roll_damage()
+    self.assertEqual(17, damage_event.damage)
+    self.assertEqual(27, damage_event.wound_check_tn)
 

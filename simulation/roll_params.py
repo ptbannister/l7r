@@ -92,7 +92,7 @@ class DefaultRollParameterProvider(RollParameterProvider):
     my_extra_kept = character.extra_kept('damage') + character.extra_kept('damage_' + skill)
     kept = character.weapon().kept() + my_extra_kept
     # calculate modifier
-    mod = character.modifier('damage', None) + character.modifier('damage_' + skill, None)
+    mod = character.modifier(None, 'damage') + character.modifier(None, 'damage_' + skill)
     return normalize_roll_params(rolled, kept, mod)
 
   def get_initiative_roll_params(self, character):

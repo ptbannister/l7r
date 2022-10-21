@@ -17,8 +17,10 @@ class Action(object):
     self._vp = vp
     self._skill_roll = None
 
-  def set_skill_roll(self, skill_roll):
-    self._skill_roll = skill_roll
+  def set_skill_roll(self, roll):
+    if not isinstance(roll, int):
+      raise ValueError('set_skill_roll requires int')
+    self._skill_roll = roll
 
   def skill_roll(self):
     return self._skill_roll
@@ -40,6 +42,7 @@ class AttackAction(Action):
   def __init__(self, subject, target, skill='attack', vp=0):
     super().__init__(subject, target, skill, vp)
     self._damage_roll = None
+    self._damage_roll_params = None
     self._parries_declared = []
     self._parries_declined = []
     self._parries_predeclared = []
@@ -68,6 +71,13 @@ class AttackAction(Action):
 
   def damage_roll(self):
     return self._damage_roll
+
+  def damage_roll_params(self):
+    if self.skill_roll() is None:
+      return None
+    extra_rolled = self.calculate_extra_damage_dice()
+    rolled, kept, mod = self.subject().get_damage_roll_params(self.target(), self.skill(), extra_rolled, self.vp())
+    return (rolled, kept, mod)
 
   def direct_damage(self):
     return None
@@ -99,8 +109,15 @@ class AttackAction(Action):
 
   def roll_damage(self):
     extra_rolled = self.calculate_extra_damage_dice()
-    self._damage_roll = self.subject().roll_damage(self.target(), self.skill(), extra_rolled, self.vp())
-    return self._damage_roll
+    damage_roll = self.subject().roll_damage(self.target(), self.skill(), extra_rolled, self.vp())
+    damage_roll = max(0, damage_roll)
+    self.set_damage_roll(damage_roll)
+    return damage_roll
+
+  def set_damage_roll(self, damage):
+    if not isinstance(damage, int):
+      raise ValueError('set_damage_roll requires int')
+    self._damage_roll = damage
 
   def set_parry_attempted(self):
     self._parry_attempted = True
@@ -164,6 +181,7 @@ class FeintAction(AttackAction):
     return 0
 
   def roll_damage(self):
+    self.set_damage_roll_params((0, 0, 0))
     return 0
 
 

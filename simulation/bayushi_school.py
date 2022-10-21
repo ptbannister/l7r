@@ -60,13 +60,12 @@ class BayushiRollParameterProvider(DefaultRollParameterProvider):
   def get_damage_roll_params(self, character, target, skill, attack_extra_rolled, vp=0):
     # calculate extra rolled dice
     ring = character.ring(character.get_skill_ring('damage'))
-    my_extra_rolled = character.extra_rolled('damage') + character.extra_rolled('damage_' + skill)
+    my_extra_rolled = character.extra_rolled('damage')
     rolled = ring + my_extra_rolled + attack_extra_rolled + character.weapon().rolled() + vp
     # calculate extra kept dice
-    my_extra_kept = character.extra_kept('damage') + character.extra_kept('damage_' + skill)
-    kept = character.weapon().kept() + my_extra_kept + vp
+    kept = character.weapon().kept() + character.extra_kept('damage') + vp
     # calculate modifier
-    mod = character.modifier('damage', None) + character.modifier('damage_' + skill, None)
+    mod = character.modifier('damage', None)
     return normalize_roll_params(rolled, kept, mod)
 
 BAYUSHI_ROLL_PARAMETER_PROVIDER = BayushiRollParameterProvider()
@@ -83,12 +82,17 @@ class BayushiWoundCheckProvider(WoundCheckProvider):
 
 
 class BayushiFeintAction(FeintAction):
-  def roll_damage(self):
+  def damage_roll_params(self):
     rolled = self.subject().skill('attack') + self.vp()
     kept = 1 + self.vp()
     modifier = self.subject().modifier(self.target(), self.skill())
-    self._damage_roll = self.subject().roll_provider().get_damage_roll(rolled, kept) + modifier
-    return self._damage_roll
+    return (rolled, kept, modifier)
+
+  def roll_damage(self):
+    (rolled, kept, modifier) = self.damage_roll_params()
+    damage_roll = self.subject().roll_provider().get_damage_roll(rolled, kept) + modifier
+    self.set_damage_roll(damage_roll)
+    return damage_roll
 
 
 class BayushiActionFactory(DefaultActionFactory):

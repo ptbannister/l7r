@@ -10,9 +10,14 @@ from abc import ABC, abstractmethod
 
 from simulation.action_factory import DefaultActionFactory
 from simulation.actions import AttackAction
+from simulation.events import AddModifierEvent, AttackSucceededEvent, LightWoundsDamageEvent, TakeAttackActionEvent
+from simulation.listeners import Listener
+from simulation.modifiers import Modifier
+from simulation.modifier_listeners import ExpireAfterNextDamageByCharacterListener
 from simulation.roll import BaseRoll
 from simulation.roll_params import DefaultRollParameterProvider, normalize_roll_params
 from simulation.roll_provider import DefaultRollProvider
+from simulation.take_action_event_factory import DefaultTakeActionEventFactory
 
 
 # supported ability names
@@ -158,9 +163,7 @@ class DamagePenaltyAbility(ProfessionAbility):
   exceeding their attack roll TN, subtract 5 from the damage."
   '''
   def apply(self, character, profession):
-    # TODO: implement this by adding an expiring Modifier to the
-    # attacker after AttackSucceededEvent
-    raise NotImplementedError()
+    character.set_listener('attack_succeeded', WAVE_MAN_ATTACK_SUCCEEDED_LISTENER)
 
 
 class FailedParryDamageBonusAbility(ProfessionAbility):
@@ -248,10 +251,21 @@ class WoundCheckPenaltyAbility(ProfessionAbility):
   the TN had not been raised."
   '''
   def apply(self, character, profession):
-    # TODO: this is challenging!
-    # need to somehow separate wound check TN from LW
-    # might need a ResolveDamageEvent with complex internal logic
-    raise NotImplementedError()
+    character.set_take_action_event_factory(WaveManTakeActionEventFactory)
+
+
+class WaveManActionFactory(DefaultActionFactory):
+  '''
+  ActionFactory that can return a WaveManAttackAction.
+  '''
+  def __init__(self, abilities):
+    self._abilities = abilities
+
+  def get_attack_action(self, subject, target, skill, vp=0):
+    if skill == 'attack':
+      return WaveManAttackAction(subject, target, self._abilities, skill, vp)
+    else:
+      return super().get_attack_action(subject, target, skill, vp)
 
 
 class WaveManAttackAction(AttackAction):
@@ -346,20 +360,29 @@ class WaveManAttackAction(AttackAction):
     to make this attack hit.
     '''
     return self._used_missed_attack_bonus
-    
 
-class WaveManActionFactory(DefaultActionFactory):
-  '''
-  ActionFactory that can return a WaveManAttackAction.
-  '''
-  def __init__(self, abilities):
-    self._abilities = abilities
 
-  def get_attack_action(self, subject, target, skill, vp=0):
-    if skill == 'attack':
-      return WaveManAttackAction(subject, target, self._abilities, skill, vp)
-    else:
-      return super().get_attack_action(subject, target, skill, vp)
+class WaveManAttackSucceededListener(Listener):
+  '''
+  Listener that implements the Wave Man profession ability
+  "damage penalty":
+  "When someone is keeping at least one extra die of damage from
+  exceeding their attack roll TN, subtract 5 from the damage."
+  '''
+  def handle(self, character, event, context):
+    if isinstance(event, AttackSucceededEvent):
+      if character == event.action.target():
+        ability_level = character.profession().ability(DAMAGE_PENALTY)
+        (rolled, kept, mod) = event.action.damage_roll_params()
+        if kept > 2 and ability_level > 0:
+          penalty = ability_level * -5
+          modifier = Modifier(event.action.subject(), character, 'damage', penalty)
+          modifier_listener = ExpireAfterNextDamageByCharacterListener(event.action.subject(), character)
+          modifier.register_listener('lw_damage', modifier_listener)
+          yield AddModifierEvent(event.action.subject(), modifier)
+
+# singleton instance
+WAVE_MAN_ATTACK_SUCCEEDED_LISTENER = WaveManAttackSucceededListener()
 
 
 class WaveManRoll(BaseRoll):
@@ -441,4 +464,41 @@ class WaveManRollProvider(DefaultRollProvider):
     '''
     always_explode = self.ability('crippled bonus')
     return WaveManRoll(rolled, kept, die_provider=self.die_provider(), explode=explode, always_explode=always_explode).roll()
+
+
+class WaveManTakeAttackActionEvent(TakeAttackActionEvent):
+  '''
+  TakeAttackActionEvent to implement the Wave Man profession
+  ability "wound check penalty":
+  "Raise the TN of someone making a Wound Check from damage you
+  dealt to them by 5. If they fail, they take Serious Wounds as if
+  the TN had not been raised."
+  '''
+  def _roll_damage(self):
+    damage_roll = self.action.roll_damage()
+    wound_check_tn_penalty = 5 * self.action.subject().profession().ability(WOUND_CHECK_PENALTY)
+    wound_check_tn = damage_roll + wound_check_tn_penalty
+    return LightWoundsDamageEvent(self.action.subject(), self.action.target(), damage_roll, tn=wound_check_tn)
+
+
+class WaveManTakeActionEventFactory(DefaultTakeActionEventFactory):
+  '''
+  TakeActionEventFactory to implement the Wave Man profession
+  ability "wound check penalty":
+  "Raise the TN of someone making a Wound Check from damage you
+  dealt to them by 5. If they fail, they take Serious Wounds as if
+  the TN had not been raised."
+  '''
+  def get_take_attack_action_event(self, action):
+    '''
+    get_take_attack_action_event(action)
+      -> WaveManTakeAttackActionEvent
+      action (Action): an AttackAction
+
+    Returns a WaveManTakeAttackActionEvent to run an attack.
+    '''
+    if isinstance(action, AttackAction):
+      return WaveManTakeAttackActionEvent(action)
+    else:
+      raise ValueError('get_take_attack_action_event only supports TakeAttackAction')
 

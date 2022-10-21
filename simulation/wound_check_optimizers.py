@@ -122,7 +122,7 @@ class DefaultWoundCheckOptimizer(object):
     if max_sw not in self.sw_to_roll.keys():
       # if the sw_to_roll mapping doesn't contain max_sw,
       # then there is no risk of taking max_sw and no resources should be used
-      return WoundCheckDeclaredEvent(self.subject, self.event.subject, self.event.damage, 0)
+      return WoundCheckDeclaredEvent(self.subject, self.event.subject, self.event.damage, 0, tn=self.event.wound_check_tn)
     tn = self.sw_to_roll[max_sw] - bonus
     # calculate probability of reaching this tn for various resource expenditures
     for vp in range(self.max_vp + 1):
@@ -144,7 +144,7 @@ class DefaultWoundCheckOptimizer(object):
         logger.debug('{} declaring wound check with {} vp (planning to spend {} ap) to take {} SW with probability {}' \
           .format(self.subject.name(), vp, ap, max_sw, result.p))
         break
-    return WoundCheckDeclaredEvent(self.subject, self.event.subject, self.event.damage, vp)
+    return WoundCheckDeclaredEvent(self.subject, self.event.subject, self.event.damage, vp=vp, tn=self.event.wound_check_tn)
 
 
 class KeepLightWoundsOptimizer(ABC):

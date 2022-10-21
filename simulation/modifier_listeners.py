@@ -11,7 +11,7 @@
 
 from abc import ABC, abstractmethod
 
-from simulation.events import AttackFailedEvent, AttackSucceededEvent, EndOfRoundEvent, RemoveModifierEvent
+from simulation.events import AttackFailedEvent, AttackSucceededEvent, EndOfRoundEvent, LightWoundsDamageEvent, RemoveModifierEvent
 from simulation.log import logger
 from simulation.modifiers import Modifier
 from simulation.skills import ATTACK_SKILLS
@@ -50,6 +50,22 @@ class ExpireAfterNextAttackByCharacterListener(ModifierListener):
   def handle(self, character, event, modifier, context):
     if isinstance(event, AttackFailedEvent) or isinstance(event, AttackSucceededEvent):
       if character == event.action.target() and self._attacker == event.action.subject():
+        yield RemoveModifierEvent(character, modifier)
+
+
+class ExpireAfterNextDamageByCharacterListener(ModifierListener):
+  '''
+  Expire a modifier after a character's next damage roll.
+  Used for expiring modifiers that affect a character's damage roll.
+  '''
+  def __init__(self, subject, target):
+    super().__init__()
+    self._subject = subject
+    self._target = target
+
+  def handle(self, character, event, modifier, context):
+    if isinstance(event, LightWoundsDamageEvent):
+      if character == event.subject and self._target == event.target:
         yield RemoveModifierEvent(character, modifier)
 
 

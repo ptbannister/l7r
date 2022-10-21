@@ -52,7 +52,7 @@ class Modifier(object):
     or zero if it doesn't apply.
     '''
     if skill in self.skills():
-      if self.target() is None or self.target() == target:
+      if target is None or self.target() is None or self.target() == target:
         return self.adjustment()
     return 0
 

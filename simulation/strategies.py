@@ -551,7 +551,7 @@ class KeepLightWoundsStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.WoundCheckSucceededEvent):
       if event.subject == character:
-        if event.damage > event.roll:
+        if event.tn >= event.roll:
           raise RuntimeError('KeepLightWoundsStrategy should not be consulted for a failed wound check')
         # keep LW to avoid defeat
         if character.sw_remaining() == 1:
@@ -608,5 +608,5 @@ class StingyWoundCheckStrategy(Strategy):
     if isinstance(event, events.LightWoundsDamageEvent):
       if event.target == character:
         logger.info('{} never spends VP on wound checks.'.format(character.name()))
-        yield events.WoundCheckDeclaredEvent(character, event.subject, event.damage)
+        yield events.WoundCheckDeclaredEvent(character, event.subject, event.damage, tn=event.tn)
 

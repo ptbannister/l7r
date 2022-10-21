@@ -228,11 +228,26 @@ class DamageEvent(Event):
     super().__init__(name)
     self.subject = subject
     self.target = target
+    if not isinstance(damage, int):
+      raise ValueError('damage parameter must be int')
     self.damage = damage
-
+ 
 class LightWoundsDamageEvent(DamageEvent):
-  def __init__(self, subject, target, damage):
+  '''
+  The LightWoundsDamageEvent also has the "wound_check_tn" field,
+  which is the base TN to succeed at the Wound Check.
+
+  Normally this is the character's Light Wound total, but there
+  are certain abilities that modify the TN.
+  '''
+  def __init__(self, subject, target, damage, tn=None):
     super().__init__('lw_damage', subject, target, damage)
+    if tn is None:
+      self.wound_check_tn = damage
+    else:
+      if not isinstance(tn, int):
+        raise ValueError('tn parameter must be int')
+      self.wound_check_tn = tn
 
 class SeriousWoundsDamageEvent(DamageEvent):
   def __init__(self, subject, target, damage):
@@ -243,6 +258,15 @@ class StatusEvent(Event):
   def __init__(self, name, subject):
     super().__init__(name)
     self.subject = subject
+
+class CrippledEvent(StatusEvent):
+  def __init__(self, name, subject):
+    super().__init__('crippled', subject)
+
+class NotCrippledEvent(Event):
+  def __init__(self, name, subject):
+    super().__init__('not_crippled', subject)
+
 
 class DefeatEvent(StatusEvent):
   pass
@@ -286,36 +310,42 @@ class WoundCheckEvent(Event):
   The "attacker" is the character who inflicted the damage.
   The "damage" is the character's total Light Wounds for the
   wound check (including new damage as well as previous damage).
+  The "tn" is the base TN for the wound check, which normally is
+  the amount of damage.
   '''
-  def __init__(self, name, subject, attacker, damage):
+  def __init__(self, name, subject, attacker, damage, tn=None):
     super().__init__(name)
     self.subject = subject
     self.attacker = attacker
     self.damage = damage
+    if tn is None:
+      self.tn = damage
+    else:
+      self.tn = tn
 
 class WoundCheckDeclaredEvent(WoundCheckEvent):
-  def __init__(self, subject, attacker, damage, vp=0):
-    super().__init__('wound_check_declared', subject, attacker, damage)
+  def __init__(self, subject, attacker, damage, tn=None, vp=0):
+    super().__init__('wound_check_declared', subject, attacker, damage, tn)
     self.vp = vp
 
 class WoundCheckFailedEvent(WoundCheckEvent):
-  def __init__(self, subject, attacker, damage, roll):
-    super().__init__('wound_check_failed', subject, attacker, damage)
+  def __init__(self, subject, attacker, damage, roll, tn=None):
+    super().__init__('wound_check_failed', subject, attacker, damage, tn)
     self.roll = roll
 
 class WoundCheckRolledEvent(WoundCheckEvent):
-  def __init__(self, subject, attacker, damage, roll):
-    super().__init__('wound_check_rolled', subject, attacker, damage)
+  def __init__(self, subject, attacker, damage, roll, tn=None):
+    super().__init__('wound_check_rolled', subject, attacker, damage, tn)
     self.roll = roll
 
 class WoundCheckSucceededEvent(WoundCheckEvent):
-  def __init__(self, subject, attacker, damage, roll):
-    super().__init__('wound_check_succeeded', subject, attacker, damage)
+  def __init__(self, subject, attacker, damage, roll, tn=None):
+    super().__init__('wound_check_succeeded', subject, attacker, damage, tn)
     self.roll = roll
 
 class TakeSeriousWoundEvent(WoundCheckEvent):
   def __init__(self, subject, attacker, damage):
-    super().__init__('take_sw', subject, attacker, damage)
+    super().__init__('take_sw', subject, attacker, damage, tn=None)
 
 
 class GainResourcesEvent(Event):

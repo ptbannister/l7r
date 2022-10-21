@@ -116,7 +116,9 @@ class LightWoundsDamageListener(Listener):
       if event.target == character:
         character.take_lw(event.damage)
         character.knowledge().observe_damage_roll(event.subject, event.damage)
-        yield from character.wound_check_strategy().recommend(character, event, context)
+        # continue with wound check if the damage roll was nonzero
+        if event.damage > 0:
+          yield from character.wound_check_strategy().recommend(character, event, context)
 
 
 class SeriousWoundsDamageListener(Listener):
@@ -196,7 +198,7 @@ class WoundCheckDeclaredListener(Listener):
         roll = character.roll_wound_check(event.damage, event.vp)
         if event.vp > 0:
           yield events.SpendVoidPointsEvent(character, 'wound check', event.vp)
-        initial_roll = events.WoundCheckRolledEvent(character, event.attacker, event.damage, roll)
+        initial_roll = events.WoundCheckRolledEvent(character, event.attacker, event.damage, roll, tn=event.tn)
         yield from character.wound_check_rolled_strategy().recommend(character, initial_roll, context)
 
 
@@ -213,11 +215,11 @@ class WoundCheckRolledListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.WoundCheckRolledEvent):
       if event.subject == character:
-        if event.roll <= event.damage:
+        if event.roll < event.tn:
           # wound check failed
-          yield events.WoundCheckFailedEvent(character, event.attacker, event.damage, event.roll)
+          yield events.WoundCheckFailedEvent(character, event.attacker, event.damage, event.roll, tn=event.tn)
         else:
-          yield events.WoundCheckSucceededEvent(character, event.attacker, event.damage, event.roll)
+          yield events.WoundCheckSucceededEvent(character, event.attacker, event.damage, event.roll, tn=event.tn)
 
 
 class WoundCheckSucceededListener(Listener):

@@ -9,7 +9,8 @@
 import unittest
 
 from simulation.character import Character
-from simulation.knowledge import Knowledge
+from simulation.knowledge import Knowledge, TheoreticalCharacter
+from simulation.modifiers import Modifier
 
 
 class TestKnowledge(unittest.TestCase):
@@ -165,19 +166,20 @@ class TestTheoreticalCharacter(unittest.TestCase):
     target.set_skill('parry', 5)
     knowledge = Knowledge()
     knowledge.observe_tn_to_hit(target, 30)
-    theoretical_target = TheoreticalCharacter(target)
+    theoretical_target = TheoreticalCharacter(knowledge, target)
     self.assertEqual(30, theoretical_target.tn_to_hit())
 
   def test_modifiers(self):
     subject = Character('subject')
     target = Character('target')
     target.set_skill('parry', 5)
+    knowledge = Knowledge()
     knowledge.observe_tn_to_hit(target, 30)
     modifier = Modifier(target, None, 'tn to hit', -5)
-    listener = ExpireAfterNextAttackListener(modifier)
-    modifier.register_listener(listener)
-    target.add_modifier(modifier)
-    # TODO: finish this test
+    knowledge.observe_modifier_added(target, modifier)
+    # knowledge should give 25 for target's TN to be hit
+    theoretical_target = TheoreticalCharacter(knowledge, target)
+    self.assertEqual(25, theoretical_target.tn_to_hit())
 
 if (__name__ == '__main__'):
   unittest.main()
