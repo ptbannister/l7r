@@ -551,7 +551,7 @@ class KeepLightWoundsStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.WoundCheckSucceededEvent):
       if event.subject == character:
-        if event.tn >= event.roll:
+        if event.tn > event.roll:
           raise RuntimeError('KeepLightWoundsStrategy should not be consulted for a failed wound check')
         # keep LW to avoid defeat
         if character.sw_remaining() == 1:

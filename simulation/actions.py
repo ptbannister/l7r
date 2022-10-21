@@ -180,8 +180,11 @@ class FeintAction(AttackAction):
   def calculate_extra_damage_dice(self, skill_roll=None, tn=None):
     return 0
 
+  def damage_roll_params(self):
+    return (0, 0, 0)
+
   def roll_damage(self):
-    self.set_damage_roll_params((0, 0, 0))
+    self.set_damage_roll(0)
     return 0
 
 

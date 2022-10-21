@@ -251,7 +251,7 @@ class WoundCheckPenaltyAbility(ProfessionAbility):
   the TN had not been raised."
   '''
   def apply(self, character, profession):
-    character.set_take_action_event_factory(WaveManTakeActionEventFactory)
+    character.set_take_action_event_factory(WAVE_MAN_TAKE_ACTION_EVENT_FACTORY)
 
 
 class WaveManActionFactory(DefaultActionFactory):
@@ -263,7 +263,7 @@ class WaveManActionFactory(DefaultActionFactory):
 
   def get_attack_action(self, subject, target, skill, vp=0):
     if skill == 'attack':
-      return WaveManAttackAction(subject, target, self._abilities, skill, vp)
+      return WaveManAttackAction(subject, target, skill, vp)
     else:
       return super().get_attack_action(subject, target, skill, vp)
 
@@ -501,4 +501,6 @@ class WaveManTakeActionEventFactory(DefaultTakeActionEventFactory):
       return WaveManTakeAttackActionEvent(action)
     else:
       raise ValueError('get_take_attack_action_event only supports TakeAttackAction')
+
+WAVE_MAN_TAKE_ACTION_EVENT_FACTORY = WaveManTakeActionEventFactory()
 
