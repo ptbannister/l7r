@@ -343,9 +343,13 @@ class WoundCheckSucceededEvent(WoundCheckEvent):
     super().__init__('wound_check_succeeded', subject, attacker, damage, tn)
     self.roll = roll
 
+class KeepLightWoundsEvent(WoundCheckEvent):
+  def __init__(self, subject, attacker, damage, tn=None):
+    super().__init__('keep_lw', subject, attacker, damage, tn)
+
 class TakeSeriousWoundEvent(WoundCheckEvent):
-  def __init__(self, subject, attacker, damage):
-    super().__init__('take_sw', subject, attacker, damage, tn=None)
+  def __init__(self, subject, attacker, damage, tn=None):
+    super().__init__('take_sw', subject, attacker, damage, tn)
 
 
 class GainResourcesEvent(Event):

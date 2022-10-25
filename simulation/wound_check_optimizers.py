@@ -90,7 +90,8 @@ class DefaultWoundCheckOptimizer(object):
     self.max_vp = self.original_max_vp
     if self.max_vp is None:
       # if no limit set: maximum is character's maximum allowed VP expenditure
-      self.max_vp = min(self.subject.max_vp_per_roll(), self.subject.vp())
+      available_vp = self.subject.void_point_manager().vp('wound check')
+      self.max_vp = min(self.subject.max_vp_per_roll(), available_vp)
     # determine max ap that may be spent on this roll
     self.max_ap = self.original_max_ap
     if self.max_ap is None:
@@ -153,25 +154,43 @@ class KeepLightWoundsOptimizer(ABC):
   a successful Wound Check.
   '''
   @abstractmethod
-  def should_keep(self, max_sw, threshold):
+  def should_keep(self, max_sw, threshold, max_vp=None):
     '''
-    keep(max_sw, threshold) -> bool
-      max_sw (int): maximum number of SW this character is willing to risk
-      threshold (float): minimum probability desired of taking no more
-        than the given max_sw.
+    keep(max_sw, threshold) -> tuple
+      max_sw (int): maximum number of Serious Wounds this character
+        is willing to risk
+      threshold (float): minimum probability desired of taking no
+        more than the specified max_sw.
+      max_vp (int): maximum number of Void Points the character
+        would be willing to spend on a future Wound Check. If None,
+        the character will consider spending the maximum possible
+        number of VP. Default is None.
 
-    Returns whether this character should keep their current LW
-    or take a Serious Wound instead.
+    Returns a tuple of (bool, int). The bool recommends whether this
+    character should keep their current LW or take a Serious Wound
+    instead, and the int recommends the number of Void Points that
+    should be reserved with the character's Void Point Manager if
+    the decision is to keep.
     '''
     pass
 
 
 class DefaultKeepLightWoundsOptimizer(KeepLightWoundsOptimizer):
+  '''
+  KeepLightWoundsOptimizer implementation that will work for most
+  characters.
+
+  This implementation intentionally does not consider Adventure
+  Points. Instead, characters who can spend AP on wound checks
+  should optimize with a riskier threshold and use their AP if they
+  fail the roll by too much. This decision may be revisited in the
+  future.
+  '''
   def __init__(self, subject, context):
     self.subject = subject
     self.context = context
 
-  def should_keep(self, max_sw, threshold):
+  def should_keep(self, max_sw, threshold, max_vp=None):
     # how much damage do we expect to take in the future?
     # TODO: revisit whether this is a good prediction of
     # future damage
@@ -197,13 +216,85 @@ class DefaultKeepLightWoundsOptimizer(KeepLightWoundsOptimizer):
     if max_sw not in sw_to_roll.keys():
       # if max_sw isn't in the sw_to_roll dictionary,
       # then we should be safe to keep
-      return True
+      return (True, 0)
     tn = sw_to_roll[max_sw]
     # plan to use any available floating bonuses
     bonus = sum([b.bonus() for b in self.subject.floating_bonuses('wound check')])
     tn -= bonus
-    # what is the probability of making the TN?
-    (rolled, kept, modifier) = self.subject.get_wound_check_roll_params()
-    p_tn = self.context.p(tn - modifier, rolled, kept)
-    return p_tn >= threshold
+    # determine how many VP are available
+    vp_available = self.subject.void_point_manager().vp('wound check')
+    vp_available = min(max_vp, self.subject.max_vp_per_roll())
+    # find probability of making the TN with different VP spends 
+    p_tn_d = {}
+    for vp in range(vp_available + 1):
+      (rolled, kept, modifier) = self.subject.get_wound_check_roll_params(vp=vp)
+      p_tn = self.context.p(tn - modifier, rolled, kept)
+      p_tn_d[vp] = p_tn
+      if p_tn >= threshold:
+        break
+    # find the cheapest roll that meets the threshold
+    for vp in range(max_vp + 1):
+      if p_tn_d[vp] >= threshold:
+        return (True, vp)
+    # fell through: cannot make TN, should not keep
+    return (False, 0)
+
+class RiskyKeepLightWoundsOptimizer(KeepLightWoundsOptimizer):
+  '''
+  A KeepLightWoundsOptimizer designed to optimize based on a
+  maximum risk instead of a minimum risk.
+
+  The DefaultKeepLightWoundsOptimizer asks "given a maximum number
+  of SW I am willing to take, what is my chance of making the Wound
+  Check to take that many SW or fewer?"
+
+  This class asks instead, "given a number of SW that I'm not
+  willing to take, what is my chance of missing my TN and taking
+  that many SW or worse?"
+  '''
+  def __init__(self, subject, context):
+    self.subject = subject
+    self.context = context
+
+  def should_keep(self, max_sw, threshold, max_vp=None):
+    expected_damage = 0
+    if len(self.subject.lw_history()) == 0:
+      expected_damage = self.context.mean_roll(7, 2)
+    else:
+      expected_damage = int(sum(self.subject.lw_history()) / len(self.subject.lw_history()))
+    future_damage = self.subject.lw() + expected_damage
+    # what are the TN break points where we take different numbers of SW?
+    sw = 100
+    prev_sw = sw
+    roll = 0
+    sw_to_roll = {}
+    while sw > 0:
+      sw = self.subject.wound_check(roll, lw=future_damage)
+      if sw < prev_sw:
+        sw_to_roll[sw] = roll
+        prev_sw = sw
+      if sw == 0:
+        break
+      roll += 1
+    if max_sw not in sw_to_roll.keys():
+      # if max_sw isn't in the sw_to_roll dictionary,
+      # then we should be safe to keep
+      return (True, 0)
+    # determine the "break point" where we take unacceptable SW
+    break_point = sw_to_roll[max_sw]
+    # plan to use any available floating bonuses
+    bonus = sum([b.bonus() for b in self.subject.floating_bonuses('wound check')])
+    break_point -= bonus
+    # determine how many VP are available
+    vp_available = self.subject.void_point_manager().vp('wound check')
+    vp_available = min(max_vp, self.subject.max_vp_per_roll())
+    # find probability of rolling the break point or less, with different VP spends
+    p_fail_d = {}
+    for vp in range(vp_available + 1):
+      (rolled, kept, modifier) = self.subject.get_wound_check_roll_params(vp=vp)
+      p_fail = 1 - self.context.p(break_point - modifier, rolled, kept)
+      if p_fail < threshold:
+        return (True, vp)
+    # fell through: fail
+    return (False, 0)
 

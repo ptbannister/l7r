@@ -20,7 +20,8 @@ class VoidPointManager(object):
   won't spend them on something else like an attack roll or a
   special ability.
   '''
-  def __init__(self):
+  def __init__(self, character):
+    self._character = character
     self._reservations = {}
 
   def cancel(self, skill):
@@ -51,6 +52,8 @@ class VoidPointManager(object):
       vp (int): number of Void Points to reserve
 
     Reserves void points for future use for the chosen skill.
+    Reservations are not additive, so a new reservation overwrites
+    any previous reservation for the same skill.
     '''
     if not isinstance(skill, str):
       raise ValueError('reserve skill must be str')
@@ -58,8 +61,7 @@ class VoidPointManager(object):
       raise ValueError('Invalid skill: {}'.format(skill))
     if not isinstance(vp, int):
       raise ValueError('reserve vp must be int')
-    prev_reservation = self.reserved(skill)
-    self._reservations[skill] = prev_reservation + vp
+    self._reservations[skill] = vp
 
   def reserved(self, skill):
     '''
@@ -74,21 +76,19 @@ class VoidPointManager(object):
       raise ValueError('Invalid skill: {}'.format(skill))
     return self._reservations.get(skill, 0)
 
-  def vp(self, character, skill):
+  def vp(self, skill):
     '''
-    vp(character, skill) -> int
-      character (Character): character of interest
+    vp(skill) -> int
       skill (str): skill of interest
 
     Returns the number of Void Points the character has available
-    for the given skill.
+    for the given skill: the character's available VP, minus any VP
+    reserved for other skills.
     '''
-    if not hasattr(character, 'vp'):
-      raise ValueError('vp character requires Character')
     if not isinstance(skill, str):
       raise ValueError('reserve skill must be str')
     if skill not in EXTENDED_SKILLS:
       raise ValueError('Invalid skill: {}'.format(skill))
-    available = character.vp() - sum([v for (k, v) in self._reservations.items() if k != skill])
+    available = self._character.vp() - sum([v for (k, v) in self._reservations.items() if k != skill])
     return max(available, 0)
 

@@ -27,6 +27,7 @@ from simulation.weapons import KATANA, Weapon
 from simulation.wound_check_optimizers import WoundCheckOptimizer
 from simulation.wound_check_optimizer_factory import DEFAULT_WOUND_CHECK_OPTIMIZER_FACTORY, WoundCheckOptimizerFactory
 from simulation.wound_check_provider import DEFAULT_WOUND_CHECK_PROVIDER, WoundCheckProvider
+from simulation.void_point_manager import VoidPointManager
 
 
 RING_NAMES = ['air', 'earth', 'fire', 'water', 'void']
@@ -129,6 +130,7 @@ class Character(object):
     self._weapon = KATANA
     self._wound_check_optimizer_factory = DEFAULT_WOUND_CHECK_OPTIMIZER_FACTORY
     self._wound_check_provider = DEFAULT_WOUND_CHECK_PROVIDER
+    self._void_point_manager = VoidPointManager(self)
 
   def actions(self):
     '''
@@ -881,6 +883,9 @@ class Character(object):
     Characters should spend TVP very freely.
     '''
     return self._tvp
+
+  def void_point_manager(self):
+    return self._void_point_manager
 
   def vp(self):
     '''

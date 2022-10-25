@@ -93,6 +93,15 @@ class Knowledge(object):
       self._actions_per_round[name] = max(prev_n, n)
       self._actions_this_round[name] = 0
 
+  def lw(self, character):
+    '''
+    lw(character) -> int
+
+    Returns knowledge of a character's Light Wound total.
+    This implementation gives all characters perfect knowledge of others' LW total.
+    '''
+    return character.lw()
+
   def modifier(self, character, target, skill):
     '''
     modifier(character, target, skill) -> int
@@ -204,6 +213,15 @@ class Knowledge(object):
     else:
       self._wounds[name] = damage
 
+  def sw(self, character):
+    '''
+    sw(character) -> int
+
+    Returns knowledge of a character's Serious Wounds taken.
+    This implementation gives all characters perfect knowledge of others' SW.
+    '''
+    return character.sw()
+
   def tn_to_hit(self, target):
     '''
     tn_to_hit(target) -> int
@@ -235,9 +253,15 @@ class TheoreticalCharacter(object):
     self._knowledge = knowledge
     self._character = character
 
+  def lw(self):
+    return self._character.lw()
+
   def ring(self, ring):
     # TODO: figure out how to estimate rings
     return 3
+
+  def sw(self):
+    return self._character.sw()
 
   def tn_to_hit(self):
     return self._knowledge.tn_to_hit(self._character) + self._knowledge.modifier(self._character, None, 'tn to hit')

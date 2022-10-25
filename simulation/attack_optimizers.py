@@ -60,12 +60,13 @@ class AttackOptimizer(object):
     # determine possible expenditures of ap and vp
     self.max_ap = self.original_max_ap
     self.max_vp = self.original_max_vp
+    available_vp = self.subject.void_point_manager().vp(self.skill)
     if self.max_ap is None:
       self.max_ap = min(self.subject.max_ap_per_roll(), self.subject.ap())
     if self.max_vp is None:
-      self.max_vp = min(self.subject.max_vp_per_roll(), self.subject.vp())
+      self.max_vp = min(self.subject.max_vp_per_roll(), available_vp)
     self.max_ap = min(self.max_ap, self.subject.ap())
-    self.max_vp = min(self.max_vp, self.subject.vp())
+    self.max_vp = min(self.max_vp, available_vp)
     # determine expected tn
     self.speculative_action = self.subject.action_factory() \
       .get_attack_action(self.subject, self.theoretical_target, self.skill)

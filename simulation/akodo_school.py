@@ -80,9 +80,11 @@ class AkodoLightWoundsDamageListener(Listener):
 
   def handle(self, character, event, context):
     if isinstance(event, events.LightWoundsDamageEvent):
+      if event.subject != character:
+        # observe another character's damage roll
+        character.knowledge().observe_damage_roll(event.subject, event.damage)
       if event.target == character:
         character.take_lw(event.damage)
-        character.knowledge().observe_damage_roll(event.subject, event.damage)
         yield from character.wound_check_strategy().recommend(character, event, context)
         yield from self._strategy.recommend(character, event, context)
 
@@ -97,7 +99,8 @@ class AkodoFifthDanStrategy(Strategy):
     if isinstance(event, events.LightWoundsDamageEvent):
       if event.target == character:
         # calculate max vp spendable on damage
-        max_vp = min(character.vp(), character.max_vp_per_roll())
+        available_vp = character.void_point_manager().vp('damage')
+        max_vp = min(available_vp, character.max_vp_per_roll())
         # TODO: implement a little more intelligence
         if max_vp > 0:
           yield events.SpendVoidPointsEvent(character, 'damage', max_vp)
@@ -143,14 +146,17 @@ class AkodoWoundCheckRolledStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.WoundCheckRolledEvent):
       if event.subject == character:
+        # how many wounds can I tolerate?
+        tolerable_sw = min(1, character.sw_remaining())
         # how many wounds would I take?
         expected_sw = character.wound_check(event.roll)
-        if expected_sw == 0:
-          # ignore it if no SW expected
+        if expected_sw <= tolerable_sw:
+          # ignore if the result is tolerable
           yield event
         else:
           # spend VP to reduce SW
-          max_spend = min(character.vp(), character.max_vp_per_roll())
+          available_vp = character.void_point_manager().vp('wound check')
+          max_spend = min(available_vp, character.max_vp_per_roll())
           prev_expected_sw = expected_sw
           chosen_spend = 0
           for vp in range(1, max_spend):
@@ -159,6 +165,8 @@ class AkodoWoundCheckRolledStrategy(Strategy):
             if expected_sw < prev_expected_sw:
               chosen_spend = vp
             prev_expected_sw = expected_sw
+            if expected_sw <= tolerable_sw:
+              break
           # spend chosen amount of VP
           new_roll = event.roll + (5 * chosen_spend)
           if (chosen_spend > 0):

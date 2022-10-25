@@ -63,8 +63,8 @@ SHIBA_ACTION_FACTORY = ShibaActionFactory()
 
 class ShibaParryAction(ParryAction):
   '''
-  Implement the Shiba Bushi School special ability
-  that parries on behalf of others do not suffer the standard -10 penalty.
+  Implement the Shiba Bushi School special ability that parries on
+  behalf of others do not suffer the standard -10 penalty.
   '''
   def roll_parry(self):
     # roll parry

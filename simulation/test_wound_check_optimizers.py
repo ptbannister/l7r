@@ -113,21 +113,23 @@ class TestDefaultWoundCheckOptimizer(unittest.TestCase):
     self.assertEqual(1, response.vp)
    
 
-class TestKeepLightWoundsOptimizer(unittest.TestCase):
+class TestDefaultKeepLightWoundsOptimizer(unittest.TestCase):
   def test_two_water(self):
     #
     # test case with a character with 2 Water
     # characters like this can't keep light wounds
     character = Character('Glass Joe')
     character.take_lw(17)
-    attacker = Character('Jake the Snake')
-    groups = [Group('subject', character), Group('attacker', attacker)]
+    attacker = Character('Sid the Squid')
+    groups = [Group('subject', character), Group('Squids', attacker)]
     context = EngineContext(groups)
     context.initialize()
     optimizer = DefaultKeepLightWoundsOptimizer(character, context)
-    self.assertFalse(optimizer.should_keep(1, 0.6))
+    (should_keep, reserve_vp) = optimizer.should_keep(1, 0.6, max_vp=1)
+    self.assertFalse(should_keep)
+    self.assertEqual(0, reserve_vp)
 
-  def test_four_water(self):
+  def test_four_water_keep_spend_zero(self):
     #
     # test case with a character with 4 Water
     # P(25|5k4) = 0.64
@@ -135,10 +137,42 @@ class TestKeepLightWoundsOptimizer(unittest.TestCase):
     character = Character('Steel Josef')
     character.set_ring('water', 4)
     character.take_lw(6)
-    attacker = Character('Jake the Snake')
-    groups = [Group('subject', character), Group('attacker', attacker)]
+    attacker = Character('Sid the Squid')
+    groups = [Group('subject', character), Group('Squids', attacker)]
     context = EngineContext(groups)
     context.initialize()
     optimizer = DefaultKeepLightWoundsOptimizer(character, context)
-    self.assertTrue(optimizer.should_keep(1, 0.6))
+    (should_keep, reserve_vp) = optimizer.should_keep(1, 0.6, max_vp=1)
+    self.assertTrue(should_keep)
+    self.assertEqual(0, reserve_vp)
+
+  def test_four_water_keep_spend_one(self):
+    #
+    # P(31|6k5) = 0.62
+    # Should be willing to keep after taking 20 LW, with 1 VP
+    character = Character('Steel Josef')
+    character.set_ring('water', 4)
+    character.take_lw(20)
+    attacker = Character('Sid the Squid')
+    groups = [Group('subject', character), Group('Squids', attacker)]
+    context = EngineContext(groups)
+    context.initialize()
+    optimizer = DefaultKeepLightWoundsOptimizer(character, context)
+    (should_keep, reserve_vp) = optimizer.should_keep(1, 0.6, max_vp=1)
+    self.assertTrue(should_keep)
+    self.assertEqual(1, reserve_vp)
+
+class TestRiskyKeepLightWoundsOptimizer(unittest.TestCase):
+  def test_six_water(self):
+    #
+    # test case for a character with 6 Water
+    # P(33|8k7) = 0.91
+    # this means that a character with 6 Water who plans to spend 1 VP
+    # can face a 51 LW with a 9% chance of taking 3 SW
+    # since an average damage roll is 19, you can risk this with 32 LW!
+    character = Character('Bubble Man')
+    character.set_ring('water', 6)
+    attacker = Character('Blade')
+    groups = [Group('subject', character), Group('Zombies', attacker)]
+    
 

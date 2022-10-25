@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+
+#
+# strategies.py
+#
+# Classes that make decisions about how to respond to events.
+#
 
 from abc import ABC, abstractmethod
 import itertools
@@ -8,21 +15,25 @@ from simulation.exceptions import NotEnoughActions
 from simulation.knowledge import TheoreticalCharacter
 from simulation.log import logger
 from simulation.roll import normalize_roll_params
-
+from simulation.wound_check_optimizers import DefaultKeepLightWoundsOptimizer
 
 class Strategy(ABC):
   '''
   Class that can choose between possible decisions to respond to an Event.
+
   The Strategy and Listener classes both respond to an Event by
   optionally returning another Event, which begs the question, why
   not just put strategy logic into Listeners?
+
   The idea behind separating Listener and Strategy is to keep the two classes simple.
   Listener is responsible for knowing when to mutate the Character's state
   (taking damage, spending resources, etc). The Strategy implements
   complex logic to choose between possible courses of action.
+
   Mixing the two classes would result in big Listener classes that
   would contain too much complexity. It would be difficult to write
   such a big class, or to test it effectively.
+
   Isolating decision making logic in the Strategy class also helps
   deal with the fact that different kinds of characters will have
   different strategies around certain aspects of their behavior, and
@@ -517,7 +528,7 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
         new_expected_sw = character.wound_check(new_roll)
         if new_expected_sw == tolerable_sw:
           break
-    return events.WoundCheckRolledEvent(event.subject, event.attacker, event.damage, new_roll)
+    return events.WoundCheckRolledEvent(event.subject, event.attacker, event.damage, new_roll, tn=event.tn)
 
   def use_floating_bonuses(self, character, event, tolerable_sw, skill):
     available_bonuses = character.floating_bonuses(skill)
@@ -530,7 +541,7 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
       new_expected_sw = character.wound_check(new_roll)
       if new_expected_sw == tolerable_sw:
         break
-    return events.WoundCheckRolledEvent(event.subject, event.attacker, event.damage, new_roll) 
+    return events.WoundCheckRolledEvent(event.subject, event.attacker, event.damage, new_roll, tn=event.tn)
 
 
 class AlwaysKeepLightWoundsStrategy(Strategy):
@@ -541,7 +552,7 @@ class AlwaysKeepLightWoundsStrategy(Strategy):
     if isinstance(event, events.WoundCheckSucceededEvent):
       if event.subject == character:
         logger.info('{} always keeps light wounds'.format(character.name()))
-        yield from ()
+        yield events.KeepLightWoundsEvent(event.subject, event.attacker, event.damage, tn=event.tn)
 
 
 class KeepLightWoundsStrategy(Strategy):
@@ -556,24 +567,18 @@ class KeepLightWoundsStrategy(Strategy):
         # keep LW to avoid defeat
         if character.sw_remaining() == 1:
           logger.info('{} keeping light wounds to avoid defeat.'.format(character.name()))
+          yield events.KeepLightWoundsEvent(character, event.attacker, event.damage, tn=event.tn)
+        # consult KeepLightWoundsOptimizer
+        optimizer = DefaultKeepLightWoundsOptimizer(character, context)
+        (should_keep, reserve_vp) = optimizer.should_keep(1, 0.6, max_vp=1)
+        if should_keep:
+          logger.info('{} keeping {} LW and reserving {} VP for a future Wound Check' \
+            .format(character.name(), character.lw(), reserve_vp))
+          character.void_point_manager().reserve('wound check', reserve_vp)
           return
-        # how much damage do we expect to take in the future?
-        expected_damage = 0
-        if len(character.lw_history()) == 0:
-          expected_damage = context.mean_roll(7, 2)
         else:
-          expected_damage = int(sum(character.lw_history()) / len(character.lw_history()))
-        # what do we expect to get for the next wound check?
-        (rolled, kept, modifier) = character.get_wound_check_roll_params()
-        future_damage = character.lw() + expected_damage
-        expected_roll = context.mean_roll(rolled, kept) + modifier
-        # how many wounds do we expect?
-        if character.wound_check(expected_roll, future_damage) > 2:
-          # take the wound if the next wound check probably will be bad
           logger.info('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
-          yield events.TakeSeriousWoundEvent(character, event.attacker, 1)
-        else:
-          logger.info('{} keeping light wounds because the next wound check should be ok.'.format(character.name()))
+          yield events.TakeSeriousWoundEvent(character, event.attacker, event.damage, tn=event.tn)
 
 
 class NeverKeepLightWoundsStrategy(Strategy):

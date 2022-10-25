@@ -113,9 +113,11 @@ class FeintSucceededListener(Listener):
 class LightWoundsDamageListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.LightWoundsDamageEvent):
+      if event.subject != character:
+        # observe another character's damage roll
+        character.knowledge().observe_damage_roll(event.subject, event.damage)
       if event.target == character:
         character.take_lw(event.damage)
-        character.knowledge().observe_damage_roll(event.subject, event.damage)
         # continue with wound check if the damage roll was nonzero
         if event.damage > 0:
           yield from character.wound_check_strategy().recommend(character, event, context)
@@ -149,7 +151,7 @@ class TakeSeriousWoundListener(Listener):
     if isinstance(event, events.TakeSeriousWoundEvent):
       if event.subject == character:
         character.reset_lw()
-        yield events.SeriousWoundsDamageEvent(event.attacker, character, event.damage)
+        yield events.SeriousWoundsDamageEvent(event.attacker, character, 1)
 
 
 class GainTemporaryVoidPointsListener(Listener):
