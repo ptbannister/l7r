@@ -23,29 +23,68 @@ FIELDNAMES = [
   'control_actions_taken',
   'control_attacks_taken',
   'control_parries_taken',
+  'control_attacks_succeeded',
+  'control_parries_succeeded',
   'control_ap_remaining',
   'control_ap_spent',
   'control_ap_spent_wound_checks',
   'control_damage_rolls_count',
   'control_damage_rolls_sum',
   'control_damage_rolls_sumsquares',
+  'control_keep_lw_total_count',
+  'control_keep_lw_total_sum',
+  'control_keep_lw_total_sumsquares',
   'control_sw',
+  'control_take_sw_total_count',
+  'control_take_sw_total_sum',
+  'control_take_sw_total_sumsquares',
   'control_vp_spent',
   'control_vp_spent_attacks',
   'control_vp_spent_wound_checks',
+  'control_wc_failed',
+  'control_wc_failed_lw_total_count',
+  'control_wc_failed_lw_total_sum',
+  'control_wc_failed_lw_total_sumsquares',
+  'control_wc_failed_margin_count',
+  'control_wc_failed_margin_sum',
+  'control_wc_failed_margin_sumsquares',
+  'control_wc_succeeded',
+  'control_wc_succeeded_margin_count',
+  'control_wc_succeeded_margin_sum',
+  'control_wc_succeeded_margin_sumsquares',
+  'control_keep_lw_total_count',
   'test_actions_taken',
   'test_attacks_taken',
   'test_parries_taken',
+  'test_attacks_succeeded',
+  'test_parries_succeeded',
   'test_ap_remaining',
   'test_ap_spent',
   'test_ap_spent_wound_checks',
   'test_damage_rolls_count',
   'test_damage_rolls_sum',
   'test_damage_rolls_sumsquares',
+  'test_keep_lw_total_count',
+  'test_keep_lw_total_sum',
+  'test_keep_lw_total_sumsquares',
   'test_sw',
+  'test_take_sw_total_count',
+  'test_take_sw_total_sum',
+  'test_take_sw_total_sumsquares',
   'test_vp_spent',
   'test_vp_spent_attacks',
-  'test_vp_spent_wound_checks'
+  'test_vp_spent_wound_checks',
+  'test_wc_failed',
+  'test_wc_failed_lw_total_count',
+  'test_wc_failed_lw_total_sum',
+  'test_wc_failed_lw_total_sumsquares',
+  'test_wc_failed_margin_count',
+  'test_wc_failed_margin_sum',
+  'test_wc_failed_margin_sumsquares',
+  'test_wc_succeeded',
+  'test_wc_succeeded_margin_count',
+  'test_wc_succeeded_margin_sum',
+  'test_wc_succeeded_margin_sumsquares'
 ]
 
 
@@ -143,13 +182,22 @@ class SummaryFeatures(object):
     self.summarize_damage(self._data, self._summary, ntrials)
     self.summarize_damage(self._control_data, self._control_summary, self._control_victories)
     self.summarize_damage(self._test_data, self._test_summary, self._test_victories)
+    self.summarize_keep_lw(self._data, self._summary, ntrials)
+    self.summarize_keep_lw(self._control_data, self._control_summary, self._control_victories)
+    self.summarize_keep_lw(self._test_data, self._test_summary, self._test_victories)
     self.summarize_sw_remaining(self._data, self._summary, ntrials)
     self.summarize_sw_remaining(self._control_data, self._control_summary, self._control_victories)
     self.summarize_sw_remaining(self._test_data, self._test_summary, self._test_victories)
+    self.summarize_take_sw(self._data, self._summary, ntrials)
+    self.summarize_take_sw(self._control_data, self._control_summary, self._control_victories)
+    self.summarize_take_sw(self._test_data, self._test_summary, self._test_victories)
     # TODO: summarize AP
     self.summarize_vp(self._data, self._summary, ntrials)
     self.summarize_vp(self._control_data, self._control_summary, self._control_victories)
     self.summarize_vp(self._test_data, self._test_summary, self._test_victories)
+    self.summarize_wound_checks(self._data, self._summary, ntrials)
+    self.summarize_wound_checks(self._control_data, self._control_summary, self._control_victories)
+    self.summarize_wound_checks(self._test_data, self._test_summary, self._test_victories)
 
   def summarize_actions(self, datad, summaryd, n):
     #
@@ -164,6 +212,14 @@ class SummaryFeatures(object):
     # summarize parries taken
     summaryd['control_parries_taken_mean'] = self.mean(datad['control_parries_taken'], n)
     summaryd['test_parries_taken_mean'] = self.mean(datad['test_parries_taken'], n)
+    #
+    # summarize attacks succeeded
+    summaryd['control_attacks_succeeded_mean'] = self.mean(datad['control_attacks_succeeded'], n)
+    summaryd['test_attacks_succeeded_mean'] = self.mean(datad['test_attacks_succeeded'], n)
+    #
+    # summarize parries succeeded
+    summaryd['control_parries_succeeded_mean'] = self.mean(datad['control_parries_succeeded'], n)
+    summaryd['test_parries_succeeded_mean'] = self.mean(datad['test_parries_succeeded'], n)
     return
 
   def summarize_damage(self, datad, summaryd, n):
@@ -193,12 +249,26 @@ class SummaryFeatures(object):
     summaryd['duration_phases_mean'] = self.mean(datad['duration_phases'], n)
     return
 
+  def summarize_keep_lw(self, datad, summaryd, n):
+    #
+    # mean LW kept
+    summaryd['control_keep_lw_total_mean'] = self.mean(datad['control_keep_lw_total_sum'], datad['control_keep_lw_total_count'])
+    summaryd['test_keep_lw_total_mean'] = self.mean(datad['test_keep_lw_total_sum'], datad['test_keep_lw_total_count'])
+    return
+
   def summarize_sw_remaining(self, datad, summaryd, n): 
     #
     # summarize sw remaining
     summaryd['test_sw_remaining_mean'] = self.mean(datad['test_sw_remaining'], n)
     summaryd['control_sw_remaining_mean'] = self.mean(datad['control_sw_remaining'], n)
     return 
+
+  def summarize_take_sw(self, datad, summaryd, n):
+    #
+    # mean LW total when taking a SW after successful Wound Check
+    summaryd['control_take_sw_total_mean'] = self.mean(datad['control_take_sw_total_sum'], datad['control_take_sw_total_count'])
+    summaryd['test_take_sw_total_mean'] = self.mean(datad['test_take_sw_total_sum'], datad['test_take_sw_total_count'])
+    return
 
   def summarize_vp(self, datad, summaryd, n):
     #
@@ -219,96 +289,161 @@ class SummaryFeatures(object):
     summaryd['test_vp_spent_wound_checks_mean'] = self.mean(datad['test_vp_spent_wound_checks'], n)
     return
 
+  def summarize_wound_checks(self, datad, summaryd, n):
+    #
+    # wound checks succeeded
+    summaryd['control_wc_succeeded_mean'] = self.mean(datad['control_wc_succeeded'], n)
+    summaryd['test_wc_succeeded_mean'] = self.mean(datad['test_wc_succeeded'], n)
+    #
+    # wound checks failed
+    summaryd['control_wc_failed_mean'] = self.mean(datad['control_wc_failed'], n)
+    summaryd['test_wc_failed_mean'] = self.mean(datad['test_wc_failed'], n)
+    #
+    # failed wound check margin
+    summaryd['control_wc_failed_margin_mean'] = self.mean(datad['control_wc_failed_margin_sum'], datad['control_wc_failed_margin_count'])
+    summaryd['test_wc_failed_margin_mean'] = self.mean(datad['test_wc_failed_margin_sum'], datad['test_wc_failed_margin_count'])
+    #
+    # failed wound check LW total
+    summaryd['control_wc_failed_lw_total_mean'] = self.mean(datad['control_wc_failed_lw_total_sum'], datad['control_wc_failed_lw_total_count'])
+    summaryd['test_wc_failed_lw_total_mean'] = self.mean(datad['test_wc_failed_lw_total_sum'], datad['test_wc_failed_lw_total_count'])
+    #
+    # succeeded wound check margin
+    summaryd['control_wc_succeeded_margin_mean'] = self.mean(datad['control_wc_succeeded_margin_sum'], datad['control_wc_succeeded_margin_count'])
+    summaryd['test_wc_succeeded_margin_mean'] = self.mean(datad['test_wc_succeeded_margin_sum'], datad['test_wc_succeeded_margin_count'])
+    return
+
   def print_report(self):
     # duration summary
-    print('Average combat duration in rounds: {}'.format(self._summary['duration_rounds_mean']))
-    print('Average combat duration in phases: {}'.format(self._summary['duration_phases_mean']))
+    print('Average combat duration in rounds: {:.2f}'.format(self._summary['duration_rounds_mean']))
+    print('Average combat duration in phases: {:.2f}'.format(self._summary['duration_phases_mean']))
     print('')
     # test group stats
     print('Test group stats:')
-    print('\tSW remaining mean: {}'.format(self._summary['test_sw_remaining_mean']))
-    print('\tDamage roll mean: {}'.format(self._summary['test_damage_mean']))
-    print('\tDamage roll stdev: {}'.format(self._summary['test_damage_stdev']))
-    print('\tVP remaining mean: {}'.format(self._summary['test_vp_remaining_mean']))
-    print('\tVP spent mean: {}'.format(self._summary['test_vp_spent_mean']))
-    print('\tVP spent on attacks mean: {}'.format(self._summary['test_vp_spent_attacks_mean']))
-    print('\tVP spent on wound checks mean: {}'.format(self._summary['test_vp_spent_wound_checks_mean']))
-    print('\tActions taken mean: {}'.format(self._summary['test_actions_taken_mean']))
-    print('\tAttacks taken mean: {}'.format(self._summary['test_attacks_taken_mean']))
-    print('\tParries taken mean: {}'.format(self._summary['test_parries_taken_mean']))
+    print('\tSW remaining mean: {:.2f}'.format(self._summary['test_sw_remaining_mean']))
+    print('\tDamage roll mean: {:.2f}'.format(self._summary['test_damage_mean']))
+    print('\tDamage roll stdev: {:.2f}'.format(self._summary['test_damage_stdev']))
+    print('\tVP remaining mean: {:.2f}'.format(self._summary['test_vp_remaining_mean']))
+    print('\tVP spent mean: {:.2f}'.format(self._summary['test_vp_spent_mean']))
+    print('\tVP spent on attacks mean: {:.2f}'.format(self._summary['test_vp_spent_attacks_mean']))
+    print('\tVP spent on wound checks mean: {:.2f}'.format(self._summary['test_vp_spent_wound_checks_mean']))
+    print('\tActions taken mean: {:.2f}'.format(self._summary['test_actions_taken_mean']))
+    print('\tAttacks taken mean: {:.2f}'.format(self._summary['test_attacks_taken_mean']))
+    print('\tParries taken mean: {:.2f}'.format(self._summary['test_parries_taken_mean']))
+    print('\tAttacks succeeded mean: {:.2f}'.format(self._summary['test_attacks_succeeded_mean']))
+    print('\tParries succeeded mean: {:.2f}'.format(self._summary['test_parries_succeeded_mean']))
+    print('\tSuccessful wound check mean margin: {:.2f}'.format(self._summary['test_wc_succeeded_margin_mean']))
+    print('\tFailed wound check mean LW: {:.2f}'.format(self._summary['test_wc_failed_lw_total_mean']))
+    print('\tFailed wound check mean margin: {:.2f}'.format(self._summary['test_wc_failed_margin_mean']))
+    print('\tMean LW kept: {:.2f}'.format(self._summary['test_keep_lw_total_mean']))
+    print('\tMean LW when voluntarily taking SW: {:.2f}'.format(self._summary['test_take_sw_total_mean']))
     print('')
     # control group stats
     print('Control group stats:')
-    print('\tSW remaining mean: {}'.format(self._summary['control_sw_remaining_mean']))
-    print('\tDamage roll mean: {}'.format(self._summary['control_damage_mean']))
-    print('\tDamage roll stdev: {}'.format(self._summary['control_damage_stdev']))
-    print('\tVP remaining mean: {}'.format(self._summary['control_vp_remaining_mean']))
-    print('\tVP spent mean: {}'.format(self._summary['control_vp_spent_mean']))
-    print('\tVP spent on attacks mean: {}'.format(self._summary['control_vp_spent_attacks_mean']))
-    print('\tVP spent on wound checks mean: {}'.format(self._summary['control_vp_spent_wound_checks_mean']))
-    print('\tActions taken mean: {}'.format(self._summary['control_actions_taken_mean']))
-    print('\tAttacks taken mean: {}'.format(self._summary['control_attacks_taken_mean']))
-    print('\tParries taken mean: {}'.format(self._summary['control_parries_taken_mean']))
+    print('\tSW remaining mean: {:.2f}'.format(self._summary['control_sw_remaining_mean']))
+    print('\tDamage roll mean: {:.2f}'.format(self._summary['control_damage_mean']))
+    print('\tDamage roll stdev: {:.2f}'.format(self._summary['control_damage_stdev']))
+    print('\tVP remaining mean: {:.2f}'.format(self._summary['control_vp_remaining_mean']))
+    print('\tVP spent mean: {:.2f}'.format(self._summary['control_vp_spent_mean']))
+    print('\tVP spent on attacks mean: {:.2f}'.format(self._summary['control_vp_spent_attacks_mean']))
+    print('\tVP spent on wound checks mean: {:.2f}'.format(self._summary['control_vp_spent_wound_checks_mean']))
+    print('\tActions taken mean: {:.2f}'.format(self._summary['control_actions_taken_mean']))
+    print('\tAttacks taken mean: {:.2f}'.format(self._summary['control_attacks_taken_mean']))
+    print('\tParries taken mean: {:.2f}'.format(self._summary['control_parries_taken_mean']))
+    print('\tAttacks succeeded mean: {:.2f}'.format(self._summary['control_attacks_succeeded_mean']))
+    print('\tParries succeeded mean: {:.2f}'.format(self._summary['control_parries_succeeded_mean']))
+    print('\tSuccessful wound check mean margin: {:.2f}'.format(self._summary['control_wc_succeeded_margin_mean']))
+    print('\tFailed wound check mean LW: {:.2f}'.format(self._summary['control_wc_failed_lw_total_mean']))
+    print('\tFailed wound check mean margin: {:.2f}'.format(self._summary['control_wc_failed_margin_mean']))
+    print('\tMean LW kept: {:.2f}'.format(self._summary['control_keep_lw_total_mean']))
+    print('\tMean LW when voluntarily taking SW: {:.2f}'.format(self._summary['control_take_sw_total_mean']))
     if self._test_victories > 0:
       # stats given test group victory
       print('')
       print('Features given test group victory:')
-      print('\tAverage combat duration in rounds: {}'.format(self._test_summary['duration_rounds_mean']))
-      print('\tAverage combat duration in phases: {}'.format(self._test_summary['duration_phases_mean']))
+      print('\tAverage combat duration in rounds: {:.2f}'.format(self._test_summary['duration_rounds_mean']))
+      print('\tAverage combat duration in phases: {:.2f}'.format(self._test_summary['duration_phases_mean']))
       print('\t')
       print('\tTest group stats:')
-      print('\t\tSW remaining mean: {}'.format(self._test_summary['test_sw_remaining_mean']))
-      print('\t\tDamage roll mean: {}'.format(self._test_summary['test_damage_mean']))
-      print('\t\tDamage roll stdev: {}'.format(self._test_summary['test_damage_stdev']))
-      print('\t\tVP remaining mean: {}'.format(self._summary['test_vp_remaining_mean']))
-      print('\t\tVP spent mean: {}'.format(self._test_summary['test_vp_spent_mean']))
-      print('\t\tVP spent on attacks mean: {}'.format(self._test_summary['test_vp_spent_attacks_mean']))
-      print('\t\tVP spent on wound checks mean: {}'.format(self._test_summary['test_vp_spent_wound_checks_mean']))
-      print('\t\tActions taken mean: {}'.format(self._test_summary['test_actions_taken_mean']))
-      print('\t\tAttacks taken mean: {}'.format(self._test_summary['test_attacks_taken_mean']))
-      print('\t\tParries taken mean: {}'.format(self._test_summary['test_parries_taken_mean']))
+      print('\t\tSW remaining mean: {:.2f}'.format(self._test_summary['test_sw_remaining_mean']))
+      print('\t\tDamage roll mean: {:.2f}'.format(self._test_summary['test_damage_mean']))
+      print('\t\tDamage roll stdev: {:.2f}'.format(self._test_summary['test_damage_stdev']))
+      print('\t\tVP remaining mean: {:.2f}'.format(self._summary['test_vp_remaining_mean']))
+      print('\t\tVP spent mean: {:.2f}'.format(self._test_summary['test_vp_spent_mean']))
+      print('\t\tVP spent on attacks mean: {:.2f}'.format(self._test_summary['test_vp_spent_attacks_mean']))
+      print('\t\tVP spent on wound checks mean: {:.2f}'.format(self._test_summary['test_vp_spent_wound_checks_mean']))
+      print('\t\tActions taken mean: {:.2f}'.format(self._test_summary['test_actions_taken_mean']))
+      print('\t\tAttacks taken mean: {:.2f}'.format(self._test_summary['test_attacks_taken_mean']))
+      print('\t\tParries taken mean: {:.2f}'.format(self._test_summary['test_parries_taken_mean']))
+      print('\t\tAttacks succeeded mean: {:.2f}'.format(self._test_summary['test_attacks_succeeded_mean']))
+      print('\t\tParries succeeded mean: {:.2f}'.format(self._test_summary['test_parries_succeeded_mean']))
+      print('\t\tSuccessful wound check mean margin: {:.2f}'.format(self._test_summary['test_wc_succeeded_margin_mean']))
+      print('\t\tFailed wound check mean LW: {:.2f}'.format(self._test_summary['test_wc_failed_lw_total_mean']))
+      print('\t\tFailed wound check mean margin: {:.2f}'.format(self._test_summary['test_wc_failed_margin_mean']))
+      print('\t\tMean LW kept: {:.2f}'.format(self._test_summary['test_keep_lw_total_mean']))
+      print('\t\tMean LW when voluntarily taking SW: {:.2f}'.format(self._test_summary['test_take_sw_total_mean']))
       print('\t')
       print('\tControl group stats:')
-      print('\t\tSW remaining mean: {}'.format(self._test_summary['control_sw_remaining_mean']))
-      print('\t\tDamage roll mean: {}'.format(self._test_summary['control_damage_mean']))
-      print('\t\tDamage roll stdev: {}'.format(self._test_summary['control_damage_stdev']))
-      print('\t\tVP remaining mean: {}'.format(self._summary['control_vp_remaining_mean']))
-      print('\t\tVP spent mean: {}'.format(self._test_summary['control_vp_spent_mean']))
-      print('\t\tVP spent on attacks mean: {}'.format(self._test_summary['control_vp_spent_attacks_mean']))
-      print('\t\tVP spent on wound checks mean: {}'.format(self._test_summary['control_vp_spent_wound_checks_mean']))
-      print('\t\tActions taken mean: {}'.format(self._test_summary['control_actions_taken_mean']))
-      print('\t\tAttacks taken mean: {}'.format(self._test_summary['control_attacks_taken_mean']))
-      print('\t\tParries taken mean: {}'.format(self._test_summary['control_parries_taken_mean']))
+      print('\t\tSW remaining mean: {:.2f}'.format(self._test_summary['control_sw_remaining_mean']))
+      print('\t\tDamage roll mean: {:.2f}'.format(self._test_summary['control_damage_mean']))
+      print('\t\tDamage roll stdev: {:.2f}'.format(self._test_summary['control_damage_stdev']))
+      print('\t\tVP remaining mean: {:.2f}'.format(self._summary['control_vp_remaining_mean']))
+      print('\t\tVP spent mean: {:.2f}'.format(self._test_summary['control_vp_spent_mean']))
+      print('\t\tVP spent on attacks mean: {:.2f}'.format(self._test_summary['control_vp_spent_attacks_mean']))
+      print('\t\tVP spent on wound checks mean: {:.2f}'.format(self._test_summary['control_vp_spent_wound_checks_mean']))
+      print('\t\tActions taken mean: {:.2f}'.format(self._test_summary['control_actions_taken_mean']))
+      print('\t\tAttacks taken mean: {:.2f}'.format(self._test_summary['control_attacks_taken_mean']))
+      print('\t\tParries taken mean: {:.2f}'.format(self._test_summary['control_parries_taken_mean']))
+      print('\t\tAttacks succeeded mean: {:.2f}'.format(self._test_summary['control_attacks_succeeded_mean']))
+      print('\t\tParries succeeded mean: {:.2f}'.format(self._test_summary['control_parries_succeeded_mean']))
+      print('\t\tSuccessful wound check mean margin: {:.2f}'.format(self._test_summary['control_wc_succeeded_margin_mean']))
+      print('\t\tFailed wound check mean LW: {:.2f}'.format(self._test_summary['control_wc_failed_lw_total_mean']))
+      print('\t\tFailed wound check mean margin: {:.2f}'.format(self._test_summary['control_wc_failed_margin_mean']))
+      print('\t\tMean LW kept: {:.2f}'.format(self._test_summary['control_keep_lw_total_mean']))
+      print('\t\tMean LW when voluntarily taking SW: {:.2f}'.format(self._test_summary['control_take_sw_total_mean']))
     if self._control_victories > 0:
       # stats given control group victory 
       print('')
       print('Features given control group victory:')
-      print('\tAverage combat duration in rounds: {}'.format(self._control_summary['duration_rounds_mean']))
-      print('\tAverage combat duration in phases: {}'.format(self._control_summary['duration_phases_mean']))
+      print('\tAverage combat duration in rounds: {:.2f}'.format(self._control_summary['duration_rounds_mean']))
+      print('\tAverage combat duration in phases: {:.2f}'.format(self._control_summary['duration_phases_mean']))
       print('\t')
       print('\tTest group stats:')
-      print('\t\tSW remaining mean: {}'.format(self._control_summary['test_sw_remaining_mean']))
-      print('\t\tDamage roll mean: {}'.format(self._control_summary['test_damage_mean']))
-      print('\t\tDamage roll stdev: {}'.format(self._control_summary['test_damage_stdev']))
-      print('\t\tVP remaining mean: {}'.format(self._summary['test_vp_remaining_mean']))
-      print('\t\tVP spent mean: {}'.format(self._control_summary['test_vp_spent_mean']))
-      print('\t\tVP spent on attacks mean: {}'.format(self._control_summary['test_vp_spent_attacks_mean']))
-      print('\t\tVP spent on wound checks mean: {}'.format(self._control_summary['test_vp_spent_wound_checks_mean']))
-      print('\t\tActions taken mean: {}'.format(self._control_summary['test_actions_taken_mean']))
-      print('\t\tAttacks taken mean: {}'.format(self._control_summary['test_attacks_taken_mean']))
-      print('\t\tParries taken mean: {}'.format(self._control_summary['test_parries_taken_mean']))
+      print('\t\tSW remaining mean: {:.2f}'.format(self._control_summary['test_sw_remaining_mean']))
+      print('\t\tDamage roll mean: {:.2f}'.format(self._control_summary['test_damage_mean']))
+      print('\t\tDamage roll stdev: {:.2f}'.format(self._control_summary['test_damage_stdev']))
+      print('\t\tVP remaining mean: {:.2f}'.format(self._summary['test_vp_remaining_mean']))
+      print('\t\tVP spent mean: {:.2f}'.format(self._control_summary['test_vp_spent_mean']))
+      print('\t\tVP spent on attacks mean: {:.2f}'.format(self._control_summary['test_vp_spent_attacks_mean']))
+      print('\t\tVP spent on wound checks mean: {:.2f}'.format(self._control_summary['test_vp_spent_wound_checks_mean']))
+      print('\t\tActions taken mean: {:.2f}'.format(self._control_summary['test_actions_taken_mean']))
+      print('\t\tAttacks taken mean: {:.2f}'.format(self._control_summary['test_attacks_taken_mean']))
+      print('\t\tParries taken mean: {:.2f}'.format(self._control_summary['test_parries_taken_mean']))
+      print('\t\tAttacks succeeded mean: {:.2f}'.format(self._control_summary['test_attacks_succeeded_mean']))
+      print('\t\tParries succeeded mean: {:.2f}'.format(self._control_summary['test_parries_succeeded_mean']))
+      print('\t\tSuccessful wound check mean margin: {:.2f}'.format(self._test_summary['test_wc_succeeded_margin_mean']))
+      print('\t\tFailed wound check mean LW: {:.2f}'.format(self._control_summary['test_wc_failed_lw_total_mean']))
+      print('\t\tFailed wound check mean margin: {:.2f}'.format(self._control_summary['test_wc_failed_margin_mean']))
+      print('\t\tMean LW kept: {:.2f}'.format(self._control_summary['test_keep_lw_total_mean']))
+      print('\t\tMean LW when voluntarily taking SW: {:.2f}'.format(self._control_summary['test_take_sw_total_mean']))
       print('\t')
       print('\tControl group stats:')
-      print('\t\tSW remaining mean: {}'.format(self._control_summary['control_sw_remaining_mean']))
-      print('\t\tDamage roll mean: {}'.format(self._control_summary['control_damage_mean']))
-      print('\t\tDamage roll stdev: {}'.format(self._control_summary['control_damage_stdev']))
-      print('\t\tVP remaining mean: {}'.format(self._summary['control_vp_remaining_mean']))
-      print('\t\tVP spent mean: {}'.format(self._control_summary['control_vp_spent_mean']))
-      print('\t\tVP spent on attacks mean: {}'.format(self._control_summary['control_vp_spent_attacks_mean']))
-      print('\t\tVP spent on wound checks mean: {}'.format(self._control_summary['control_vp_spent_wound_checks_mean']))
-      print('\t\tActions taken mean: {}'.format(self._control_summary['control_actions_taken_mean']))
-      print('\t\tAttacks taken mean: {}'.format(self._control_summary['control_attacks_taken_mean']))
-      print('\t\tParries taken mean: {}'.format(self._test_summary['control_parries_taken_mean']))
+      print('\t\tSW remaining mean: {:.2f}'.format(self._control_summary['control_sw_remaining_mean']))
+      print('\t\tDamage roll mean: {:.2f}'.format(self._control_summary['control_damage_mean']))
+      print('\t\tDamage roll stdev: {:.2f}'.format(self._control_summary['control_damage_stdev']))
+      print('\t\tVP remaining mean: {:.2f}'.format(self._summary['control_vp_remaining_mean']))
+      print('\t\tVP spent mean: {:.2f}'.format(self._control_summary['control_vp_spent_mean']))
+      print('\t\tVP spent on attacks mean: {:.2f}'.format(self._control_summary['control_vp_spent_attacks_mean']))
+      print('\t\tVP spent on wound checks mean: {:.2f}'.format(self._control_summary['control_vp_spent_wound_checks_mean']))
+      print('\t\tActions taken mean: {:.2f}'.format(self._control_summary['control_actions_taken_mean']))
+      print('\t\tAttacks taken mean: {:.2f}'.format(self._control_summary['control_attacks_taken_mean']))
+      print('\t\tParries taken mean: {:.2f}'.format(self._test_summary['control_parries_taken_mean']))
+      print('\t\tAttacks succeeded mean: {:.2f}'.format(self._control_summary['control_attacks_succeeded_mean']))
+      print('\t\tParries succeeded mean: {:.2f}'.format(self._control_summary['control_parries_succeeded_mean']))
+      print('\t\tSuccessful wound check mean margin: {:.2f}'.format(self._control_summary['control_wc_succeeded_margin_mean']))
+      print('\t\tFailed wound check mean LW: {:.2f}'.format(self._control_summary['control_wc_failed_lw_total_mean']))
+      print('\t\tFailed wound check mean margin: {:.2f}'.format(self._control_summary['control_wc_failed_margin_mean']))
+      print('\t\tMean LW kept: {:.2f}'.format(self._control_summary['control_keep_lw_total_mean']))
+      print('\t\tMean LW when voluntarily taking SW: {:.2f}'.format(self._control_summary['control_take_sw_total_mean']))
     return
 
 
@@ -348,6 +483,8 @@ class TrialFeatures(object):
     self._data['control_actions_taken'] = 0
     self._data['control_attacks_taken'] = 0
     self._data['control_parries_taken'] = 0
+    self._data['control_attacks_succeeded'] = 0
+    self._data['control_parries_succeeded'] = 0
     # control's AP
     self._data['control_ap_remaining'] = 0
     self._data['control_ap_spent'] = 0
@@ -357,6 +494,14 @@ class TrialFeatures(object):
     self._data['control_sw'] = 0
     # control's SW remaining
     self._data['control_sw_remaining'] = 0
+    # control's wound checks
+    self._data['control_keep_lw_total'] = []
+    self._data['control_take_sw_total'] = []
+    self._data['control_wc_failed'] = 0
+    self._data['control_wc_failed_margin'] = []
+    self._data['control_wc_failed_lw_total'] = []
+    self._data['control_wc_succeeded'] = 0
+    self._data['control_wc_succeeded_margin'] = []
     # control's VP
     self._data['control_vp_remaining'] = 0
     self._data['control_vp_spent'] = 0
@@ -366,6 +511,8 @@ class TrialFeatures(object):
     self._data['test_actions_taken'] = 0
     self._data['test_attacks_taken'] = 0
     self._data['test_parries_taken'] = 0
+    self._data['test_attacks_succeeded'] = 0
+    self._data['test_parries_succeeded'] = 0
     # test's AP
     self._data['test_ap_remaining'] = 0
     self._data['test_ap_spent'] = 0
@@ -375,6 +522,14 @@ class TrialFeatures(object):
     self._data['test_sw'] = 0
     # test's SW remaining
     self._data['test_sw_remaining'] = 0
+    # test's wound checks
+    self._data['test_keep_lw_total'] = []
+    self._data['test_take_sw_total'] = []
+    self._data['test_wc_failed'] = 0
+    self._data['test_wc_failed_margin'] = []
+    self._data['test_wc_failed_lw_total'] = []
+    self._data['test_wc_succeeded'] = 0
+    self._data['test_wc_succeeded_margin'] = []
     # test's VP
     self._data['test_vp_remaining'] = 0
     self._data['test_vp_spent'] = 0
@@ -401,24 +556,20 @@ class TrialFeatures(object):
     elif isinstance(event, events.TakeParryActionEvent):
       self.observe_parry(event, context)
     elif isinstance(event, events.AttackSucceededEvent):
-      # TODO: collect successful attacks
-      pass
+      self.observe_attack_succeeded(event, context)
     elif isinstance(event, events.AttackFailedEvent):
       # TODO: collect failed attacks
       pass
     elif isinstance(event, events.ParrySucceededEvent):
-      # TODO: collect successful parries
-      pass
+      self.observe_parry_succeeded(event, context)
     elif isinstance(event, events.WoundCheckSucceededEvent):
-      # TODO: collect successful wound checks
-      pass
+      self.observe_wound_check_succeeded(event, context)
     elif isinstance(event, events.WoundCheckFailedEvent):
-      # TODO: collect failed wound checks and LW total at the time
-      pass
+      self.observe_wound_check_failed(event, context)
+    elif isinstance(event, events.KeepLightWoundsEvent):
+      self.observe_keep_lw(event, context)
     elif isinstance(event, events.TakeSeriousWoundEvent):
-      # TODO: collect number of times character took SW after successful wound check
-      # and what the LW total was at the time
-      pass
+      self.observe_take_sw(event, context)
 
   def observe_action(self, event, context):
     if event.subject in context.test_group():
@@ -432,6 +583,18 @@ class TrialFeatures(object):
     else:
       self._data['control_attacks_taken'] += 1
 
+  def observe_attack_succeeded(self, event, context):
+    if event.action.subject() in context.test_group():
+      self._data['test_attacks_succeeded'] += 1
+    else:
+      self._data['control_attacks_succeeded'] += 1
+
+  def observe_keep_lw(self, event, context):
+    if event.subject in context.test_group():
+      self._data['test_keep_lw_total'].append(event.damage)
+    else:
+      self._data['control_keep_lw_total'].append(event.damage)
+
   def observe_lw(self, event, context):
     if event.subject in context.test_group():
       self._data['test_damage_rolls'].append(event.damage)
@@ -444,6 +607,12 @@ class TrialFeatures(object):
     else:
       self._data['control_parries_taken'] += 1
 
+  def observe_parry_succeeded(self, event, context):
+    if event.action.subject() in context.test_group():
+      self._data['test_parries_succeeded'] += 1
+    else:
+      self._data['control_parries_succeeded'] += 1
+
   def observe_phase(self):
     self._data['duration_phases'] += 1
 
@@ -455,6 +624,13 @@ class TrialFeatures(object):
       self._data['test_sw'] += event.damage
     else:
       self._data['control_sw'] += event.damage
+
+  def observe_take_sw(self, event, context):
+    # observes LW total when character takes SW voluntarily
+    if event.subject in context.test_group():
+      self._data['test_take_sw_total'].append(event.damage)
+    else:
+      self._data['control_take_sw_total'].append(event.damage)
 
   def observe_vp_spent(self, event, context):
     if event.subject in context.test_group():
@@ -482,10 +658,31 @@ class TrialFeatures(object):
     self._winner = result
     self._data['winner'] = result
 
+  def observe_wound_check_failed(self, event, context):
+    if event.subject in context.test_group():
+      self._data['test_wc_failed'] += 1
+      self._data['test_wc_failed_margin'].append(event.tn - event.roll)
+      self._data['test_wc_failed_lw_total'].append(event.damage)
+    else:
+      self._data['control_wc_failed'] += 1
+      self._data['control_wc_failed_margin'].append(event.tn - event.roll)
+      self._data['control_wc_failed_lw_total'].append(event.damage)
+
+  def observe_wound_check_succeeded(self, event, context):
+    if event.subject in context.test_group():
+      self._data['test_wc_succeeded'] += 1
+      self._data['test_wc_succeeded_margin'].append(event.roll - event.tn)
+    else:
+      self._data['control_wc_succeeded'] += 1
+      self._data['control_wc_succeeded_margin'].append(event.roll - event.tn)
+
   def complete(self, context):
     self.complete_damage_rolls(context)
+    self.complete_keep_lw(context)
     self.complete_sw_remaining(context)
+    self.complete_take_sw(context)
     self.complete_vp_remaining(context)
+    self.complete_wound_checks(context)
  
   def complete_damage_rolls(self, context):
     # get count, sum, and sum of squares for control damage rolls
@@ -501,17 +698,84 @@ class TrialFeatures(object):
     self._data['test_damage_rolls_count'] = len(test_damage)
     self._data.pop('test_damage_rolls')
 
+  def complete_keep_lw(self, context):
+    # get count, sum, and sum of squares for LW total when keeping LW
+    control_keep_lw_total = self._data['control_keep_lw_total']
+    self._data['control_keep_lw_total_sum'] = sum(control_keep_lw_total)
+    self._data['control_keep_lw_total_sumsquares'] = sum([x * x for x in control_keep_lw_total])
+    self._data['control_keep_lw_total_count'] = len(control_keep_lw_total)
+    self._data.pop('control_keep_lw_total')
+    # same for test
+    test_keep_lw_total = self._data['test_keep_lw_total']
+    self._data['test_keep_lw_total_sum'] = sum(test_keep_lw_total)
+    self._data['test_keep_lw_total_sumsquares'] = sum([x * x for x in test_keep_lw_total])
+    self._data['test_keep_lw_total_count'] = len(test_keep_lw_total)
+    self._data.pop('test_keep_lw_total')
+
   def complete_sw_remaining(self, context):
     control_sw_remaining = sum([character.sw_remaining() for character in context.groups()[0]])
     test_sw_remaining = sum([character.sw_remaining() for character in context.groups()[1]])
     self._data['control_sw_remaining'] = control_sw_remaining
     self._data['test_sw_remaining'] = test_sw_remaining
 
+  def complete_take_sw(self, context):
+    # get count, sum, and sum of squares for control LW total
+    # when voluntarily taking SW after a successful wound check
+    control_take_sw_total = self._data['control_take_sw_total']
+    self._data['control_take_sw_total_sum'] = sum(control_take_sw_total)
+    self._data['control_take_sw_total_sumsquares'] = sum([x * x for x in control_take_sw_total])
+    self._data['control_take_sw_total_count'] = len(control_take_sw_total)
+    self._data.pop('control_take_sw_total')
+    # same for test group
+    test_take_sw_total = self._data['test_take_sw_total']
+    self._data['test_take_sw_total_sum'] = sum(test_take_sw_total)
+    self._data['test_take_sw_total_sumsquares'] = sum([x * x for x in test_take_sw_total])
+    self._data['test_take_sw_total_count'] = len(test_take_sw_total)
+    self._data.pop('test_take_sw_total')
+
   def complete_vp_remaining(self, context):
     control_vp_remaining = sum([character.vp() for character in context.groups()[0]])
     test_vp_remaining = sum([character.vp() for character in context.groups()[1]])
     self._data['control_vp_remaining'] = control_vp_remaining
     self._data['test_vp_remaining'] = test_vp_remaining
+
+  def complete_wound_checks(self, context):
+    # get count, sum, and sum of squares for control wound check failed margin
+    control_wc_failed_margin = self._data['control_wc_failed_margin']
+    self._data['control_wc_failed_margin_sum'] = sum(control_wc_failed_margin)
+    self._data['control_wc_failed_margin_sumsquares'] = sum([x * x for x in control_wc_failed_margin])
+    self._data['control_wc_failed_margin_count'] = len(control_wc_failed_margin)
+    self._data.pop('control_wc_failed_margin')
+    # get count, sum, and sum of squares for test wound check failed margin
+    test_wc_failed_margin = self._data['test_wc_failed_margin']
+    self._data['test_wc_failed_margin_sum'] = sum(test_wc_failed_margin)
+    self._data['test_wc_failed_margin_sumsquares'] = sum([x * x for x in test_wc_failed_margin])
+    self._data['test_wc_failed_margin_count'] = len(test_wc_failed_margin)
+    self._data.pop('test_wc_failed_margin')
+    # get count, sum, and sum of squares for control LW total when wound check failed
+    control_wc_failed_lw_total = self._data['control_wc_failed_lw_total']
+    self._data['control_wc_failed_lw_total_sum'] = sum(control_wc_failed_lw_total)
+    self._data['control_wc_failed_lw_total_sumsquares'] = sum([x * x for x in control_wc_failed_lw_total])
+    self._data['control_wc_failed_lw_total_count'] = len(control_wc_failed_lw_total)
+    self._data.pop('control_wc_failed_lw_total')
+    # same for test
+    test_wc_failed_lw_total = self._data['test_wc_failed_lw_total']
+    self._data['test_wc_failed_lw_total_sum'] = sum(test_wc_failed_lw_total)
+    self._data['test_wc_failed_lw_total_sumsquares'] = sum([x * x for x in test_wc_failed_lw_total])
+    self._data['test_wc_failed_lw_total_count'] = len(test_wc_failed_lw_total)
+    self._data.pop('test_wc_failed_lw_total')
+    # get count, sum, and sum of squares for control wound check succeeded margin
+    control_wc_succeeded_margin = self._data['control_wc_succeeded_margin']
+    self._data['control_wc_succeeded_margin_sum'] = sum(control_wc_succeeded_margin)
+    self._data['control_wc_succeeded_margin_sumsquares'] = sum([x * x for x in control_wc_succeeded_margin])
+    self._data['control_wc_succeeded_margin_count'] = len(control_wc_succeeded_margin)
+    self._data.pop('control_wc_succeeded_margin')
+    # get count, sum, and sum of squares for test wound check succeeded margin
+    test_wc_succeeded_margin = self._data['test_wc_succeeded_margin']
+    self._data['test_wc_succeeded_margin_sum'] = sum(test_wc_succeeded_margin)
+    self._data['test_wc_succeeded_margin_sumsquares'] = sum([x * x for x in test_wc_succeeded_margin])
+    self._data['test_wc_succeeded_margin_count'] = len(test_wc_succeeded_margin)
+    self._data.pop('test_wc_succeeded_margin')
 
   def write(self, f):
     writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
