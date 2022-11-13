@@ -12,6 +12,9 @@ import unittest
 
 from simulation import actions, bayushi_school
 from simulation.character import Character
+from simulation.context import EngineContext
+from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
 
@@ -22,24 +25,32 @@ logger.setLevel(logging.DEBUG)
 
 
 class TestBayushiActionFactory(unittest.TestCase):
-  def test_get_attack(self):
+  def setUp(self):
     bayushi = Character('Bayushi')
     target = Character('target')
+    groups = [Group('Scorpion', bayushi), Group('target', target)]
+    context = EngineContext(groups)
+    self.bayushi = bayushi
+    self.target = target
+    self.context = context
+    self.initiative_action = InitiativeAction([1], 1)
+
+  def test_get_attack(self):
     factory = bayushi_school.BayushiActionFactory()
-    action = factory.get_attack_action(bayushi, target, 'attack')
+    action = factory.get_attack_action(self.bayushi, self.target, \
+      'attack', self.initiative_action, self.context)
     self.assertTrue(isinstance(action, actions.AttackAction))
-    self.assertEqual(bayushi, action.subject())
-    self.assertEqual(target, action.target())
+    self.assertEqual(self.bayushi, action.subject())
+    self.assertEqual(self.target, action.target())
     self.assertEqual('attack', action.skill()) 
 
   def test_get_feint(self):
-    bayushi = Character('Bayushi')
-    target = Character('target')
     factory = bayushi_school.BayushiActionFactory()
-    action = factory.get_attack_action(bayushi, target, 'feint')
+    action = factory.get_attack_action(self.bayushi, self.target, \
+      'feint', self.initiative_action, self.context)
     self.assertTrue(isinstance(action, bayushi_school.BayushiFeintAction))
-    self.assertEqual(bayushi, action.subject())
-    self.assertEqual(target, action.target())
+    self.assertEqual(self.bayushi, action.subject())
+    self.assertEqual(self.target, action.target())
     self.assertEqual('feint', action.skill()) 
 
 
@@ -82,6 +93,9 @@ class TestBayushiFeintAction(unittest.TestCase):
     bayushi.set_skill('attack', 4)
     bayushi.set_skill('feint', 1)
     target = Character('target')
+    groups = [Group('Scorpion', bayushi), Group('target', target)]
+    context = EngineContext(groups)
+    initiative_action = InitiativeAction([1], 1)
     # set Bayushi school roll parameter provider
     bayushi.set_roll_parameter_provider(bayushi_school.BayushiRollParameterProvider())
     # set test roll provider to rig damage roll
@@ -89,10 +103,10 @@ class TestBayushiFeintAction(unittest.TestCase):
     roll_provider.put_damage_roll(9)
     bayushi.set_roll_provider(roll_provider)
     # set up Bayushi school Feint attack action
-    action = bayushi_school.BayushiFeintAction(bayushi, target)
+    action = bayushi_school.BayushiFeintAction(bayushi, target, \
+      'feint', initiative_action, context)
     action._attack_roll = 9001
     # assert expected behavior
     self.assertEqual(9, action.roll_damage())
     self.assertEqual((4, 1), roll_provider.pop_observed_params('damage'))
 
- 

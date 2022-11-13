@@ -165,7 +165,7 @@ class SpendActionListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.SpendActionEvent):
       if event.subject == character:
-        character.spend_action(event.phase)
+        character.spend_action(event.initiative_action)
         yield from ()
 
 

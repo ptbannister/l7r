@@ -24,22 +24,32 @@ def normalize_roll_params(rolled, kept, bonus=0):
   extra kept dice, excess kept dice above ten become a bonus,
   and the bonus is added to the roll.
   '''
+  # convert excess rolled dice to extra kept dice
   if rolled > 10:
     excess_rolled = rolled - 10
     rolled = 10
     kept += excess_rolled
+  # convert extra kept dice to bonus
   if kept > 10:
     excess_kept = kept - 10
     kept = 10
-    bonus += excess_kept
+    bonus += (2 * excess_kept)
+  # check if there are fewer dice rolled than kept
+  if rolled < kept:
+    kept = rolled
+  # rolled and kept may not be lower than zero
+  rolled = max(rolled, 0)
+  kept = max(kept, 0)
   return (rolled, kept, bonus)
 
 
 class RollParameterProvider(ABC):
   @abstractmethod
-  def get_damage_roll_params(self, character, target, skill, attack_extra_rolled, vp=0):
+  def get_damage_roll_params(self, character, target, skill, \
+      attack_extra_rolled, vp=0):
     '''
-    get_damage_roll_params(character, target, skill, attack_extra_rolled, vp=0) -> tuple of three ints
+    get_damage_roll_params(character, target, skill, \
+        attack_extra_rolled, vp=0) -> tuple of three ints
       character (Character): character who is rolling damage
       target (Character): character who will be damaged
       skill (str): skill name being used
@@ -53,15 +63,32 @@ class RollParameterProvider(ABC):
 
   @abstractmethod
   def get_initiative_roll_params(self, character):
+    '''
+    get_initiative_roll_params(character) -> tuple of ints
+      character (Character): character who is rolling initiative
+
+    Returns the roll parameters (rolled, kept, modifier) for the
+    character's initiative roll.
+
+    Modifiers do not apply to initiative rolls, so the modifier is
+    always 0.
+    '''
     pass
 
   @abstractmethod
-  def get_skill_roll_params(self, character, target, skill, vp=0):
+  def get_skill_roll_params(self, character, target, skill, \
+      contested_skill=None, ring=None, vp=0):
     '''
-    get_skill_roll_params(character, target, skill, vp=0) -> tuple of ints
+    get_skill_roll_params(character, target, skill, \
+        contested_skill=None, ring=None, vp=0) -> tuple of ints
       character (Character): character who is rolling
       target (Character): target of the skill
       skill (str): skill name being used
+      contested_skill (str): if given, this is a contested roll,
+        and names the skill the other character is using to contest.
+      ring (str): ring to use for the skill roll. Defaults to None,
+        which means the character's default ring for that skill is
+        used.
       vp (int): number of Void Points to spend on this roll
 
     Returns the parameters for the character's skill roll using the
@@ -73,7 +100,7 @@ class RollParameterProvider(ABC):
   def get_wound_check_roll_params(self, character, vp=0):
     '''
     get_wound_check_roll_params(character, vp=0) -> tuple of ints
-      character (Character): character who will be rolling for  a Wound Check
+      character (Character): character who will be rolling for a Wound Check
       vp (int): number of Void Points to spend on this roll
 
     Returns the parameters for the character's wound check roll
@@ -83,16 +110,17 @@ class RollParameterProvider(ABC):
 
 
 class DefaultRollParameterProvider(RollParameterProvider):
-  def get_damage_roll_params(self, character, target, skill, attack_extra_rolled, vp=0):
+  def get_damage_roll_params(self, character, target, skill, \
+      attack_extra_rolled, vp=0):
     # calculate extra rolled dice
     ring = character.ring(character.get_skill_ring('damage'))
     my_extra_rolled = character.extra_rolled('damage')
     rolled = ring + my_extra_rolled + attack_extra_rolled + character.weapon().rolled()
     # calculate extra kept dice
-    my_extra_kept = character.extra_kept('damage') + character.extra_kept('damage_' + skill)
-    kept = character.weapon().kept() + my_extra_kept
+    my_extra_kept = character.extra_kept('damage')
+    kept = character.weapon().kept() + character.extra_kept('damage')
     # calculate modifier
-    mod = character.modifier(None, 'damage') + character.modifier(None, 'damage_' + skill)
+    mod = character.modifier(None, 'damage')
     return normalize_roll_params(rolled, kept, mod)
 
   def get_initiative_roll_params(self, character):
@@ -101,11 +129,18 @@ class DefaultRollParameterProvider(RollParameterProvider):
     kept = ring + character.extra_kept('initiative')
     return (rolled, kept, 0)
 
-  def get_skill_roll_params(self, character, target, skill, vp=0):
-    ring = character.ring(character.get_skill_ring(skill))
+  def get_skill_roll_params(self, character, target, skill, \
+      contested_skill=None, ring=None, vp=0):
+    if ring is None:
+      ring = character.ring(character.get_skill_ring(skill))
     rolled = ring + character.skill(skill) + character.extra_rolled(skill) + vp
     kept = ring + character.extra_kept(skill) + vp
     modifier = character.modifier(target, skill)
+    if contested_skill is not None:
+      my_skill = character.skill(skill)
+      your_skill = target.skill(contested_skill)
+      if my_skill > your_skill:
+        modifier += 5 * (my_skill - your_skill) 
     return normalize_roll_params(rolled, kept, modifier)
 
   def get_wound_check_roll_params(self, character, vp=0):

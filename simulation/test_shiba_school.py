@@ -16,6 +16,7 @@ from simulation.character_builder import CharacterBuilder
 from simulation.context import EngineContext
 from simulation.engine import CombatEngine
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
 
@@ -28,10 +29,14 @@ logger.setLevel(logging.DEBUG)
 class TestShibaActionFactory(unittest.TestCase):
   def test_get_parry(self):
     shiba = Character('Shiba')
+    shiba.set_actions([1])
     attacker = Character('attacker')
+    attacker.set_actions([1])
+    initiative_action = InitiativeAction([1], 1)
     factory = shiba_school.ShibaActionFactory()
-    attack = actions.AttackAction(attacker, shiba, 'attack')
-    parry = factory.get_parry_action(shiba, attacker, attack, 'parry')
+    context = EngineContext([Group('Phoenix', shiba), Group('Attacker', attacker)])
+    attack = actions.AttackAction(attacker, shiba, 'attack', initiative_action, context)
+    parry = factory.get_parry_action(shiba, attacker, attack, 'parry', initiative_action, context)
     self.assertTrue(isinstance(parry, shiba_school.ShibaParryAction))
     self.assertEqual(shiba, parry.subject())
     self.assertEqual(attacker, parry.target())
@@ -40,10 +45,15 @@ class TestShibaActionFactory(unittest.TestCase):
 class TestShibaParryAction(unittest.TestCase):
   def test_no_parry_other_penalty(self):
     shiba = Character('Shiba')
+    shiba.set_actions([1])
     attacker = Character('attacker')
+    attacker.set_actions([1])
+    initiative_action = InitiativeAction([1], 1)
     target = Character('target')
-    attack = actions.AttackAction(attacker, target, 'attack')
-    parry = shiba_school.ShibaParryAction(shiba, attacker, attack, 'parry')
+    context = EngineContext([Group('Phoenix', shiba), Group('Target', target)])
+    attack = actions.AttackAction(attacker, target, 'attack', initiative_action, context)
+    parry = shiba_school.ShibaParryAction(shiba, attacker, 'parry', \
+      initiative_action, context, attack)
     # rig shiba's parry roll
     roll_provider = TestRollProvider()
     roll_provider.put_skill_roll('parry', 50)
@@ -57,9 +67,11 @@ class TestShibaParrySucceededListener(unittest.TestCase):
   def setUp(self):
     # set up characters
     shiba = Character('Shiba')
+    shiba.set_actions([1])
     shiba.set_skill('attack', 4)
     shiba.set_skill('parry', 5)
     attacker = Character('attacker')
+    attacker.set_actions([1])
     attacker.set_skill('parry', 5)
     # set up context
     groups = [Group('Shiba', shiba), Group('attacker', attacker)]
@@ -68,13 +80,17 @@ class TestShibaParrySucceededListener(unittest.TestCase):
     self.attacker = attacker
     self.shiba = shiba
     self.context = context
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_handle_parry_succeeded(self):
     # set up attack action
-    attack = actions.AttackAction(self.attacker, self.shiba, 'attack')
+    attack = actions.AttackAction(self.attacker, self.shiba, \
+      'attack', self.initiative_action, self.context)
     attack.set_skill_roll(45)
     # set up parry action
-    parry = shiba_school.ShibaParryAction(self.shiba, self.attacker, attack, 'parry')
+    parry = shiba_school.ShibaParryAction(self.shiba, \
+      self.attacker, 'parry', self.initiative_action, self.context, \
+      attack)
     parry.set_skill_roll(51)
     # set up parry succeeded event
     event = events.ParrySucceededEvent(parry)
@@ -105,10 +121,12 @@ class TestShibaParrySucceededListener(unittest.TestCase):
     self.context = EngineContext(groups, round=1, phase=1)
     self.context.initialize()
     # set up attack
-    attack = actions.AttackAction(self.attacker, self.shiba, 'attack')
+    attack = actions.AttackAction(self.attacker, self.shiba, \
+      'attack', self.initiative_action, self.context)
     attack.set_skill_roll(45)
     # set up parry
-    parry = shiba_school.ShibaParryAction(self.shiba, self.attacker, attack, 'parry')
+    parry = shiba_school.ShibaParryAction(self.shiba, self.attacker, \
+       'parry', self.initiative_action, self.context, attack)
     take_action_event = shiba_school.ShibaTakeParryEvent(parry)
     # rig parry and damage rolls
     roll_provider = TestRollProvider()
@@ -155,16 +173,24 @@ class TestShibaParrySucceededListener(unittest.TestCase):
 
 class TestShibaTakeParryEvent(unittest.TestCase):
   def setUp(self):
+    # characters
     shiba = Character('Shiba')
     shiba.set_skill('attack', 3)
     attacker = Character('attacker')
-    attack = actions.AttackAction(attacker, shiba, 'attack')
-    attack.set_skill_roll(50)
-    parry = shiba_school.ShibaParryAction(shiba, attacker, attack, 'parry')
-    take_action_event = shiba_school.ShibaTakeParryEvent(parry)
+    # initiative action
+    initiative_action = InitiativeAction([1], 1)
+    # groups and context
     groups = [Group('Phoenix', shiba), Group('attacker', attacker)]
     context = EngineContext(groups, round=1, phase=1)
     context.initialize()
+    # attack
+    attack = actions.AttackAction(attacker, shiba, 'attack', initiative_action, context)
+    attack.set_skill_roll(50)
+    # parry
+    parry = shiba_school.ShibaParryAction(shiba, attacker, 'parry', \
+      initiative_action, context, attack)
+    take_action_event = shiba_school.ShibaTakeParryEvent(parry)
+    # instances
     self.shiba = shiba
     self.attacker = attacker
     self.attack = attack

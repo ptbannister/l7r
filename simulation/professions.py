@@ -261,11 +261,11 @@ class WaveManActionFactory(DefaultActionFactory):
   def __init__(self, abilities):
     self._abilities = abilities
 
-  def get_attack_action(self, subject, target, skill, vp=0):
+  def get_attack_action(self, subject, target, skill, initiative_action, context, vp=0):
     if skill == 'attack':
-      return WaveManAttackAction(subject, target, skill, vp)
+      return WaveManAttackAction(subject, target, skill, initiative_action, context, vp=vp)
     else:
-      return super().get_attack_action(subject, target, skill, vp)
+      return super().get_attack_action(subject, target, skill, initiative_action, context, vp=vp)
 
 
 class WaveManAttackAction(AttackAction):
@@ -288,8 +288,8 @@ class WaveManAttackAction(AttackAction):
   roll two of the extra damage dice that you would have rolled
   had they not attempted to parry."
   '''
-  def __init__(self, subject, target, skill='attack', vp=0):
-    super().__init__(subject, target, skill, vp)
+  def __init__(self, subject, target, skill, initiative_action, context, vp=0):
+    super().__init__(subject, target, skill, initiative_action, context, vp=vp)
     self._used_missed_attack_bonus = False
 
   def ability(self, name):
@@ -320,8 +320,8 @@ class WaveManAttackAction(AttackAction):
       penalty = self.ability(PARRY_PENALTY) * 5
       return self.skill_roll() + penalty
 
-  def roll_attack(self):
-    roll = self.subject().roll_skill(self.target(), self.skill(), self.vp())
+  def roll_skill(self):
+    roll = self.subject().roll_skill(self.target(), self.skill(), vp=self.vp())
     # apply missed_attack_bonus ability
     if roll < self.tn():
       for i in range(self.ability(MISSED_ATTACK_BONUS)):

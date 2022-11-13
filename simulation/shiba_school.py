@@ -55,8 +55,8 @@ class ShibaActionFactory(DefaultActionFactory):
   '''
   ActionFactory that returns the ShibaParryAction for parries.
   '''
-  def get_parry_action(self, subject, target, attack, skill, vp=0):
-    return ShibaParryAction(subject, target, attack, skill, vp)
+  def get_parry_action(self, subject, target, attack, skill, initiative_action, context, vp=0):
+    return ShibaParryAction(subject, target, skill, initiative_action, context, attack, vp=vp)
 
 SHIBA_ACTION_FACTORY = ShibaActionFactory()
 
@@ -68,7 +68,7 @@ class ShibaParryAction(ParryAction):
   '''
   def roll_parry(self):
     # roll parry
-    self.set_skill_roll(self.subject().roll_skill(self.target(), self.skill(), self.vp()))
+    self.set_skill_roll(self.subject().roll_skill(self.target(), self.skill(), vp=self.vp()))
     return self.skill_roll()
 
 

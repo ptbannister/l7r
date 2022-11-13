@@ -14,6 +14,7 @@ from simulation import actions, events
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.listeners import Listener
 from simulation.log import logger
 from simulation.modifiers import Modifier
@@ -33,6 +34,7 @@ class TestExpireAfterNextAttackListener(unittest.TestCase):
     self.shiba = Character('Shiba')
     groups = [Group('Lion', [self.matsu]), Group('Crane-Phoenix', [self.kakita, self.shiba])]
     self.context = EngineContext(groups)
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_expire_after_failed_attack(self):
     modifier = Modifier(self.matsu, None, 'tn to hit', -5)
@@ -44,7 +46,8 @@ class TestExpireAfterNextAttackListener(unittest.TestCase):
     self.assertEqual(-5, self.matsu.modifier(None, 'tn to hit'))
     self.assertEqual(15, self.matsu.tn_to_hit())
     # should expire after Kakita attacks Matsu
-    kakita_attack = actions.AttackAction(self.kakita, self.matsu, 'attack')
+    kakita_attack = actions.AttackAction(self.kakita, self.matsu, \
+      'attack', self.initiative_action, self.context)
     kakita_attack_failed = events.AttackFailedEvent(kakita_attack)
     responses = [response for response in modifier.handle(self.matsu, kakita_attack_failed, self.context)]
     self.assertEqual(1, len(responses))
@@ -62,7 +65,8 @@ class TestExpireAfterNextAttackListener(unittest.TestCase):
     self.assertEqual(-5, self.matsu.modifier(None, 'tn to hit'))
     self.assertEqual(15, self.matsu.tn_to_hit())
     # should expire after Kakita attacks Matsu
-    kakita_attack = actions.AttackAction(self.kakita, self.matsu, 'attack')
+    kakita_attack = actions.AttackAction(self.kakita, self.matsu, \
+      'attack', self.initiative_action, self.context)
     kakita_attack_succeeded = events.AttackSucceededEvent(kakita_attack)
     responses = [response for response in modifier.handle(self.matsu, kakita_attack_succeeded, self.context)]
     self.assertEqual(1, len(responses))
@@ -80,7 +84,8 @@ class TestExpireAfterNextAttackListener(unittest.TestCase):
     self.assertEqual(-5, self.matsu.modifier(None, 'tn to hit'))
     self.assertEqual(15, self.matsu.tn_to_hit())
     # should not expire if Matsu attacks Shiba
-    matsu_attack = actions.AttackAction(self.matsu, self.shiba, 'attack')
+    matsu_attack = actions.AttackAction(self.matsu, self.shiba, \
+      'attack', self.initiative_action, self.context)
     matsu_attack_failed = events.AttackFailedEvent(matsu_attack)
     responses = [response for response in modifier.handle(self.matsu, matsu_attack_failed, self.context)]
     self.assertEqual(0, len(responses))
@@ -94,6 +99,7 @@ class TestExpireAfterNextAttackByCharacterListener(unittest.TestCase):
     self.shiba = Character('Shiba')
     groups = [Group('Lion', [self.matsu]), Group('Crane-Phoenix', [self.kakita, self.shiba])]
     self.context = EngineContext(groups)
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_expire_after_failed_attack(self):
     modifier = Modifier(self.matsu, None, 'tn to hit', -5)
@@ -105,7 +111,8 @@ class TestExpireAfterNextAttackByCharacterListener(unittest.TestCase):
     self.assertEqual(-5, self.matsu.modifier(None, 'tn to hit'))
     self.assertEqual(15, self.matsu.tn_to_hit())
     # should expire after Kakita attacks Matsu
-    kakita_attack = actions.AttackAction(self.kakita, self.matsu, 'attack')
+    kakita_attack = actions.AttackAction(self.kakita, self.matsu, \
+      'attack', self.initiative_action, self.context)
     kakita_attack_failed = events.AttackFailedEvent(kakita_attack)
     responses = [response for response in modifier.handle(self.matsu, kakita_attack_failed, self.context)]
     self.assertEqual(1, len(responses))
@@ -123,7 +130,8 @@ class TestExpireAfterNextAttackByCharacterListener(unittest.TestCase):
     self.assertEqual(-5, self.matsu.modifier(None, 'tn to hit'))
     self.assertEqual(15, self.matsu.tn_to_hit())
     # should expire after Kakita attacks Matsu
-    kakita_attack = actions.AttackAction(self.kakita, self.matsu, 'attack')
+    kakita_attack = actions.AttackAction(self.kakita, self.matsu, \
+      'attack', self.initiative_action, self.context)
     kakita_attack_succeeded = events.AttackSucceededEvent(kakita_attack)
     responses = [response for response in modifier.handle(self.matsu, kakita_attack_succeeded, self.context)]
     self.assertEqual(1, len(responses))
@@ -141,7 +149,8 @@ class TestExpireAfterNextAttackByCharacterListener(unittest.TestCase):
     self.assertEqual(-5, self.matsu.modifier(None, 'tn to hit'))
     self.assertEqual(15, self.matsu.tn_to_hit())
     # should not expire if Shiba attacks Matsu
-    shiba_attack = actions.AttackAction(self.shiba, self.matsu, 'attack')
+    shiba_attack = actions.AttackAction(self.shiba, self.matsu, \
+      'attack', self.initiative_action, self.context)
     shiba_attack_failed = events.AttackSucceededEvent(shiba_attack)
     responses = [response for response in modifier.handle(self.matsu, shiba_attack_failed, self.context)]
     self.assertEqual(0, len(responses))

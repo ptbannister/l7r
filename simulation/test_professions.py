@@ -16,6 +16,7 @@ from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.events import AddModifierEvent, AttackSucceededEvent, LightWoundsDamageEvent
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
 from simulation.roll import TestDice
 from simulation.roll_provider import TestRollProvider
@@ -49,6 +50,7 @@ class TestWaveManAttackAction(unittest.TestCase):
     self.attacker = attacker
     self.target = target
     self.context = context
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_miss_no_abilities(self):
     # rig attack roll to miss
@@ -56,8 +58,9 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_skill_roll('attack', 24)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
-    attack.roll_attack()
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
+    attack.roll_skill()
     # attack should get expected roll and miss
     self.assertEqual(24, attack.skill_roll())
     self.assertFalse(attack.is_hit())
@@ -66,7 +69,8 @@ class TestWaveManAttackAction(unittest.TestCase):
   def test_failed_parry_damage_bonus_level_one(self):
     self.attacker.profession().take_ability(professions.FAILED_PARRY_DAMAGE_BONUS)
     # set up attack with failed parry attempt
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_parry_attempted()
     # attack that barely hit should get no extra damage dice
     attack.set_skill_roll(25)
@@ -82,7 +86,8 @@ class TestWaveManAttackAction(unittest.TestCase):
     self.attacker.profession().take_ability(professions.FAILED_PARRY_DAMAGE_BONUS)
     self.attacker.profession().take_ability(professions.FAILED_PARRY_DAMAGE_BONUS)
     # set up attack with failed parry attempt
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_parry_attempted()
     # attack that barely hit should get no extra damage dice
     attack.set_skill_roll(25)
@@ -104,8 +109,9 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_skill_roll('attack', 20)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
-    attack.roll_attack()
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
+    attack.roll_skill()
     # attack roll should get a bonus of +5
     self.assertEqual(25, attack.skill_roll())
     self.assertTrue(attack.is_hit())
@@ -119,8 +125,9 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_skill_roll('attack', 19)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
-    attack.roll_attack()
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
+    attack.roll_skill()
     # attack roll should get a bonus of +5 but still miss
     self.assertEqual(24, attack.skill_roll())
     self.assertFalse(attack.is_hit())
@@ -135,8 +142,9 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_skill_roll('attack', 15)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
-    attack.roll_attack()
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
+    attack.roll_skill()
     # attack roll should get a bonus of +10
     self.assertEqual(25, attack.skill_roll())
     self.assertTrue(attack.is_hit())
@@ -151,8 +159,9 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_skill_roll('attack', 14)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
-    attack.roll_attack()
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
+    attack.roll_skill()
     # attack roll should get a bonus of +5 but still miss
     self.assertEqual(24, attack.skill_roll())
     self.assertFalse(attack.is_hit())
@@ -161,7 +170,8 @@ class TestWaveManAttackAction(unittest.TestCase):
 
   def test_parry_penalty_level_one(self):
     self.attacker.profession().take_ability(professions.PARRY_PENALTY)
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(25)
     # parry TN should be +5
     self.assertEqual(25, attack.skill_roll())
@@ -171,7 +181,8 @@ class TestWaveManAttackAction(unittest.TestCase):
   def test_parry_penalty_level_two(self):
     self.attacker.profession().take_ability(professions.PARRY_PENALTY)
     self.attacker.profession().take_ability(professions.PARRY_PENALTY)
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(25)
     # parry TN should be +10
     self.assertEqual(25, attack.skill_roll())
@@ -186,8 +197,9 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_skill_roll('attack', 20)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
-    attack.roll_attack()
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
+    attack.roll_skill()
     # attack roll should get a bonus of +5
     self.assertEqual(25, attack.skill_roll())
     self.assertTrue(attack.is_hit())
@@ -202,7 +214,8 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_damage_roll(16)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack and make it a hit
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(25)
     attack.roll_damage()
     # damage should be increased to nearest multiple of five
@@ -210,7 +223,8 @@ class TestWaveManAttackAction(unittest.TestCase):
     #
     # now try a multiple of five
     roll_provider.put_damage_roll(15)
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(25)
     attack.roll_damage()
     # damage should be increased by three
@@ -224,7 +238,8 @@ class TestWaveManAttackAction(unittest.TestCase):
     roll_provider.put_damage_roll(16)
     self.attacker.set_roll_provider(roll_provider)
     # set up attack and make it a hit
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(25)
     attack.roll_damage()
     # damage should be increased by +5 and then +3
@@ -232,7 +247,8 @@ class TestWaveManAttackAction(unittest.TestCase):
     #
     # now try a multiple of five
     roll_provider.put_damage_roll(15)
-    attack = professions.WaveManAttackAction(self.attacker, self.target, 'attack')
+    attack = professions.WaveManAttackAction(self.attacker, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(25)
     attack.roll_damage()
     # damage should be increased by +3 and then bumped to nearest five
@@ -255,10 +271,12 @@ class TestWaveManAttackSucceededListener(unittest.TestCase):
     self.attacker = attacker
     self.wave_man = wave_man
     self.context = context
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_level_zero(self):
     # attack succeeded event
-    attack = AttackAction(self.attacker, self.wave_man)
+    attack = AttackAction(self.attacker, self.wave_man, 'attack', \
+      self.initiative_action, self.context)
     attack.set_skill_roll(35)
     attack.set_damage_roll(27)
     attack_succeeded = AttackSucceededEvent(attack)
@@ -269,7 +287,8 @@ class TestWaveManAttackSucceededListener(unittest.TestCase):
   def test_level_one(self):
     self.wave_man.profession().take_ability(professions.DAMAGE_PENALTY)
     # attack succeeded event
-    attack = AttackAction(self.attacker, self.wave_man)
+    attack = AttackAction(self.attacker, self.wave_man, 'attack', \
+      self.initiative_action, self.context)
     attack.set_skill_roll(35)
     attack.set_damage_roll(27)
     attack_succeeded = AttackSucceededEvent(attack)
@@ -289,7 +308,8 @@ class TestWaveManAttackSucceededListener(unittest.TestCase):
     self.wave_man.profession().take_ability(professions.DAMAGE_PENALTY)
     self.wave_man.profession().take_ability(professions.DAMAGE_PENALTY)
     # attack succeeded event
-    attack = AttackAction(self.attacker, self.wave_man)
+    attack = AttackAction(self.attacker, self.wave_man, 'attack', \
+      self.initiative_action, self.context)
     attack.set_skill_roll(35)
     attack.set_damage_roll(27)
     attack_succeeded = AttackSucceededEvent(attack)
@@ -583,10 +603,16 @@ class TestWaveManTakeAttackActionEvent(unittest.TestCase):
     self.character.set_roll_provider(roll_provider)
     # set up a target
     self.target = Character('target')
+    # set up context
+    groups = [Group('Wave Man', character), Group('target', self.target)]
+    self.context = EngineContext(groups)
+    # initiative action
+    self.initiative_action = InitiativeAction([1], 1)
     
   def test_level_zero(self):
     # set up an attack
-    attack = professions.WaveManAttackAction(self.character, self.target)
+    attack = professions.WaveManAttackAction(self.character, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(30)
     # set up take attack action event
     take_attack_event = professions.WaveManTakeAttackActionEvent(attack)
@@ -597,7 +623,8 @@ class TestWaveManTakeAttackActionEvent(unittest.TestCase):
   def test_level_one(self):
     self.character.profession().take_ability(professions.WOUND_CHECK_PENALTY)
     # set up an attack
-    attack = professions.WaveManAttackAction(self.character, self.target)
+    attack = professions.WaveManAttackAction(self.character, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(30)
     # set up take attack action event
     take_attack_event = professions.WaveManTakeAttackActionEvent(attack)
@@ -609,7 +636,8 @@ class TestWaveManTakeAttackActionEvent(unittest.TestCase):
     self.character.profession().take_ability(professions.WOUND_CHECK_PENALTY)
     self.character.profession().take_ability(professions.WOUND_CHECK_PENALTY)
     # set up an attack
-    attack = professions.WaveManAttackAction(self.character, self.target)
+    attack = professions.WaveManAttackAction(self.character, \
+      self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(30)
     # set up take attack action event
     take_attack_event = professions.WaveManTakeAttackActionEvent(attack)

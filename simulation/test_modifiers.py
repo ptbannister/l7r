@@ -12,6 +12,7 @@ from simulation import actions, events
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.listeners import Listener
 from simulation.modifiers import FreeRaise, Modifier
 from simulation.modifier_listeners import ModifierListener
@@ -57,20 +58,23 @@ class TestModifierEvents(unittest.TestCase):
     self.target = Character('target')
     groups = [Group('subject', self.subject), Group('target', self.target)]
     self.context = EngineContext(groups)
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_listen_to_events(self):
     # set up the "explode on attack" modifier
     modifier = Modifier(self.subject, self.target, 'attack', 0)
     modifier.register_listener('attack_succeeded', ExplodeOnAttackListener())
     # play an irrelevant event on the listener
-    irrelevant_attack = actions.AttackAction(self.target, self.subject, 'attack')
+    irrelevant_attack = actions.AttackAction(self.target, \
+      self.subject, 'attack', self.initiative_action, self.context)
     irrelevant_attack_event = events.AttackSucceededEvent(irrelevant_attack)
     responses = [response for response in modifier.handle(self.subject, irrelevant_attack_event, self.context)]
     # should have no effect
     self.assertEqual(0, self.subject.sw())
     self.assertEqual(0, self.target.sw())
     # play a relevant event on the listener
-    relevant_attack = actions.AttackAction(self.subject, self.target, 'attack')
+    relevant_attack = actions.AttackAction(self.subject, \
+      self.target, 'attack', self.initiative_action, self.context)
     relevant_attack_event = events.AttackSucceededEvent(relevant_attack)
     responses = [response for response in modifier.handle(self.subject, relevant_attack_event, self.context)]
     # attacker should explode

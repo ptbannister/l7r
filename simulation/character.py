@@ -9,7 +9,7 @@
 import math
 import uuid
 
-from simulation import actions, listeners, strategies
+from simulation import actions, kakita_school, listeners, strategies
 from simulation.attack_optimizer_factory import AttackOptimizerFactory, DEFAULT_ATTACK_OPTIMIZER_FACTORY
 from simulation.action_factory import ActionFactory, DEFAULT_ACTION_FACTORY
 from simulation.knowledge import Knowledge
@@ -75,6 +75,8 @@ class Character(object):
       'add_modifier': listeners.AddModifierListener(),
       'attack_declared': listeners.AttackDeclaredListener(),
       'attack_rolled': listeners.AttackRolledListener(),
+      'contested_iaijutsu_attack_declared': kakita_school. \
+        ContestedIaijutsuAttackDeclaredListener(),
       'gain_tvp': listeners.GainTemporaryVoidPointsListener(),
       'lw_damage': listeners.LightWoundsDamageListener(),
       'new_round': listeners.NewRoundListener(),
@@ -106,6 +108,7 @@ class Character(object):
       'damage': 'fire',
       'double attack': 'fire',
       'feint': 'fire',
+      'iaijutsu': 'fire',
       'initiative': 'void',
       'lunge': 'fire',
       'parry': 'air',
@@ -116,6 +119,8 @@ class Character(object):
       'action': strategies.HoldOneActionStrategy(),
       'attack': strategies.UniversalAttackStrategy(),
       'attack_rolled': strategies.AttackRolledStrategy(),
+      'contested_iaijutsu_attack_declared': kakita_school \
+        .ContestedIaijutsuAttackDeclaredStrategy(),
       'light_wounds': strategies.KeepLightWoundsStrategy(),
       'parry': strategies.ReluctantParryStrategy(),
       'parry_rolled': strategies.ParryRolledStrategy(),
@@ -222,6 +227,9 @@ class Character(object):
   def character_id(self):
     return self._character_id
 
+  def contested_iaijutsu_attack_declared_strategy(self):
+    return self._strategies['contested_iaijutsu_attack_declared']
+
   def crippled(self):
     '''
     crippled() -> bool
@@ -264,6 +272,18 @@ class Character(object):
   def friends(self):
     return self.group()
 
+  def gain_action(self, phase):
+    '''
+    gain_action(phase)
+      phase (int): phase of action die
+
+    Gain an action in the given phase.
+    '''
+    if not isinstance(phase, int):
+      raise ValueError('gain_action phase must be int')
+    self._actions.append(phase)
+    self._actions.sort()
+
   def gain_floating_bonus(self, floating_bonus):
     '''
     gain_floating_bonus(floating_bonus):
@@ -284,25 +304,32 @@ class Character(object):
     self._tvp += n
 
   def get_damage_roll_params(self, target, skill, attack_extra_rolled, vp=0):
-    return self.roll_parameter_provider().get_damage_roll_params(self, target, skill, attack_extra_rolled, vp)
+    return self.roll_parameter_provider() \
+      .get_damage_roll_params(self, target, skill, attack_extra_rolled, vp=vp)
 
   def get_initiative_roll_params(self):
-    return self.roll_parameter_provider().get_initiative_roll_params(self)
+    return self.roll_parameter_provider() \
+      .get_initiative_roll_params(self)
 
   def get_skill_ring(self, skill):
     '''
     get_skill_ring(skill) -> str
       skill (str): skill of interest
-
+    
     Returns the ring used to use the given skill.
     '''
+    if not isinstance(skill, str):
+      raise ValueError('skill must be str')
     return self._skill_rings.get(skill, 0)
 
-  def get_skill_roll_params(self, target, skill, vp=0):
-    return self.roll_parameter_provider().get_skill_roll_params(self, target, skill, vp)
+  def get_skill_roll_params(self, target, skill, contested_skill=None, ring=None, vp=0):
+    return self.roll_parameter_provider() \
+      .get_skill_roll_params(self, target, skill, \
+        contested_skill=contested_skill, ring=ring, vp=vp)
 
   def get_wound_check_roll_params(self, vp=0):
-    return self.roll_parameter_provider().get_wound_check_roll_params(self, vp)
+    return self.roll_parameter_provider() \
+      .get_wound_check_roll_params(self, vp=vp)
 
   def group(self):
     return self._group
@@ -567,16 +594,21 @@ class Character(object):
   def roll_provider(self):
     return self._roll_provider
 
-  def roll_skill(self, target, skill, vp=0):
+  def roll_skill(self, target, skill, contested_skill=None, ring=None, vp=0):
     '''
     roll_skill(skill, vp=0) -> int
       target (Character): character targeted with the skill
       skill (str): skill used for this roll
+      contested_skill (str): if provided, names the skill the target
+        is using to contest.
+      ring (str): ring used for this roll. Defaults to None, which
+        means the character's default ring for this skill is used,
+        but may be specified to use another ring.
       vp (int): number of Void Points to spend on the roll
 
     Roll a skill for this character against the specified target.
     '''
-    (rolled, kept, mod) = self.get_skill_roll_params(target, skill, vp)
+    (rolled, kept, mod) = self.get_skill_roll_params(target, skill, contested_skill, ring, vp)
     explode = not self.crippled()
     roll = self.roll_provider().get_skill_roll(skill, rolled, kept, explode) + mod
     logger.info('{} rolled {}: {}'.format(self._name, skill, roll))
@@ -770,16 +802,17 @@ class Character(object):
   def skills(self):
     return self._skills
 
-  def spend_action(self, phase):
+  def spend_action(self, initiative_action):
     '''
     spend_action(phase)
-      phase (int): phase of the action being spent
+      initiative_action (InitiativeAction): initiative action being spent
 
-    Spend one of the character's actions in the given phase.
+    Spend a character's action dice.
     '''
-    if phase not in self._actions:
-      raise ValueError('{} does not have an action in phase {}'.format(self.name(), phase))
-    self._actions.remove(phase)
+    for die in initiative_action.dice():
+      if die not in self._actions:
+        raise ValueError('{} does not have an action in phase {}'.format(self.name(), die))
+      self._actions.remove(die)
 
   def spend_ap(self, skill, n):
     '''

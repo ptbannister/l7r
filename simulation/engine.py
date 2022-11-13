@@ -77,6 +77,30 @@ class CombatEngine(Engine):
       except KeyboardInterrupt:
         break
 
+  def run_duel(self):
+    # validate groups and characters
+    if len(self.context.groups()) != 2:
+      raise RuntimeError('Duel requires two groups')
+    for group in self.context.groups():
+      if len(group) != 1:
+        raise RuntimeError('Duel must be a one-on-one fight')
+    # determine challenger and defender
+    # challenger is always the test group
+    challenger = self.context.test_group().get(0)
+    defender = self.context.groups().get(0).get(0)
+    # run iaijutsu duels until somebody is cut or defeated
+    while (True):
+      try:
+        self.event(IaijutsuDuelEvent(challenger, defender))
+      except CombatEnded:
+        logger.info('---------- Combat ended ----------')
+        return
+      except DuelEnded:
+        logger.info('---- Duel ended, melee begins ----')
+        break
+    # continue in normal melee combat
+    self.run()
+
   def run_round(self):
     logger.info('Starting Round {}'.format(self.context().round()))
     self.event(events.NewRoundEvent(self.context().round()))

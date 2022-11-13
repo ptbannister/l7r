@@ -10,12 +10,13 @@ import logging
 import sys
 import unittest
 
+from simulation import events
 from simulation.actions import AttackAction, ParryAction
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.engine import CombatEngine
-from simulation import events
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
 from simulation.strategies import AlwaysParryStrategy, NeverParryStrategy, PlainAttackStrategy, ReluctantParryStrategy, StingyPlainAttackStrategy
@@ -34,20 +35,21 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attacker.set_ring('fire', 5)
     attacker.set_skill('attack', 4)
     attacker.set_strategy('attack', StingyPlainAttackStrategy())
-    attacker._actions = [1]
+    attacker.set_actions([1])
     self.attacker = attacker
     # set up target character
     target = Character('target')
     target.set_parry_strategy(NeverParryStrategy())
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
-    target._actions = [1]
+    target.set_actions([1])
     self.target = target
     # set up groups
     groups = [Group('attacker', attacker), Group('target', target)]
     # set up context
     self.context = EngineContext(groups, round=1, phase=1)
     self.context.initialize()
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_run_hit(self):
     # rig the attack roll to hit by 1
@@ -60,7 +62,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     target_roll_provider.put_wound_check_roll(25)
     self.target.set_roll_provider(target_roll_provider)
     # set up attack
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     # set up engine
     engine = CombatEngine(self.context)
     # run the event
@@ -96,7 +98,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     attacker_roll_provider.put_skill_roll('attack', 29)
     self.attacker.set_roll_provider(attacker_roll_provider)
     # set up attack
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     # set up engine
     engine = CombatEngine(self.context)
     # run the event
@@ -137,7 +139,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     # set up engine and context
     engine = CombatEngine(self.context)
     # set up an attack action
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     # run the event
     event = events.TakeAttackActionEvent(attack)
     engine.event(event)
@@ -210,7 +212,7 @@ class TestTakeAttackActionEvent(unittest.TestCase):
     # set up engine and context
     engine = CombatEngine(self.context)
     # set up an attack action
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     # run the event
     event = events.TakeAttackActionEvent(attack)
     engine.event(event)
@@ -266,29 +268,30 @@ class TestTakeParryActionEvent(unittest.TestCase):
     attacker.set_ring('fire', 5)
     attacker.set_skill('attack', 4)
     attacker.set_strategy('attack', StingyPlainAttackStrategy())
-    attacker._actions = [1]
+    attacker.set_actions = ([1])
     self.attacker = attacker
     # set up target character
     target = Character('target')
     target.set_parry_strategy(AlwaysParryStrategy())
     target.set_ring('air', 5)
     target.set_skill('parry', 5)
-    target._actions = [1]
+    target.set_actions = ([1])
     self.target = target
     # set up groups
     groups = [Group('attacker', attacker), Group('target', target)]
     # set up context
     self.context = EngineContext(groups, round=1, phase=1)
     self.context.initialize()
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_run_parry(self):
     # set up engine
     engine = CombatEngine(self.context)
     # set up an attack that hit by 20
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(50)
     # set up the parry action
-    parry = ParryAction(self.target, self.attacker, attack)
+    parry = ParryAction(self.target, self.attacker, 'parry', self.initiative_action, self.context, attack)
     # rig the parry roll to succeed by 1
     target_roll_provider = TestRollProvider()
     target_roll_provider.put_skill_roll('parry', 51)
@@ -321,10 +324,10 @@ class TestTakeParryActionEvent(unittest.TestCase):
     # set up engine
     engine = CombatEngine(self.context)
     # set up an attack that hit by 20
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(50)
     # set up the parry action
-    parry = ParryAction(self.target, self.attacker, attack)
+    parry = ParryAction(self.target, self.attacker, 'parry', self.initiative_action, self.context, attack)
     # rig the parry roll to fail by 1
     target_roll_provider = TestRollProvider()
     target_roll_provider.put_skill_roll('parry', 49)

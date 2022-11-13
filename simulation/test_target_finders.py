@@ -13,6 +13,7 @@ import unittest
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
 from simulation.target_finders import TargetFinder
 
@@ -37,6 +38,7 @@ class TestTargetFinder(unittest.TestCase):
     self.doji = doji
     self.bayushi = bayushi
     self.hida = hida
+    self.initiative_action = InitiativeAction([4], 4)
     self.context = EngineContext(groups)
     self.context.initialize()
 
@@ -49,8 +51,8 @@ class TestTargetFinder(unittest.TestCase):
     finder = TargetFinder()
     # initial knowledge should find hida easier to hit, because the default tn to hit is 20
     self.akodo.knowledge().observe_tn_to_hit(self.bayushi, 25)
-    self.assertEqual(self.hida, finder.find_easiest_target(self.akodo, 'attack', self.context))
+    self.assertEqual(self.hida, finder.find_easiest_target(self.akodo, 'attack', self.initiative_action, self.context))
     # with fuller knowledge, bayushi is the best target
     self.akodo.knowledge().observe_tn_to_hit(self.hida, 30)
-    self.assertEqual(self.bayushi, finder.find_easiest_target(self.akodo, 'attack', self.context))
+    self.assertEqual(self.bayushi, finder.find_easiest_target(self.akodo, 'attack', self.initiative_action, self.context))
   

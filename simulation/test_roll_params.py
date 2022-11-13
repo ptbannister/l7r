@@ -25,14 +25,14 @@ class TestNormalize(unittest.TestCase):
     self.assertEqual((10, 10, 0), normalize_roll_params(14, 6))
 
   def test_excess_kept(self):
-    self.assertEqual((10, 10, 1), normalize_roll_params(11, 10))
-    self.assertEqual((10, 10, 5), normalize_roll_params(17, 8))
-    self.assertEqual((10, 10, 10), normalize_roll_params(25, 5))
+    self.assertEqual((10, 10, 2), normalize_roll_params(11, 10))
+    self.assertEqual((10, 10, 10), normalize_roll_params(17, 8))
+    self.assertEqual((10, 10, 20), normalize_roll_params(25, 5))
 
   def test_bonus(self):
     self.assertEqual((6, 3, 5), normalize_roll_params(6, 3, 5))
     self.assertEqual((7, 3, 5), normalize_roll_params(7, 3, 5))
-    self.assertEqual((10, 10, 6), normalize_roll_params(15, 6, 5))
+    self.assertEqual((10, 10, 7), normalize_roll_params(15, 6, 5))
 
 
 class TestDefaultRollParameterProvider(unittest.TestCase):

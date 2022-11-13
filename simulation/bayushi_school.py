@@ -96,11 +96,11 @@ class BayushiFeintAction(FeintAction):
 
 
 class BayushiActionFactory(DefaultActionFactory):
-  def get_attack_action(self, subject, target, skill, vp=0):
+  def get_attack_action(self, subject, target, skill, initiative_action, context, vp=0):
     if skill == 'feint':
-      return BayushiFeintAction(subject, target, vp)
+      return BayushiFeintAction(subject, target, skill, initiative_action, context, vp=vp)
     else:
-      return super().get_attack_action(subject, target, skill, vp)
+      return super().get_attack_action(subject, target, skill, initiative_action, context, vp=vp)
 
 BAYUSHI_ACTION_FACTORY = BayushiActionFactory()
 

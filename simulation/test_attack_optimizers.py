@@ -13,6 +13,7 @@ import unittest
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
 from simulation.attack_optimizers import AttackOptimizer, DamageOptimizer
 
@@ -56,6 +57,8 @@ class TestAttackOptimizer(unittest.TestCase):
     groups = [Group('Scorpion', bayushi), Group('Ronin', [jiro, taro])]
     context = EngineContext(groups, round=1, phase=1)
     context.initialize()
+    # initiative action in phase one
+    self.initiative_action = InitiativeAction([1], 1)
     # set instances
     self.taro = taro
     self.jiro = jiro
@@ -71,14 +74,16 @@ class TestAttackOptimizer(unittest.TestCase):
     # Taro's base attack roll is 6k3, spending 2 VP would reach 8k5
     # P(45|8k5) = 0.31
     # Recommendation for threshold 0.5 should be None
-    optimizer = AttackOptimizer(self.taro, self.jiro, 'double attack', self.context)
+    optimizer = AttackOptimizer(self.taro, self.jiro, \
+      'double attack', self.initiative_action, self.context)
     self.assertEqual(None, optimizer.optimize(0.5))
     #
     # Jiro double attacking Bayushi has TN 50
     # Jiro's base attack roll is 7k4, spending 2 VP would reach 9k6
     # P(50|9k6) = 0.38
     # Recommendation for threshold 0.5 should be None
-    optimizer = AttackOptimizer(self.jiro, self.bayushi, 'double attack', self.context)
+    optimizer = AttackOptimizer(self.jiro, self.bayushi, \
+      'double attack', self.initiative_action, self.context)
     self.assertEqual(None, optimizer.optimize(0.5))
 
   def test_spend_no_resources(self):
@@ -90,7 +95,8 @@ class TestAttackOptimizer(unittest.TestCase):
     # Bayushi's base attack roll is 10k5
     # P(40|10k5) = 0.65 
     # Recommendation for threshold 0.6 should be (0, 0)
-    optimizer = AttackOptimizer(self.bayushi, self.taro, 'double attack', self.context)
+    optimizer = AttackOptimizer(self.bayushi, self.taro, \
+      'double attack', self.initiative_action, self.context)
     attack = optimizer.optimize(0.6)
     self.assertEqual(0, attack.vp())
     #
@@ -98,7 +104,8 @@ class TestAttackOptimizer(unittest.TestCase):
     # Bayushi's base attack roll is 9k5
     # P(20|9k5) = 1.0 
     # should recommend (0, 0) to attack Taro with probability of 0.9
-    optimizer = AttackOptimizer(self.bayushi, self.taro, 'attack', self.context)
+    optimizer = AttackOptimizer(self.bayushi, self.taro, 'attack', \
+      self.initiative_action, self.context)
     attack = optimizer.optimize(0.9)
     self.assertEqual(0, attack.vp())
 
@@ -111,7 +118,8 @@ class TestAttackOptimizer(unittest.TestCase):
     # Taro's base attack roll is 6k3, spending 1 VP would make it 7k4
     # P(25|7k4) = 0.85
     # should recommend (1, 0) at threshold 0.8
-    optimizer = AttackOptimizer(self.taro, self.jiro, 'attack', self.context)
+    optimizer = AttackOptimizer(self.taro, self.jiro, 'attack', \
+      self.initiative_action, self.context)
     attack = optimizer.optimize(0.8)
     self.assertEqual(1, attack.vp())
     #
@@ -119,7 +127,8 @@ class TestAttackOptimizer(unittest.TestCase):
     # Taro's base attack roll is 6k3, spending 1 VP would make it 7k4
     # P(30|7k4) = 0.64
     # should recommend (1, 0) at threshold 0.6
-    optimizer = AttackOptimizer(self.taro, self.bayushi, 'attack', self.context)
+    optimizer = AttackOptimizer(self.taro, self.bayushi, 'attack', \
+      self.initiative_action, self.context)
     attack = optimizer.optimize(0.6)
     self.assertEqual(1, attack.vp())
 
@@ -132,7 +141,8 @@ class TestAttackOptimizer(unittest.TestCase):
     # Jiro's base attack roll is 7k4, spending 2 VP would make it 9k6
     # P(50|9k6) = 0.38
     # should recommend (2,0) at threshold 0.3 
-    optimizer = AttackOptimizer(self.jiro, self.bayushi, 'double attack', self.context)
+    optimizer = AttackOptimizer(self.jiro, self.bayushi, \
+      'double attack', self.initiative_action, self.context)
     attack = optimizer.optimize(0.3)
     self.assertEqual(2, attack.vp())
 
@@ -171,6 +181,8 @@ class TestDamageOptimizer(unittest.TestCase):
     groups = [Group('Scorpion', bayushi), Group('Ronin', [jiro, taro])]
     context = EngineContext(groups, round=1, phase=1)
     context.initialize()
+    # initiative action in phase one
+    self.initiative_action = InitiativeAction([1], 1)
     # set instances
     self.taro = taro
     self.jiro = jiro
@@ -184,16 +196,18 @@ class TestDamageOptimizer(unittest.TestCase):
     #
     # Taro double attacking Jiro has TN 45
     # Taro's base attack roll is 6k3, spending 2 VP would reach 8k5
-    # Taro P(45|8k5) = 0.31
+    # P(45|8k5) = 0.31
     # Recommendation for threshold 0.5 should be None
-    optimizer = DamageOptimizer(self.taro, self.jiro, 'double attack', self.context)
+    optimizer = DamageOptimizer(self.taro, self.jiro, \
+      'double attack', self.initiative_action, self.context)
     self.assertEqual(None, optimizer.optimize(0.5))
     #
     # Jiro double attacking Bayushi has TN 50
     # Jiro's base attack roll is 7k4, spending 2 VP would reach 9k6
     # P(50|9k6) = 0.38
     # Recommendation for threshold 0.5 should be None
-    optimizer = DamageOptimizer(self.jiro, self.bayushi, 'double attack', self.context)
+    optimizer = DamageOptimizer(self.jiro, self.bayushi, \
+      'double attack', self.initiative_action, self.context)
     self.assertEqual(None, optimizer.optimize(0.5))
 
   def test_spend_no_resources(self):
@@ -207,7 +221,8 @@ class TestDamageOptimizer(unittest.TestCase):
     # P(25|6k3) = 0.52
     # P(45|8k5) = 0.03
     # Recommendation should be (0, 0) at threshold 0.5 
-    optimizer = DamageOptimizer(self.taro, self.jiro, 'attack', self.context)
+    optimizer = DamageOptimizer(self.taro, self.jiro, 'attack', \
+      self.initiative_action, self.context)
     attack = optimizer.optimize(0.5)
     self.assertEqual(0, attack.vp())
     #
@@ -219,7 +234,8 @@ class TestDamageOptimizer(unittest.TestCase):
     exploding_mook = Character('Exploding Mook')
     exploding_mook.set_skill('parry', 2)
     self.bayushi.knowledge().observe_tn_to_hit(exploding_mook, 15)
-    optimizer = DamageOptimizer(self.bayushi, exploding_mook, 'attack', self.context)
+    optimizer = DamageOptimizer(self.bayushi, \
+      exploding_mook, 'attack', self.initiative_action, self.context)
     attack = optimizer.optimize(0.9)
     self.assertEqual(0, attack.vp())
 
@@ -237,7 +253,8 @@ class TestDamageOptimizer(unittest.TestCase):
     # P(45|8k5) = 0.31
     # P(45|9k6) = 0.56
     # Recommendation should be (2, 0) at threshold of 0.5
-    optimizer = DamageOptimizer(self.jiro, self.bayushi, 'attack', self.context)
+    optimizer = DamageOptimizer(self.jiro, self.bayushi, 'attack', \
+      self.initiative_action, self.context)
     attack = optimizer.optimize(0.5)
     self.assertEqual(2, attack.vp())
 

@@ -12,7 +12,8 @@ class Knowledge(object):
     self._damage_rolls = {}
     self._modifiers = {}
     self._parry_rolls = {}
-    self._debuffs = {}
+    self._rings = {}
+    self._skills = {}
     self._tn_to_hit = {}
     self._wounds = {}
 
@@ -78,6 +79,8 @@ class Knowledge(object):
     self._damage_rolls.clear()
     self._modifiers.clear()
     self._parry_rolls.clear()
+    self._rings.clear()
+    self._skills.clear()
     self._tn_to_hit.clear()
     self._wounds.clear()
 
@@ -185,6 +188,42 @@ class Knowledge(object):
     Observe a modifier being removed from a character.
     '''
     self._modifiers[character.name()].remove(modifier)
+
+  def observe_ring(self, character, ring, rank):
+    '''
+    observe_ring(character, ring, rank)
+      character (Character): character of interest
+      ring (str): name of a ring being observed
+      rank (int): observed rank of the ring
+
+    Observe that a character's named ring is at the given rank.
+    '''
+    name = character.name()
+    if not isinstance(ring, str):
+      raise ValueError('observe_ring ring must be str')
+    if not isinstance(rank, int):
+      raise ValueError('observe_ring rank must be int')
+    if name not in self._rings.keys():
+      self._rings[name] = {}
+    self._rings[name][ring] = rank
+
+  def observe_skill(self, character, skill, rank):
+    '''
+    observe_skill(character, skill, rank)
+      character (Character): character of interest
+      skill (str): name of a skill being observed
+      rank (int): observed rank of the skill
+
+    Observe that a character's named skill is at the given rank.
+    '''
+    name = character.name()
+    if not isinstance(skill, str):
+      raise ValueError('observe_skill skill must be str')
+    if not isinstance(rank, int):
+      raise ValueError('observe_skill rank must be int')
+    if name not in self._skills.keys():
+      self._skills[name] = {}
+    self._skills[name][skill] = rank
 
   def observe_tn_to_hit(self, character, tn):
     '''

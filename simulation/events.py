@@ -89,6 +89,11 @@ class ActionEvent(Event):
     super().__init__(name)
     self.action = action
 
+class ContestedActionEvent(Event):
+  def __init__(self, name, contested_action):
+    super().__init__(name)
+    self.action = contested_action
+
 class TakeActionEvent(ActionEvent):
   def __init__(self, name, action):
     super().__init__(name, action)
@@ -125,7 +130,7 @@ class TakeAttackActionEvent(TakeActionEvent):
     return AttackFailedEvent(self.action)
 
   def _roll_attack(self,  context):
-    attack_roll = self.action.roll_attack()
+    attack_roll = self.action.roll_skill()
     if self.action.vp() > 0:
       yield SpendVoidPointsEvent(self.action.subject(), self.action.skill(), self.action.vp())
     initial_event = AttackRolledEvent(self.action, attack_roll)
@@ -163,7 +168,7 @@ class TakeParryActionEvent(TakeActionEvent):
     return ParryFailedEvent(self.action)
 
   def _roll_parry(self, context):
-    parry_roll = self.action.roll_parry()
+    parry_roll = self.action.roll_skill()
     self.action.set_attack_parry_attempted()
     if self.action.vp() > 0:
       yield SpendVoidPointsEvent(self.action.subject(), self.action.skill(), self.action.vp())
@@ -365,12 +370,13 @@ class GainTemporaryVoidPointsEvent(GainResourcesEvent):
 
 class SpendActionEvent(Event):
   '''
-  Event for when a character spends an action.
+  Event for when a character spends an action die.
   '''
-  def __init__(self, subject, phase):
+  def __init__(self, subject, skill, initiative_action):
     super().__init__('spend_action')
     self.subject = subject
-    self.phase = phase
+    self.skill = skill
+    self.initiative_action = initiative_action
 
 
 class SpendResourcesEvent(Event):

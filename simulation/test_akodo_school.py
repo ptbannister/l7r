@@ -14,6 +14,7 @@ from simulation import actions, akodo_school, events
 from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
  
 # set up logging
@@ -25,12 +26,15 @@ logger.setLevel(logging.DEBUG)
 class TestAkodoAttackFailedListener(unittest.TestCase):
   def setUp(self):
     self.akodo = Character('Akodo')
+    self.akodo.set_actions([1,])
     self.bayushi = Character('Bayushi')
     groups = [Group('Lion', self.akodo), Group('Scorpion', self.bayushi)]
     self.context = EngineContext(groups)
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_feint_failed(self):
-    action = actions.FeintAction(self.akodo, self.bayushi)
+    action = actions.FeintAction(self.akodo, self.bayushi, 'feint', \
+      self.initiative_action, self.context)
     event = events.AttackFailedEvent(action)
     listener = akodo_school.AkodoAttackFailedListener()
     responses = list(listener.handle(self.akodo, event, self.context))
@@ -40,15 +44,19 @@ class TestAkodoAttackFailedListener(unittest.TestCase):
     self.assertEqual(self.akodo, response.subject)
     self.assertEqual(1, response.amount)
 
+
 class TestAkodoAttackSucceededListener(unittest.TestCase):
   def setUp(self):
     self.akodo = Character('Akodo')
+    self.akodo.set_actions([1,])
     self.bayushi = Character('Bayushi')
     groups = [Group('Lion', self.akodo), Group('Scorpion', self.bayushi)]
     self.context = EngineContext(groups)
+    self.initiative_action = InitiativeAction([1], 1)
 
   def test_feint_succeeded(self):
-    action = actions.FeintAction(self.akodo, self.bayushi)
+    action = actions.FeintAction(self.akodo, self.bayushi, 'feint', \
+      self.initiative_action, self.context)
     event = events.AttackSucceededEvent(action)
     listener = akodo_school.AkodoAttackSucceededListener()
     responses = list(listener.handle(self.akodo, event, self.context))
@@ -57,6 +65,7 @@ class TestAkodoAttackSucceededListener(unittest.TestCase):
     self.assertTrue(isinstance(response, events.GainTemporaryVoidPointsEvent))
     self.assertEqual(self.akodo, response.subject)
     self.assertEqual(4, response.amount)
+
 
 class TestAkodoFifthDanStrategy(unittest.TestCase):
   def setUp(self):

@@ -41,7 +41,7 @@ class TestRoll(unittest.TestCase):
     test_dice = TestDice()
     test_dice.extend([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1])
     roll = Roll(15, 10, die_provider=test_dice)
-    self.assertEqual(61, roll.roll())
+    self.assertEqual(66, roll.roll())
 
 
 class TestTestDice(unittest.TestCase):

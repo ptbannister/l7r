@@ -12,6 +12,7 @@ import math
 
 from simulation import actions, events
 from simulation.exceptions import NotEnoughActions
+from simulation.initiative_actions import InitiativeAction
 from simulation.knowledge import TheoreticalCharacter
 from simulation.log import logger
 from simulation.roll import normalize_roll_params
@@ -85,42 +86,46 @@ class HoldOneActionStrategy(Strategy):
 
 
 class BaseAttackStrategy(Strategy):
-  def spend_action(self, character, skill, context):
-    '''
-    spend_action(character, skill, context) -> SpendActionEvent
-
-    Spend an available action to take an attack.
-    '''
+  def choose_action(self, character, skill, context):
     if character.has_action(context):
-      # spend the newest available action
-      # older actions are usually more valuable
-      chosen_phase = max([phase for phase in character.actions() if phase <= context.phase()])
-      yield events.SpendActionEvent(character, chosen_phase)
+      # choose earliest available action die
+      # older action dice are usually more valuable
+      action_die = min([die for die in character.actions() if die <= context.phase()])
+      return InitiativeAction([action_die], action_die)
     elif character.has_interrupt_action(skill, context):
-      # interrupt
       cost = character.interrupt_cost(skill, context)
-      spent = 0
-      while spent < cost:
-        chosen_phase = max(character.actions())
-        yield events.SpendActionEvent(character, chosen_phase)
-        spent += 1
+      action_dice = []
+      unspent_action_dice = []
+      unspent_action_dice.extend(character.actions())
+      while len(action_dice) < cost:
+        die = max(unspent_action_dice)
+        unspent_action_dice.pop(die)
+        action_dice.append(die)
+      return InitaitiveAction(action_dice, context.phase(), is_interrupt=True) 
     else:
-      # somehow character is unable to attack
-      # this should have been caught sooner
       raise NotEnoughActions()
- 
-  def try_skill(self, character, skill, threshold, context):
+
+  def spend_action(self, character, skill, initiative_action):
     '''
-    try_skill(character, skill, threshold, context) -> TakeAttackActionEvent or None
+    spend_action(character, skill, initiative_action) -> SpendActionEvent
+
+    Spend an action dice to take an attack.
+    '''
+    yield events.SpendActionEvent(character, skill, initiative_action)
+ 
+  def try_skill(self, character, skill, initiative_action, threshold, context):
+    '''
+    try_skill(character, skill, initiative_action, threshold, context) -> TakeAttackActionEvent or None
 
     Returns a TakeAttackActionEvent if the strategy can successfully
     find a target and optimize an attack using the given skill.
     '''
     if character.skill(skill) > 0:
-      target = character.target_finder().find_target(character, skill, context)
+      target = character.target_finder().find_target(character, skill, initiative_action, context)
       if target is not None:
         attack = character.attack_optimizer_factory() \
-          .get_optimizer(character, target, skill, context) \
+          .get_optimizer(character, target, skill, \
+            initiative_action, context) \
           .optimize(threshold)
         if attack is not None:
           logger.info('{} is attacking {} with {} and spending {} VP' \
@@ -136,17 +141,18 @@ class PlainAttackStrategy(BaseAttackStrategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.YourMoveEvent):
       if character.has_action(context):
+        initiative_action = self.choose_action(character, 'attack', context)
         # attempt to optimize for a good attack
-        action_event = self.try_skill(character, 'attack', 0.7, context)
+        action_event = self.try_skill(character, 'attack', initiative_action, 0.7, context)
         if action_event is not None:
-          yield from self.spend_action(character, 'attack', context)
+          yield from self.spend_action(character, 'attack',  initiative_action)
           yield action_event
           return
         # fell through: chance of success is low
         # try an attack anyway even if it's desperate
-        action_event = self.try_skill(character, 'attack', 0.01, context)
+        action_event = self.try_skill(character, 'attack', initiative_action, 0.01, context)
         if action_event is not None:
-          yield from self.spend_action(character, 'attack', context)
+          yield from self.spend_action(character, 'attack', initiative_action)
           yield action_event
         else:
           yield events.HoldActionEvent(character)
@@ -162,13 +168,15 @@ class StingyPlainAttackStrategy(BaseAttackStrategy):
     if isinstance(event, events.YourMoveEvent):
       # TODO: implement intelligence around interrupts
       if character.has_action(context):
+        initiative_action = self.choose_action(character, 'attack', context)
         target = character.target_finder() \
           .find_target(character, 'attack', context)
         if target is not None:
           action = subject.action_factory() \
-            .get_attack_action(subject, target, skill)
+            .get_attack_action(subject, target, skill, \
+              initiative_action, context)
           logger.info('{} is attacking {}'.format(character.name(), target.name()))
-          yield from self.spend_action(character, 'attack', context)
+          yield from self.spend_action(character, 'attack', initiative_action)
           yield character.take_action_event_factory() \
             .get_take_attack_action_event(attack)
         else:
@@ -183,9 +191,10 @@ class UniversalAttackStrategy(BaseAttackStrategy):
       # TODO: implement intelligence around interrupts
       if character.has_action(context):
         # try to double attack first
-        double_attack_event = self.try_skill(character, 'double attack', 0.6, context)
+        initiative_action = self.choose_action(character, 'double attack', context)
+        double_attack_event = self.try_skill(character, 'double attack', initiative_action, 0.6, context)
         if double_attack_event is not None:
-          yield from self.spend_action(character, 'double attack', context)
+          yield from self.spend_action(character, 'double attack', initiative_action)
           yield double_attack_event
           return
         # TODO: consider a lunge (probably need a LungeStrategy)
@@ -193,21 +202,24 @@ class UniversalAttackStrategy(BaseAttackStrategy):
           # if this character is out of VP and has more than one action in this round, a feint might be worth iti
           target = character.target_finder().find_target(character, 'feint', context)
           if target is not None:
-            feint_event = self.try_skill(character, 'feint', 0.7, context)
+            initiative_action = self.choose_action(character, 'feint', context)
+            feint_event = self.try_skill(character, 'feint', initiative_action, 0.7, context)
             if feint_event is not None:
-              yield from self.spend_action(character, 'feint', context)
+              yield from self.spend_action(character, 'feint', initiative_action)
               yield feint_event
               return
         # try a plain attack
-        attack_event = self.try_skill(character, 'attack', 0.7, context)
+        initiative_action = self.choose_action(character, 'attack', context)
+        attack_event = self.try_skill(character, 'attack', initiative_action, 0.7, context)
         if attack_event is not None:
-          yield from self.spend_action(character, 'attack', context)
+          yield from self.spend_action(character, 'attack','attack',  initiative_action)
           yield attack_event
           return
         # try a plain attack even if it's desperate
-        attack_event = self.try_skill(character, 'attack', 0.01, context)
+        initiative_action = self.choose_action(character, 'attack', context)
+        attack_event = self.try_skill(character, 'attack', initiative_action, 0.01, context)
         if attack_event is not None:
-          yield from self.spend_action(character, 'attack', context)
+          yield from self.spend_action(character, 'attack', initiative_action)
           yield attack_event
           return
         # fell through: do nothing
@@ -220,7 +232,7 @@ class BaseParryStrategy(Strategy):
   def recommend(self, character, event, context):
     if isinstance(event, events.AttackRolledEvent):
       # bail if no action
-      if not character.has_action(context) and not character.has_interrupt_action('parry', context):
+      if not (character.has_action(context) or character.has_interrupt_action('parry', context)):
         logger.debug('{} will not parry because no action'.format(character.name()))
         return
       # don't try to parry for enemies
@@ -242,9 +254,6 @@ class BaseParryStrategy(Strategy):
         raise RuntimeError('Not enough actions to parry')
         return
 
-  def _recommend(self, character, event, context):
-    raise NotImplementedError()
-
   def _can_shirk(self, character, event, context):
     '''
     Returns whether this character can shirk and let somebody else parry.
@@ -261,6 +270,32 @@ class BaseParryStrategy(Strategy):
             # shirk the parry
             return True
     return False
+
+  def _choose_action(self, character, skill, context):
+    '''
+    _choose_action(character, skill, context) -> InitiativeAction
+
+    Choose action dice to spend to parry.
+    '''
+    if character.has_action(context):
+      # spend the newest available action
+      # older actions are usually more valuable
+      die = max([die for die in character.actions() if die <= context.phase()])
+      return InitiativeAction([die], die)
+    elif character.has_interrupt_action(skill, context):
+      # interrupt
+      cost = character.interrupt_cost(skill, context)
+      action_dice = []
+      unspent_action_dice = []
+      unspent_action_dice.extend(character.actions())
+      while len(action_dice) < cost:
+        die = max(unspent_actions)
+        unspent_actions.pop(die)
+        action_dice.append(die)
+      return InitiativeAction(action_dice, context.phase(), is_interrupt=True)
+    else:
+      # somehow character is unable to parry
+      raise NotEnoughActions()
 
   def _estimate_damage(self, character, event, context):
     '''
@@ -281,28 +316,16 @@ class BaseParryStrategy(Strategy):
     expected_sw = target.wound_check(expected_roll, target.lw() + expected_damage)
     return expected_sw
 
-  def spend_action(self, character, skill, context):
-    '''
-    spend_action(character, skill, context) -> SpendActionEvent
+  def _recommend(self, character, event, context):
+    raise NotImplementedError()
 
-    Spend an available action to take an attack.
+  def _spend_action(self, character, skill, initiative_action):
     '''
-    if character.has_action(context):
-      # spend the newest available action
-      # older actions are usually more valuable
-      chosen_phase = max([phase for phase in character.actions() if phase <= context.phase()])
-      yield events.SpendActionEvent(character, chosen_phase)
-    elif character.has_interrupt_action(skill, context):
-      # interrupt
-      cost = character.interrupt_cost(skill, context)
-      spent = 0
-      while spent < cost:
-        chosen_phase = max(character.actions())
-        yield events.SpendActionEvent(character, chosen_phase)
-        spent += 1
-    else:
-      # somehow character is unable to parry
-      raise NotEnoughActions()
+    _spend_action(character, skill, initiative_action) -> SpendActionEvent
+
+    Spend action dice to parry.
+    '''
+    yield events.SpendActionEvent(character, skill, initiative_action)
  
 
 class AlwaysParryStrategy(BaseParryStrategy):
@@ -311,8 +334,11 @@ class AlwaysParryStrategy(BaseParryStrategy):
   '''
   def _recommend(self, character, event, context):
     logger.debug('{} always parries for friends'.format(character.name()))
-    parry = character.action_factory().get_parry_action(character, event.action.subject(), event.action, 'parry')
-    yield from self.spend_action(character, 'parry', context)
+    initiative_action = self._choose_action(character, 'parry', context)
+    parry = character.action_factory() \
+      .get_parry_action(character, event.action.subject(), \
+        event.action, 'parry', initiative_action, context)
+    yield from self._spend_action(character, 'parry', initiative_action)
     yield character.take_action_event_factory().get_take_parry_action_event(parry)
 
 
@@ -353,17 +379,14 @@ class ReluctantParryStrategy(BaseParryStrategy):
           logger.debug('{} reluctantly parries because the attack would probably be fatal'.format(character.name()))
         elif probably_critical:
           logger.debug('{} reluctantly parries because the attack looks dangerous'.format(character.name()))
-        parry = character.action_factory().get_parry_action(character, event.action.subject(), event.action, 'parry')
-        yield from self.spend_action(character, 'parry', context)
+        initiative_action = self._choose_action(character, 'parry', context)
+        parry = character.action_factory() \
+          .get_parry_action(character, event.action.subject(), \
+            event.action, 'parry', initiative_action, context)
+        yield from self._spend_action(character, 'parry', initiative_action)
         yield character.take_action_event_factory().get_take_parry_action_event(parry)
       else:
         logger.debug('{} will not parry a small attack'.format(character.name()))
-
-
-class NeverParryStrategy(Strategy):
-  def recommend(self, character, event, context):
-    logger.debug('{} never parries'.format(character.name()))
-    yield from ()
 
 
 class SkillRolledStrategy(Strategy):
@@ -568,6 +591,7 @@ class KeepLightWoundsStrategy(Strategy):
         if character.sw_remaining() == 1:
           logger.info('{} keeping light wounds to avoid defeat.'.format(character.name()))
           yield events.KeepLightWoundsEvent(character, event.attacker, event.damage, tn=event.tn)
+          return
         # consult KeepLightWoundsOptimizer
         optimizer = DefaultKeepLightWoundsOptimizer(character, context)
         (should_keep, reserve_vp) = optimizer.should_keep(1, 0.6, max_vp=1)
@@ -575,7 +599,7 @@ class KeepLightWoundsStrategy(Strategy):
           logger.info('{} keeping {} LW and reserving {} VP for a future Wound Check' \
             .format(character.name(), character.lw(), reserve_vp))
           character.void_point_manager().reserve('wound check', reserve_vp)
-          return
+          yield events.KeepLightWoundsEvent(character, event.attacker, event.damage, tn=event.tn)
         else:
           logger.info('{} taking a serious wound because the next wound check might be bad.'.format(character.name()))
           yield events.TakeSeriousWoundEvent(character, event.attacker, event.damage, tn=event.tn)

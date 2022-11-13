@@ -16,6 +16,7 @@ from simulation.character import Character
 from simulation.context import EngineContext
 from simulation.exceptions import NotEnoughActions
 from simulation.groups import Group
+from simulation.initiative_actions import InitiativeAction
 from simulation.log import logger
 from simulation.roll_provider import TestRollProvider
 from simulation.strategies import BaseAttackStrategy, PlainAttackStrategy, KeepLightWoundsStrategy, NeverParryStrategy, ReluctantParryStrategy, WoundCheckStrategy
@@ -56,35 +57,33 @@ class TestBaseAttackStrategy(unittest.TestCase):
     self.strong_attacker = strong_attacker
     self.target = target
     self.context = context
+    self.initiative_action = InitiativeAction([1], 1)
 
-  def test_spend_action(self):
+  def test_choose_action(self):
     strategy = BaseAttackStrategy()
-    # spend available action
-    responses = [response for response in strategy.spend_action(self.strong_attacker, 'attack', self.context)]
-    self.assertEqual(1, len(responses))
-    response = responses[0]
-    self.assertTrue(isinstance(response, events.SpendActionEvent))
-    self.assertEqual(1, response.phase)
+    # choose an action
+    initiative_action = strategy.choose_action(self.strong_attacker, self.initiative_action, self.context)
+    self.assertEqual([1], initiative_action.dice())
 
-  def test_spend_action_unavailable(self):
+  def test_choose_action_unavailable(self):
     # set charcter's action to phase 2
     self.strong_attacker.set_actions([2])
     strategy = BaseAttackStrategy()
-    # try to act in phase 1, it should fail
+    # try to choose an action in phase 1, it should fail
     with self.assertRaises(NotEnoughActions):
-      responses = [response for response in strategy.spend_action(self.strong_attacker, 'attack', self.context)]
+      strategy.choose_action(self.strong_attacker, 'attack', self.context)
 
   def test_try_skill(self):
     strategy = BaseAttackStrategy()
     # try attack with weak attacker
     # weak attacker should not spend VP
-    action_event = strategy.try_skill(self.weak_attacker, 'attack', 0.5, self.context)
+    action_event = strategy.try_skill(self.weak_attacker, 'attack', self.initiative_action, 0.5, self.context)
     self.assertFalse(action_event is None)
     self.assertEqual(self.target, action_event.action.target())
     self.assertEqual(0, action_event.action.vp())
     # try attack with strong attacker
     # should spend 1 VP
-    action_event = strategy.try_skill(self.strong_attacker, 'attack', 0.5, self.context)
+    action_event = strategy.try_skill(self.strong_attacker, 'attack', self.initiative_action, 0.5, self.context)
     self.assertFalse(action_event is None)
     self.assertEqual(self.target, action_event.action.target())
     self.assertEqual(1, action_event.action.vp())
@@ -150,7 +149,9 @@ class TestKeepLightWoundsStrategy(unittest.TestCase):
     event = events.WoundCheckSucceededEvent(self.character, self.attacker, 10, 30)
     responses = list(strategy.recommend(self.character, event, self.context))
     # should not recommend taking SW for a small hit
-    self.assertEqual([], responses)
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, events.KeepLightWoundsEvent))
 
   def test_keep_lw_near_defeat(self):
     # give character a lot of SW and LW
@@ -160,7 +161,9 @@ class TestKeepLightWoundsStrategy(unittest.TestCase):
     event = events.WoundCheckSucceededEvent(self.character, self.attacker, 9001, 9002)
     responses = list(strategy.recommend(self.character, event, self.context))
     # should not recommend taking SW when one hit from defeat
-    self.assertEqual([], responses)
+    self.assertEqual(1, len(responses))
+    response = responses[0]
+    self.assertTrue(isinstance(response, events.KeepLightWoundsEvent))
 
   def test_take_sw(self):
     # give character a lot of LW so they must take a SW
@@ -172,7 +175,7 @@ class TestKeepLightWoundsStrategy(unittest.TestCase):
     self.assertEqual(1, len(responses))
     response = responses[0]
     self.assertTrue(isinstance(response, events.TakeSeriousWoundEvent))
-    self.assertEqual(1, response.damage)
+    self.assertEqual(100, response.damage)
 
 
 class TestReluctantParryStrategy(unittest.TestCase):
@@ -185,6 +188,7 @@ class TestReluctantParryStrategy(unittest.TestCase):
     roll_provider.put_initiative_roll([1,1,1])
     target.set_roll_provider(roll_provider)
     target.roll_initiative()
+    initiative_action = InitiativeAction([1], 1)
     # set up groups
     attacker_group = Group('attacker', attacker)
     target_group = Group('target', target)
@@ -196,10 +200,11 @@ class TestReluctantParryStrategy(unittest.TestCase):
     self.attacker = attacker
     self.target = target
     self.context = context
+    self.initiative_action = initiative_action
 
   def test_do_not_parry_miss(self):
     # set up attack
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(1)
     event = events.AttackRolledEvent(attack, 1)
     # get the recommendation
@@ -227,7 +232,7 @@ class TestReluctantParryStrategy(unittest.TestCase):
     # set up context
     context = EngineContext(groups, round=1, phase=1)
     # set up attack 
-    attack = AttackAction(isawa, fu_leng)
+    attack = AttackAction(isawa, fu_leng, 'attack', self.initiative_action, context)
     attack.set_skill_roll(9001)
     event = events.AttackRolledEvent(attack, 9001)
     # get the recommendation
@@ -241,7 +246,7 @@ class TestReluctantParryStrategy(unittest.TestCase):
 
   def test_do_not_parry_small_attack(self):
     # set up attack
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(20)
     event = events.AttackRolledEvent(attack, 20)
     # use the straevents.tegy
@@ -259,7 +264,7 @@ class TestReluctantParryStrategy(unittest.TestCase):
     # make target near death so they will have to parry
     self.target.take_sw(3)
     # set up attack
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(9001)
     event = events.AttackRolledEvent(attack, 9001)
     # use the strategy
@@ -277,7 +282,7 @@ class TestReluctantParryStrategy(unittest.TestCase):
     # make target near death so they will have to parry
     self.target.take_sw(3)
     # set up attack
-    attack = DoubleAttackAction(self.attacker, self.target)
+    attack = DoubleAttackAction(self.attacker, self.target, 'double attack', self.initiative_action, self.context)
     attack.set_skill_roll(30)
     event = events.AttackRolledEvent(attack, 30)
     # use the strategy
@@ -302,6 +307,7 @@ class TestNeverParryStrategy(unittest.TestCase):
     roll_provider.put_initiative_roll([1,1,1])
     target.set_roll_provider(roll_provider)
     target.roll_initiative()
+    initiative_action = InitiativeAction([1], 1)
     # set up groups
     attacker_group = Group('attacker', attacker)
     target_group = Group('target', target)
@@ -312,10 +318,11 @@ class TestNeverParryStrategy(unittest.TestCase):
     self.attacker = attacker
     self.target = target
     self.context = context
+    self.initiative_action = initiative_action
 
   def test_do_not_parry_big_attack(self):
     # set up attack
-    attack = AttackAction(self.attacker, self.target)
+    attack = AttackAction(self.attacker, self.target, 'attack', self.initiative_action, self.context)
     attack.set_skill_roll(9001)
     event = events.AttackRolledEvent(attack, 9001)
     # use the strategy
@@ -326,7 +333,7 @@ class TestNeverParryStrategy(unittest.TestCase):
 
   def test_do_not_parry_double_attack(self):
     # set up attack
-    attack = DoubleAttackAction(self.attacker, self.target)
+    attack = DoubleAttackAction(self.attacker, self.target, 'double attack', self.initiative_action, self.context)
     attack.set_skill_roll(30)
     event = events.AttackRolledEvent(attack, 30)
     # use the strategy

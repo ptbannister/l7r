@@ -34,27 +34,30 @@ class AttackOptimizer(object):
   This class should be used to optimize attack rolls when the goal
   is to hit a TN, and there isn't benefit from exceeding the TN.
 
-  The Akodo Bushi School's Feint is a good example of an attack
-  where the only purpose is to hit the TN.
+  Feint is the typical example of an attack where there is no
+  benefit for exceeding the TN.
   '''
-  def __init__(self, subject, target, skill, context, max_vp=None, max_ap=None):
+  def __init__(self, subject, target, skill, initiative_action, \
+      context, max_vp=None, max_ap=None):
     self.subject = subject
     self.target = target
     self.theoretical_target = TheoreticalCharacter(subject.knowledge(), target)
     self.skill = skill
+    self.initiative_action = initiative_action
     self.context = context
     self.explode = not self.subject.crippled()
     # set this information later
     self.original_max_ap = max_ap
     self.original_max_vp = max_vp
-    self.speculative_action = None
+    self.action = None
     self.tn = 0
     self.expected_rolls = []
     self.initialize()
 
   def get_action(self, vp):
     return self.subject.action_factory() \
-      .get_attack_action(self.subject, self.target, self.skill, vp)
+      .get_attack_action(self.subject, self.target, self.skill, \
+        self.initiative_action, self.context, vp=vp)
 
   def initialize(self):
     # determine possible expenditures of ap and vp
@@ -68,14 +71,16 @@ class AttackOptimizer(object):
     self.max_ap = min(self.max_ap, self.subject.ap())
     self.max_vp = min(self.max_vp, available_vp)
     # determine expected tn
-    self.speculative_action = self.subject.action_factory() \
-      .get_attack_action(self.subject, self.theoretical_target, self.skill)
-    self.tn = self.speculative_action.tn()
+    self.action = self.subject.action_factory() \
+      .get_attack_action(self.subject, self.theoretical_target, \
+        self.skill, self.initiative_action, self.context)
+    self.tn = self.action.tn()
     # consider using available floating bonuses, if any
     bonus = sum([b.bonus() for b in self.subject.floating_bonuses(self.skill)])
     # determine expected value of possible vp spends
     for vp in range(self.max_vp + 1):
-      (rolled, kept, mod) = self.subject.get_skill_roll_params(self.target, self.skill, vp)
+      self.action.set_vp(vp)
+      (rolled, kept, mod) = self.action.skill_roll_params()
       roll = self.context.mean_roll(rolled, kept) + mod + bonus
       for ap in range(self.max_ap +  1):
         adjusted_roll = roll + (5 * ap)
@@ -98,7 +103,7 @@ class AttackOptimizer(object):
       if r.p >= threshold:
         recommendation = (r.vp, r.ap)
         break
-    if recommendation is not None: 
+    if recommendation is not None:
       return self.get_action(recommendation[0])
     else:
       return None
@@ -116,7 +121,7 @@ class DamageOptimizer(AttackOptimizer):
     super().initialize()
     self.expected_kept_damage = {}
     for r in self.expected_rolls:
-      extra_rolled = self.speculative_action \
+      extra_rolled = self.action \
         .calculate_extra_damage_dice(r.roll, self.tn)
       (rolled, kept, bonus) = self.subject.get_damage_roll_params(self.target, \
         self.skill, extra_rolled)
