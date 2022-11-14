@@ -1,10 +1,10 @@
-name: Bayushi
-school: Bayushi Bushi School
+name: Shiba
+school: Shiba Bushi School
 xp: 415
 rings:
-  air: 3
+  air: 5
   earth: 5
-  fire: 6
+  fire: 4
   water: 5
   void: 5
 skills:

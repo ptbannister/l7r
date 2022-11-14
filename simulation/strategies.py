@@ -199,20 +199,18 @@ class UniversalAttackStrategy(BaseAttackStrategy):
           return
         # TODO: consider a lunge (probably need a LungeStrategy)
         if character.vp() == 0 and len(character.actions()) > 1:
-          # if this character is out of VP and has more than one action in this round, a feint might be worth iti
-          target = character.target_finder().find_target(character, 'feint', context)
-          if target is not None:
-            initiative_action = self.choose_action(character, 'feint', context)
-            feint_event = self.try_skill(character, 'feint', initiative_action, 0.7, context)
-            if feint_event is not None:
-              yield from self.spend_action(character, 'feint', initiative_action)
-              yield feint_event
-              return
+          # if this character is out of VP and has more than one action in this round, a feint might be worth it
+          initiative_action = self.choose_action(character, 'feint', context)
+          feint_event = self.try_skill(character, 'feint', initiative_action, 0.7, context)
+          if feint_event is not None:
+            yield from self.spend_action(character, 'feint', initiative_action)
+            yield feint_event
+            return
         # try a plain attack
         initiative_action = self.choose_action(character, 'attack', context)
         attack_event = self.try_skill(character, 'attack', initiative_action, 0.7, context)
         if attack_event is not None:
-          yield from self.spend_action(character, 'attack','attack',  initiative_action)
+          yield from self.spend_action(character, 'attack', initiative_action)
           yield attack_event
           return
         # try a plain attack even if it's desperate
@@ -289,8 +287,8 @@ class BaseParryStrategy(Strategy):
       unspent_action_dice = []
       unspent_action_dice.extend(character.actions())
       while len(action_dice) < cost:
-        die = max(unspent_actions)
-        unspent_actions.pop(die)
+        die = max(unspent_action_dice)
+        unspent_action_dice.remove(die)
         action_dice.append(die)
       return InitiativeAction(action_dice, context.phase(), is_interrupt=True)
     else:
@@ -333,7 +331,7 @@ class AlwaysParryStrategy(BaseParryStrategy):
   Always parry for friends.
   '''
   def _recommend(self, character, event, context):
-    logger.debug('{} always parries for friends'.format(character.name()))
+    logger.debug('{} always parries'.format(character.name()))
     initiative_action = self._choose_action(character, 'parry', context)
     parry = character.action_factory() \
       .get_parry_action(character, event.action.subject(), \
@@ -543,7 +541,6 @@ class WoundCheckRolledStrategy(SkillRolledStrategy):
     max_spend = min(ap, character.max_ap_per_roll())
     new_roll = event.roll
     if character.can_spend_ap('wound check'):
-      new_roll = event.roll
       new_expected_sw = character.wound_check(new_roll)
       while self._chosen_ap < max_spend:
         self._chosen_ap += 1

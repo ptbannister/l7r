@@ -9,6 +9,7 @@
 from abc import ABC, abstractmethod
 
 from simulation import events, modifiers, modifier_listeners
+from simulation.log import logger
 
 
 class Listener(ABC):
@@ -217,6 +218,7 @@ class WoundCheckRolledListener(Listener):
   def handle(self, character, event, context):
     if isinstance(event, events.WoundCheckRolledEvent):
       if event.subject == character:
+        logger.debug('{} rolled wound check {} against tn {}'.format(character.name(), event.roll, event.tn))
         if event.roll < event.tn:
           # wound check failed
           yield events.WoundCheckFailedEvent(character, event.attacker, event.damage, event.roll, tn=event.tn)

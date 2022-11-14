@@ -292,6 +292,9 @@ class TheoreticalCharacter(object):
     self._knowledge = knowledge
     self._character = character
 
+  def actions(self):
+    return self._character.actions()
+
   def lw(self):
     return self._character.lw()
 

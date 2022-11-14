@@ -330,31 +330,31 @@ class WoundCheckEvent(Event):
 
 class WoundCheckDeclaredEvent(WoundCheckEvent):
   def __init__(self, subject, attacker, damage, tn=None, vp=0):
-    super().__init__('wound_check_declared', subject, attacker, damage, tn)
+    super().__init__('wound_check_declared', subject, attacker, damage, tn=tn)
     self.vp = vp
 
 class WoundCheckFailedEvent(WoundCheckEvent):
   def __init__(self, subject, attacker, damage, roll, tn=None):
-    super().__init__('wound_check_failed', subject, attacker, damage, tn)
+    super().__init__('wound_check_failed', subject, attacker, damage, tn=tn)
     self.roll = roll
 
 class WoundCheckRolledEvent(WoundCheckEvent):
   def __init__(self, subject, attacker, damage, roll, tn=None):
-    super().__init__('wound_check_rolled', subject, attacker, damage, tn)
+    super().__init__('wound_check_rolled', subject, attacker, damage, tn=tn)
     self.roll = roll
 
 class WoundCheckSucceededEvent(WoundCheckEvent):
   def __init__(self, subject, attacker, damage, roll, tn=None):
-    super().__init__('wound_check_succeeded', subject, attacker, damage, tn)
+    super().__init__('wound_check_succeeded', subject, attacker, damage, tn=tn)
     self.roll = roll
 
 class KeepLightWoundsEvent(WoundCheckEvent):
   def __init__(self, subject, attacker, damage, tn=None):
-    super().__init__('keep_lw', subject, attacker, damage, tn)
+    super().__init__('keep_lw', subject, attacker, damage, tn=tn)
 
 class TakeSeriousWoundEvent(WoundCheckEvent):
   def __init__(self, subject, attacker, damage, tn=None):
-    super().__init__('take_sw', subject, attacker, damage, tn)
+    super().__init__('take_sw', subject, attacker, damage, tn=tn)
 
 
 class GainResourcesEvent(Event):

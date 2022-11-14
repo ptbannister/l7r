@@ -6,6 +6,8 @@
 # Implement Kakita Bushi School.
 #
 
+import random
+
 from simulation import events, target_finders
 from simulation.actions import AttackAction, DoubleAttackAction, LungeAction
 from simulation.action_factory import DefaultActionFactory
@@ -13,7 +15,7 @@ from simulation.contested_actions import ContestedAction
 from simulation.events import Event, ContestedActionEvent, LightWoundsDamageEvent
 from simulation.initiative_actions import InitiativeAction
 from simulation.listeners import Listener
-from simulation.roll import DieProvider
+from simulation.roll import DieProvider, InitiativeRoll
 from simulation.roll_params import DefaultRollParameterProvider, normalize_roll_params
 from simulation.roll_provider import DefaultRollProvider
 from simulation.schools import BaseSchool
@@ -314,7 +316,7 @@ class KakitaDoubleAttackAction(DoubleAttackAction):
   ability.
   '''
   def skill_roll_params(self):
-    (rolled, kept, modifier) = self.subject.get_skill_roll_params( \
+    (rolled, kept, modifier) = self.subject().get_skill_roll_params( \
       self.target(), self.skill(), vp=self.vp())
     # calculate tempo bonus
     subject_tempo = self.context().phase()
@@ -332,7 +334,7 @@ class KakitaLungeAction(LungeAction):
   ability.
   '''
   def skill_roll_params(self):
-    (rolled, kept, modifier) = self.subject.get_skill_roll_params( \
+    (rolled, kept, modifier) = self.subject().get_skill_roll_params( \
       self.target(), self.skill(), vp=self.vp())
     # calculate tempo bonus
     subject_tempo = self.context().phase()
@@ -350,11 +352,11 @@ class KakitaActionFactory(DefaultActionFactory):
   '''
   def get_attack_action(self, subject, target, skill, initiative_action, context, vp=0):
     if skill in ('attack', 'iaijutsu'):
-      return KakitaAttackAction(subject, target, skill, initiative_action, context, vp)
+      return KakitaAttackAction(subject, target, skill, initiative_action, context, vp=vp)
     elif skill == 'double attack':
-      return KakitaDoubleAttackAction(subject, target, skill, initiative_action, context, vp)
+      return KakitaDoubleAttackAction(subject, target, skill, initiative_action, context, vp=vp)
     elif skill == 'lunge':
-      return KakitaLungeAction(subject, target, skill, initiative_action, context, vp)
+      return KakitaLungeAction(subject, target, skill, initiative_action, context, vp=vp)
     else:
       raise ValueError('Invalid attack skill: {}'.format(skill))
 

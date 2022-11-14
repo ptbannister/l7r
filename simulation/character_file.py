@@ -143,14 +143,14 @@ class CharacterReader(object):
     # advantages are optional
     if 'advantages' in data.keys():
       for advantage in data['advantages']:
-        builder.take_advantage(advantage)
+        builder.take_advantage(advantage.lower())
     return builder
 
   def _take_disadvantages(self, data, builder):
     # disadvantages are optional
     if 'disadvantages' in data.keys():
       for disadvantage in data['disadvantages']:
-        builder.take_disadvantage(disadvantage)
+        builder.take_disadvantage(disadvantage.lower())
     return builder
 
 
