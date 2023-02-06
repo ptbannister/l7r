@@ -33,6 +33,8 @@ SAMURAI
 
 samurai are typically 80% bushi, 10% courtier, and 10% merchant
 
+NOTE: subsequent research has shown that the percentage of "useful"
+samurai of working age is probably closer to 60% than 80%.
 
 
 MERCHANT HOUSES
